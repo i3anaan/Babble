@@ -8,8 +8,10 @@ stmt : ID ':=' expr                     # Assignment
      | stmt (ID ':' expr)+              # KeywordSend
      | (ID ':' expr)+                   # ObjKeywordSend
      | ID (ID ':' ID)+ '[' sequence ']' # MethodDefinition
+//MAYBE: Add types to method definition     
      | expr                             # LoneExpr
      ;
+//MAYBE: Add return statement (Currently last expression)
 
 defs : '|' ID+ '|' ;
 
@@ -20,11 +22,14 @@ expr : ID                          # VarExpr
      | '[' (ID* '|')? sequence ']' # BlockExpr
      | '(' stmt ')'                # ParenExpr
      ;
+//TODO: Array syntax ('{}')
+
 
 ID: [A-Za-z][a-zA-Z0-9_]*;
 INTEGER   : [0-9]+;
 STRING    : '"' (.*?) '"';
 
+//MAYBE: think of something smart for associativity
 OPERATOR  : ('+' | '-' | '*' | '/' | '=' | '!')+;
 
 COMMENT   : '/*' (.)*? '*/' -> skip;
