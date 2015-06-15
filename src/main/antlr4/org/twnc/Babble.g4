@@ -1,4 +1,4 @@
-grammar Chitchat;
+grammar Babble;
 
 sequence : defs? (stmt ('.'+ stmt)*)? '.'? ;
 
