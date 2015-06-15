@@ -10,3 +10,8 @@ buildNumber.properties
 # IDEA ignores
 *.iml
 .idea
+
+# Eclipse ignores
+.project
+.classpath
+*.settings
