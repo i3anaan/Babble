@@ -1,0 +1,49 @@
+/* 
+
+example.bla
+
+This file demonstrates Babble syntax and some built-in methods.
+
+ */
+
+/* Expressions. */
+
+10.
+
+#symbol.
+
+"String".
+
+Class methodcall: argument.
+
+object methodcall: argument.
+
+object 
+
+object unarymethod.
+
+10 factorial factorial.
+
+binary + method.
+
+[ simpleBlock ].
+
+x := 10.
+
+/* Usage of built-ins. */
+
+[ 10 ] value.
+
+[ 1 == 1 ] ifTrue: [
+	Transcript show: "The world is right.".
+] ifFalse: [
+	Transcript show: "The world is not right."
+].
+
+true ifTrue: [].
+[ true ] ifTrue: [].
+[ true ] value ifTrue: [].
+
+[ true ] whileTrue: [
+	Transcript show: "A" on: "stderr".
+].
