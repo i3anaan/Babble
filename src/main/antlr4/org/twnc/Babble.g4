@@ -17,22 +17,29 @@ stmt : ID ':=' expr                     # Assignment
 
 defs : '|' ID+ '|' ;
 
-expr : ID                          # VarExpr
-     | value=INTEGER               # IntExpr
+expr : value=INTEGER               # IntExpr
      | string=STRING               # StrExpr
+     | TRUE                        # TrueExpr
+     | FALSE                       # FalseExpr
+     | NIL                         # NilExpr
+     | ID                          # VarExpr
      | '#' ID                      # SymbolExpr
      | '[' (ID* '|')? sequence ']' # BlockExpr
      | '(' stmt ')'                # ParenExpr
      ;
 //TODO: Array syntax ('{}')
 
+TRUE : 'true';
+FALSE : 'false';
+NIL : 'nil';
 
 ID: [A-Za-z][a-zA-Z0-9_]*;
 INTEGER   : [0-9]+;
 STRING    : '"' (.*?) '"';
 
 //MAYBE: think of something smart for associativity
-OPERATOR  : ('+' | '-' | '*' | '/' | '=' | '!')+;
+OPERATOR  : ('+' | '-' | '*' | '/' | '=' | '!' )+;
+
 
 COMMENT   : '/*' (.)*? '*/' -> skip;
 SEPARATOR : [ \t\r\n] -> skip;

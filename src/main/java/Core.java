@@ -68,12 +68,23 @@ public class Core {
     /* TODO Port some of these to Babble */
 
     public static abstract class BBool extends BObject {
-        public abstract BObject _not();
     }
 
     public static class BTrue extends BBool {
-        public BObject _not() {
-            return new BFalse();
+        public BObject _not() { return new BFalse(); }
+
+        public BObject _and_(BTrue t) { return new BTrue(); }
+        public BObject _and_(BFalse f) { return new BFalse(); }
+
+        public BObject _or_(BTrue b) { return new BTrue(); }
+        public BObject _or_(BFalse b) { return new BTrue(); }
+
+        public BObject _xor_(BTrue t) { return new BFalse(); }
+        public BObject _xor_(BFalse t) { return new BTrue(); }
+
+        public BObject _assert() {
+            assert true;
+            return this;
         }
 
         public String toString() {
@@ -82,8 +93,20 @@ public class Core {
     }
 
     public static class BFalse extends BBool {
-        public BObject _not() {
-            return new BTrue();
+        public BObject _not() { return new BTrue(); }
+
+        public BObject _and_(BTrue t) { return new BFalse(); }
+        public BObject _and_(BFalse f) { return new BFalse(); }
+
+        public BObject _or_(BTrue b) { return new BTrue(); }
+        public BObject _or_(BFalse b) { return new BTrue(); }
+
+        public BObject _xor_(BTrue t) { return new BTrue(); }
+        public BObject _xor_(BFalse t) { return new BFalse(); }
+
+        public BObject _assert() {
+            assert false;
+            return this;
         }
 
         public String toString() {
@@ -110,6 +133,10 @@ public class Core {
 
         public BInt(BigInteger bi) {
             integer = bi;
+        }
+
+        public BInt(String s) {
+            integer = new BigInteger(s);
         }
 
         public BInt(BInt bi) {
@@ -142,6 +169,30 @@ public class Core {
 
         public String toString() {
             return integer.toString();
+        }
+    }
+
+    public static class BStr extends BObject {
+        private String str;
+
+        public BStr(String str) {
+            this.str = str;
+        }
+
+        public BStr(BStr bstr) {
+            this.str = bstr.toString();
+        }
+
+        public String toString() {
+            return str;
+        }
+
+        public BObject _upper() {
+            return new BStr(str.toUpperCase());
+        }
+
+        public BObject _lower() {
+            return new BStr(str.toLowerCase());
         }
     }
 }
