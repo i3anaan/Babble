@@ -1,10 +1,12 @@
 grammar Babble;
 
+program : sequence ;
+
 sequence : defs? (stmt ('.'+ stmt)*)? '.'? ;
 
 stmt : ID ':=' expr                     # Assignment
-     | stmt ID                          # UnarySend
-     | stmt OPERATOR expr               # InfixSend
+     | stmt method=ID                   # UnarySend
+     | stmt method=OPERATOR expr        # InfixSend
      | stmt (ID ':' expr)+              # KeywordSend
      | (ID ':' expr)+                   # ObjKeywordSend
      | ID (ID ':' ID)+ '[' sequence ']' # MethodDefinition
@@ -16,8 +18,8 @@ stmt : ID ':=' expr                     # Assignment
 defs : '|' ID+ '|' ;
 
 expr : ID                          # VarExpr
-     | INTEGER                     # IntExpr
-     | STRING                      # StrExpr
+     | value=INTEGER               # IntExpr
+     | string=STRING               # StrExpr
      | '#' ID                      # SymbolExpr
      | '[' (ID* '|')? sequence ']' # BlockExpr
      | '(' stmt ')'                # ParenExpr
