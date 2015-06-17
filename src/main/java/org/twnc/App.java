@@ -32,10 +32,10 @@ public class App extends BabbleBaseListener implements Opcodes {
                 "true xor:true print." +
                 "true or:false print." +
                 "\"--- Maths ---\" print." +
-                "10 print." +
-                "10 negate print." +
-                "10 + 10 print." +
-                "20 / 10 print." +
+                "12 print." +
+                "13 negate print." +
+                "20 + 30 print." +
+                "40 / 11 print." +
                 "\"--- Strings ---\" print." +
                 "\"hello\" print." +
                 "\"WORLD\" lower print." +
@@ -142,7 +142,7 @@ public class App extends BabbleBaseListener implements Opcodes {
     public void exitIntExpr(BabbleParser.IntExprContext ctx) {
         mv.visitTypeInsn(NEW, "Core$BInt");
         mv.visitInsn(DUP);
-        mv.visitLdcInsn("10");
+        mv.visitLdcInsn(ctx.getText());
         mv.visitMethodInsn(INVOKESPECIAL, "Core$BInt", "<init>", "(Ljava/lang/String;)V", false);
     }
 

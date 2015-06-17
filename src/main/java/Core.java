@@ -156,6 +156,7 @@ public class Core {
         }
 
         public BObject _slash_(BInt that) {
+            System.out.println(this+" / "+that+" = " +this.getInteger().divide(that.getInteger()));
             return new BInt(this.getInteger().divide(that.getInteger()));
         }
 
