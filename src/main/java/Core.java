@@ -60,6 +60,10 @@ public class Core {
             return new BStr(this.toString());
         }
 
+        public BObject _asBool() {
+            return new BTrue();
+        }
+
         /**
          * Invoke one of this BObject's methods. The selector must be in
          * mangled form.
@@ -113,6 +117,10 @@ public class Core {
             return this;
         }
 
+        public BObject _asBool() {
+            return new BFalse();
+        }
+
         public String toString() {
             return "false";
         }
@@ -125,6 +133,10 @@ public class Core {
 
         public BObject _isNil() {
             return new BTrue();
+        }
+
+        public BObject _asBool() {
+            return new BFalse();
         }
     }
 
@@ -176,6 +188,14 @@ public class Core {
             return new BInt(this.getInteger().mod(that.getInteger()));
         }
 
+        public BObject _asBool() {
+            if (integer.equals(BigInteger.ZERO)) {
+                return new BFalse();
+            } else {
+                return new BTrue();
+            }
+        }
+
         public BigInteger getInteger() {
             return integer;
         }
@@ -196,8 +216,12 @@ public class Core {
             this.str = bstr.toString();
         }
 
-        public String toString() {
-            return str;
+        public BObject _asBool() {
+            if (str.isEmpty()) {
+                return new BFalse();
+            } else {
+                return new BTrue();
+            }
         }
 
         public BObject _upper() {
@@ -207,6 +231,11 @@ public class Core {
         public BObject _lower() {
             return new BStr(str.toLowerCase());
         }
+
+        public String toString() {
+            return str;
+        }
+
     }
 
     public static class BSymbol extends BObject {
@@ -224,6 +253,12 @@ public class Core {
 
         public String toString() {
             return "#" + symbol;
+        }
+    }
+
+    public static class BBlock extends BObject {
+        public BObject _value() {
+            return new BNil();
         }
     }
 }

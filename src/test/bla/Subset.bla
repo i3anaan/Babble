@@ -21,3 +21,14 @@ true or:false print.
 #Monday asInt print.
 #Tuesday asString print.
 #Tuesday asInt print.
+
+"--- Truthiness --" print.
+true asBool print.
+10 asBool print.
+"hello" asBool print.
+#symbol asBool print.
+
+false asBool print.
+nil asBool print.
+0 asBool print.
+"" asBool print.
