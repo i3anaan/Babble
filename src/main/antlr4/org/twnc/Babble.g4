@@ -34,7 +34,7 @@ FALSE : 'false';
 NIL : 'nil';
 
 ID: [A-Za-z][a-zA-Z0-9_]*;
-INTEGER   : [0-9]+;
+INTEGER   : '-'? [0-9]+;
 STRING    : '"' (.*?) '"';
 
 //MAYBE: think of something smart for associativity

@@ -168,6 +168,14 @@ public class Core {
             return new BInt(this.getInteger().negate());
         }
 
+        public BObject _abs() {
+            return new BInt(this.getInteger().abs());
+        }
+
+        public BObject _mod(BInt that) {
+            return new BInt(this.getInteger().mod(that.getInteger()));
+        }
+
         public BigInteger getInteger() {
             return integer;
         }

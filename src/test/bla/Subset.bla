@@ -11,6 +11,8 @@ true or:false print.
 20 / 10 print.
 30 + 40 * 50 print.
 30 + (40 * 50) print.
+-10 print.
+-10 abs print.
 "--- Strings ---" print.
 "hello" print.
 "WORLD" lower print.
