@@ -9,6 +9,8 @@ true or:false print.
 10 negate print.
 10 + 10 print.
 20 / 10 print.
+30 + 40 * 50 print.
+30 + (40 * 50) print.
 "--- Strings ---" print.
 "hello" print.
 "WORLD" lower print.
