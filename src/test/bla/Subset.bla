@@ -4,6 +4,7 @@ true not print.
 true or:true print.
 true xor:true print.
 true or:false print.
+
 "--- Maths ---" print.
 10 print.
 10 negate print.
@@ -13,9 +14,13 @@ true or:false print.
 30 + (40 * 50) print.
 -10 print.
 -10 abs print.
+
 "--- Strings ---" print.
 "hello" print.
 "WORLD" lower print.
+"con", "cat", "e", "nation" print.
+"string replacement" replace: "re" with: "dis" print.
+
 "--- Symbols ---" print.
 #Monday asString print.
 #Monday asInt print.

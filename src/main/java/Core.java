@@ -5,7 +5,6 @@
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.invoke.WrongMethodTypeException;
 import java.math.BigInteger;
 import java.util.Arrays;
 
@@ -76,6 +75,9 @@ public class Core {
     /* TODO Port some of these to Babble */
 
     public static abstract class BBool extends BObject {
+        public static BBool of(boolean b) {
+            return b ? new BTrue() : new BFalse();
+        }
     }
 
     public static class BTrue extends BBool {
@@ -93,6 +95,10 @@ public class Core {
         public BObject _assert() {
             assert true;
             return this;
+        }
+
+        public BObject _asBool() {
+            return new BTrue();
         }
 
         public String toString() {
@@ -172,7 +178,6 @@ public class Core {
         }
 
         public BObject _slash_(BInt that) {
-            System.out.println(this+" / "+that+" = " +this.getInteger().divide(that.getInteger()));
             return new BInt(this.getInteger().divide(that.getInteger()));
         }
 
@@ -189,11 +194,7 @@ public class Core {
         }
 
         public BObject _asBool() {
-            if (integer.equals(BigInteger.ZERO)) {
-                return new BFalse();
-            } else {
-                return new BTrue();
-            }
+            return BBool.of(integer.equals(BigInteger.ZERO));
         }
 
         public BigInteger getInteger() {
@@ -217,11 +218,7 @@ public class Core {
         }
 
         public BObject _asBool() {
-            if (str.isEmpty()) {
-                return new BFalse();
-            } else {
-                return new BTrue();
-            }
+            return BBool.of(str.isEmpty());
         }
 
         public BObject _upper() {
@@ -230,6 +227,26 @@ public class Core {
 
         public BObject _lower() {
             return new BStr(str.toLowerCase());
+        }
+
+        public BObject _startsWith_(BStr that) {
+            return BBool.of(str.startsWith(that.toString()));
+        }
+
+        public BObject _endsWith_(BStr that) {
+            return BBool.of(str.endsWith(that.toString()));
+        }
+
+        public BObject _contains_(BStr that) {
+            return BBool.of(str.contains(that.toString()));
+        }
+
+        public BObject _replace_with_(BStr search, BStr replace) {
+            return new BStr(str.replace(search.toString(), replace.toString()));
+        }
+
+        public BObject _comma_(BStr that) {
+            return new BStr(str.concat(that.toString()));
         }
 
         public String toString() {

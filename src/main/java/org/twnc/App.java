@@ -176,7 +176,7 @@ public class App extends BabbleBaseListener implements Opcodes {
         mv.visitTypeInsn(ANEWARRAY, "Core$BObject");
         // [ ... receiver args array
 
-        for (int i = 0; i < numArgs; i++) {
+        for (int i = numArgs - 1; i >= 0; i--) {
             // [ ... receiver args array
             mv.visitInsn(DUP_X1);
             // [ ... receiver args array arg array
@@ -208,6 +208,7 @@ public class App extends BabbleBaseListener implements Opcodes {
         rep.put('/', "slash");
         rep.put('*', "star");
         rep.put('!', "bang");
+        rep.put(',', "comma");
 
         for (Object bit : bits) {
             sb.append('_');
