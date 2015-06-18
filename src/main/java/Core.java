@@ -56,6 +56,10 @@ public class Core {
             return new BFalse();
         }
 
+        public BObject _asString() {
+            return new BStr(this.toString());
+        }
+
         /**
          * Invoke one of this BObject's methods. The selector must be in
          * mangled form.
@@ -194,6 +198,24 @@ public class Core {
 
         public BObject _lower() {
             return new BStr(str.toLowerCase());
+        }
+    }
+
+    public static class BSymbol extends BObject {
+        private int num;
+        private String symbol;
+
+        public BSymbol(String symbol, int num) {
+            this.num = num;
+            this.symbol = symbol;
+        }
+
+        public BObject _asInt() {
+            return new BInt(num);
+        }
+
+        public String toString() {
+            return "#" + symbol;
         }
     }
 }

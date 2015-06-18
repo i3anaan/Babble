@@ -8,51 +8,47 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class App extends BabbleBaseListener implements Opcodes {
-
     private ClassWriter cw;
     private MethodVisitor mv;
-    private Label top;
-    private Label bottom;
+
+    private Map<String, Integer> symbols;
+
+    private String name;
+
+    public App(String name) {
+        this.name = name;
+        symbols = new HashMap<>();
+    }
 
     public static void main(String[] args) throws Exception {
-        String program = "" +
-                "\"--- Booleans ---\" print." +
-                "true print." +
-                "true not print." +
-                "true or:true print." +
-                "true xor:true print." +
-                "true or:false print." +
-                "\"--- Maths ---\" print." +
-                "12 print." +
-                "13 negate print." +
-                "20 + 30 print." +
-                "40 / 11 print." +
-                "\"--- Strings ---\" print." +
-                "\"hello\" print." +
-                "\"WORLD\" lower print." +
-        "";
+        if (args.length < 1) {
+            System.err.println("Usage: babble <file.bla>");
+        } else {
+            String path = args[0];
+            File file = new File(path);
 
-        CharStream chars = new ANTLRInputStream(program);
-        Lexer lexer = new BabbleLexer(chars);
-        TokenStream tokens = new CommonTokenStream(lexer);
-        BabbleParser parser = new BabbleParser(tokens);
+            CharStream chars = new ANTLRInputStream(new FileInputStream(file));
+            Lexer lexer = new BabbleLexer(chars);
+            TokenStream tokens = new CommonTokenStream(lexer);
+            BabbleParser parser = new BabbleParser(tokens);
 
-        ParseTreeWalker walker = new ParseTreeWalker();
-        ParseTree tree = parser.program();
-        App app = new App();
-        walker.walk(app, tree);
-        app.writeBytecode("target/classes/Hello.class");
+            String target = "target/classes/" + file.getName().replace(".bla", ".class");
 
-        System.out.println("[ OK ]");
+            ParseTreeWalker walker = new ParseTreeWalker();
+            ParseTree tree = parser.program();
+            App app = new App(file.getName().split("\\.")[0]);
+            walker.walk(app, tree);
+            app.writeBytecode(target);
+
+            System.out.println(String.format("[ OK ] Compiled %s", target));
+        }
     }
 
     public void writeBytecode(String path) throws IOException {
@@ -65,7 +61,7 @@ public class App extends BabbleBaseListener implements Opcodes {
     public void enterProgram(BabbleParser.ProgramContext ctx) {
         cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES + ClassWriter.COMPUTE_MAXS);
 
-        cw.visit(52, ACC_PUBLIC + ACC_SUPER, "Hello", null, "java/lang/Object", null);
+        cw.visit(52, ACC_PUBLIC + ACC_SUPER, name, null, "java/lang/Object", null);
 
         cw.visitInnerClass("Core$BObject", "Core", "BObject", ACC_PUBLIC + ACC_STATIC);
 
@@ -122,6 +118,25 @@ public class App extends BabbleBaseListener implements Opcodes {
         mv.visitTypeInsn(NEW, "Core$BTrue");
         mv.visitInsn(DUP);
         mv.visitMethodInsn(INVOKESPECIAL, "Core$BTrue", "<init>", "()V", false);
+    }
+
+    @Override
+    public void exitSymbolExpr(BabbleParser.SymbolExprContext ctx) {
+        String sym = ctx.ID().getText();
+
+        int num;
+        if (symbols.containsKey(sym)) {
+            num = symbols.get(sym);
+        } else {
+            num = symbols.size();
+            symbols.put(sym, num);
+        }
+
+        mv.visitTypeInsn(NEW, "Core$BSymbol");
+        mv.visitInsn(DUP);
+        mv.visitLdcInsn(sym);
+        mv.visitIntInsn(BIPUSH, num);
+        mv.visitMethodInsn(INVOKESPECIAL, "Core$BSymbol", "<init>", "(Ljava/lang/String;I)V", false);
     }
 
     @Override
