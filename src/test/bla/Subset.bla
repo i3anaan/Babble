@@ -1,5 +1,6 @@
 "--- Booleans ---" print.
 true print.
+false print.
 true not print.
 true or:true print.
 true xor:true print.

@@ -3,12 +3,13 @@ package org.twnc;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.*;
 
 import java.io.*;
+import java.lang.invoke.CallSite;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -170,6 +171,28 @@ public class App extends BabbleBaseListener implements Opcodes {
     }
 
     private void visitInvoke(String selector, int numArgs) {
+        MethodType mt = MethodType.methodType(
+                CallSite.class,
+                MethodHandles.Lookup.class,
+                String.class,
+                MethodType.class,
+                Object.class
+        );
+
+        Handle bootstrap = new Handle(Opcodes.H_INVOKESTATIC, "Core", "bootstrap", mt.toMethodDescriptorString());
+
+        StringBuilder type = new StringBuilder();
+        type.append("(");
+
+        for (int i = 0; i < numArgs + 1; i++) {
+            type.append("LCore$BObject;");
+        }
+
+        type.append(")LCore$BObject;");
+
+        mv.visitInvokeDynamicInsn(selector, type.toString(), bootstrap);
+
+        /*
         // [ ... receiver args
         mv.visitIntInsn(BIPUSH, numArgs);
         // [ ... receiver args n
@@ -197,6 +220,7 @@ public class App extends BabbleBaseListener implements Opcodes {
         // [ ... receiver selector array
         mv.visitMethodInsn(INVOKESTATIC, "Core", "invoke", "(LCore$BObject;Ljava/lang/String;[LCore$BObject;)LCore$BObject;", false);
         // [ ... result
+        */
     }
 
     private String mangle(Object... bits) {

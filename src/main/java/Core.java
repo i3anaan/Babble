@@ -2,9 +2,7 @@
  * Core code for the Babble runtime system.
  */
 
-import java.lang.invoke.MethodHandle;
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
+import java.lang.invoke.*;
 import java.math.BigInteger;
 import java.util.Arrays;
 
@@ -31,6 +29,17 @@ public class Core {
             // We *have* to catch Throwable: the method we're invoking could throw anything.
             throw new RuntimeException(e);
         }
+    }
+
+    public static CallSite bootstrap(MethodHandles.Lookup lookup, String selector, MethodType mt, Object self) throws Throwable {
+        assert Boolean.TRUE;
+
+        MethodHandle mh = lookup.findVirtual(
+                        BObject.class,
+                        selector,
+                        mt);
+
+        return new MutableCallSite(mh);
     }
 
     public static class BObject extends Object {
