@@ -7,6 +7,10 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.twnc.BabbleParser.ProgramContext;
+import org.twnc.irtree.ASTGenerator;
+import org.twnc.irtree.Node;
+import org.twnc.util.Graphvizivier;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -43,6 +47,14 @@ public class App extends BabbleBaseListener implements Opcodes {
 
             ParseTreeWalker walker = new ParseTreeWalker();
             ParseTree tree = parser.program();
+            
+            ASTGenerator generator = new ASTGenerator();
+            System.out.println(tree);
+            Node irtree = generator.visitProgram((ProgramContext) tree);
+            Graphvizivier graphvizivier = new Graphvizivier();
+            System.out.println(irtree);
+            System.out.println(graphvizivier.nodeToGraph(irtree));
+            
             App app = new App(file.getName().split("\\.")[0]);
             walker.walk(app, tree);
             app.writeBytecode(target);

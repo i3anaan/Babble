@@ -1,5 +1,6 @@
 package org.twnc.irtree;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,5 +27,13 @@ public class ProgramNode extends Node{
             }
         }
         return null;
+    }
+    
+    @Override
+    public List<Node> getChildren() {
+        List<Node> children = new ArrayList<Node>();
+        children.addAll(methods);
+        
+        return children;
     }
 }

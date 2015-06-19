@@ -7,7 +7,7 @@ import java.util.List;
 public class SendNode extends StatNode{
 
     private StatNode statement;
-    private String selector; //TODO better name?
+    private String selector;
     private List<ExprNode> arguments;
     
     public SendNode(StatNode statement, String selector) {
@@ -16,10 +16,10 @@ public class SendNode extends StatNode{
         this.arguments = new ArrayList<>();
     }
     
-    public SendNode(StatNode statement, String selector, ExprNode... arguments) {
+    public SendNode(StatNode statement, String selector, List<ExprNode> arguments) {
         this.statement = statement;
         this.selector = selector;
-        this.arguments = Arrays.asList(arguments);
+        this.arguments = arguments;
     }
     
     public StatNode getStatement() {
@@ -36,5 +36,16 @@ public class SendNode extends StatNode{
     
     public ExprNode getArgument(int index) {
         return arguments.get(index);
+    }
+    
+
+    
+    @Override
+    public List<Node> getChildren() {
+        List<Node> children = new ArrayList<Node>();
+        children.add(statement);
+        children.addAll(arguments);
+        
+        return children;
     }
 }

@@ -1,5 +1,8 @@
 package org.twnc.irtree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class IntLitNode extends ExprNode {
 
     int value;
@@ -14,5 +17,11 @@ public class IntLitNode extends ExprNode {
     
     public int getValue() {
         return value;
+    }
+    
+    @Override
+    public List<Node> getChildren() {
+        List<Node> children = new ArrayList<Node>();
+        return children;
     }
 }

@@ -1,3 +1,4 @@
+Main:main [
 "--- Booleans ---" print.
 true print.
 true not print.
@@ -37,3 +38,4 @@ false asBool print.
 nil asBool print.
 0 asBool print.
 "" asBool print.
+]

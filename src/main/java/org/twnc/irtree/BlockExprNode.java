@@ -10,9 +10,9 @@ public class BlockExprNode extends ExprNode{
     private SequenceNode sequence;
     private List<VarRefNode> arguments;
     
-    public BlockExprNode(SequenceNode sequence, VarRefNode... arguments) {
+    public BlockExprNode(SequenceNode sequence, List<VarRefNode> arguments) {
         this.sequence = sequence;
-        this.arguments = Arrays.asList(arguments);
+        this.arguments = arguments;
     }
     
     
@@ -26,5 +26,14 @@ public class BlockExprNode extends ExprNode{
     
     public SequenceNode getSequence() {
         return sequence;
+    }
+    
+    @Override
+    public List<Node> getChildren() {
+        List<Node> children = new ArrayList<Node>();
+        children.add(sequence);
+        children.addAll(arguments);
+        
+        return children;
     }
 }

@@ -7,6 +7,7 @@ sequence : (stmt ('.'+ stmt)*)? '.'? ;
 mthd : object=ID (ID ':' ID)+ '[' sequence ']'  # ClassMethodDefinition
      | (ID ':' ID)+ '[' sequence ']'            # GlobalMethodDefinition
      ;
+     //TODO no-argument methods?
 
 stmt : ID ':=' expr                     # Assignment
      | stmt method=ID                   # UnarySend
@@ -18,8 +19,6 @@ stmt : ID ':=' expr                     # Assignment
      ;
 //MAYBE: Add return statement (Currently last expression)
 
-defs : '|' ID+ '|' ;
-
 expr : value=INTEGER               # IntExpr
      | string=STRING               # StrExpr
      | TRUE                        # TrueExpr
@@ -28,7 +27,7 @@ expr : value=INTEGER               # IntExpr
      | ID                          # VarExpr
      | '#' ID                      # SymbolExpr
      | '[' (ID* '|')? sequence ']' # BlockExpr
-     | '(' stmt ')'                # ParenExpr
+     | '(' stmt ')'                # ParenExpr //TODO Shouldn't this be expr?
      ;
 //TODO: Array syntax ('{}')
 

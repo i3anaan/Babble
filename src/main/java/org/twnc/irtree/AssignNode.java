@@ -1,5 +1,8 @@
 package org.twnc.irtree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AssignNode extends StatNode{
 
     private VarRefNode variable;
@@ -16,5 +19,14 @@ public class AssignNode extends StatNode{
     
     public ExprNode getExpression() {
         return expression;
+    }
+    
+    @Override
+    public List<Node> getChildren() {
+        List<Node> children = new ArrayList<Node>();
+        children.add(variable);
+        children.add(expression);
+        
+        return children;
     }
 }

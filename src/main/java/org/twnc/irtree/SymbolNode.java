@@ -1,5 +1,8 @@
 package org.twnc.irtree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SymbolNode extends ExprNode{
 
     private String id;
@@ -10,5 +13,11 @@ public class SymbolNode extends ExprNode{
     
     public String getID() {
         return id;
+    }
+    
+    @Override
+    public List<Node> getChildren() {
+        List<Node> children = new ArrayList<Node>();
+        return children;
     }
 }

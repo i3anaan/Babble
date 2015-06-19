@@ -1,5 +1,5 @@
 package org.twnc.irtree;
 
-public class ExprNode extends StatNode{
+public abstract class ExprNode extends StatNode{
 
 }

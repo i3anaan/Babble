@@ -3,88 +3,69 @@ package org.twnc.irtree;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.twnc.BabbleBaseVisitor;
-import org.twnc.BabbleParser.AssignmentContext;
-import org.twnc.BabbleParser.BlockExprContext;
-import org.twnc.BabbleParser.ClassMethodDefinitionContext;
-import org.twnc.BabbleParser.DefsContext;
-import org.twnc.BabbleParser.FalseExprContext;
-import org.twnc.BabbleParser.GlobalMethodDefinitionContext;
-import org.twnc.BabbleParser.InfixSendContext;
-import org.twnc.BabbleParser.IntExprContext;
-import org.twnc.BabbleParser.KeywordSendContext;
-import org.twnc.BabbleParser.LocalMethodDefinitionContext;
-import org.twnc.BabbleParser.LoneExprContext;
-import org.twnc.BabbleParser.MethodDefinitionContext;
-import org.twnc.BabbleParser.MthdContext;
-import org.twnc.BabbleParser.NilExprContext;
-import org.twnc.BabbleParser.ObjKeywordSendContext;
-import org.twnc.BabbleParser.ParenExprContext;
-import org.twnc.BabbleParser.ProgramContext;
-import org.twnc.BabbleParser.SequenceContext;
-import org.twnc.BabbleParser.StrExprContext;
-import org.twnc.BabbleParser.SymbolExprContext;
-import org.twnc.BabbleParser.TrueExprContext;
-import org.twnc.BabbleParser.UnarySendContext;
-import org.twnc.BabbleParser.VarExprContext;
+import org.twnc.BabbleParser.*;
 
 public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
-    public Node visitDefs(DefsContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitDefs(ctx);
-    }
-
-    @Override
     public Node visitTrueExpr(TrueExprContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitTrueExpr(ctx);
+        return VarRefNode.TRUE;
     }
 
     @Override
     public Node visitNilExpr(NilExprContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitNilExpr(ctx);
+        return VarRefNode.NIL;
     }
 
     @Override
     public Node visitSymbolExpr(SymbolExprContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitSymbolExpr(ctx);
+        return new SymbolNode(ctx.ID().getText());
     }
 
     @Override
     public Node visitProgram(ProgramContext ctx) {
         List<MethodNode> methods = new ArrayList<MethodNode>();
-        for (MthdContext m : ctx.mthd()) {
-            methods.add((MethodNode) visit(m));
+        for (MthdContext context : ctx.mthd()) {
+            methods.add((MethodNode) visit(context));
         }
+        
         return new ProgramNode(methods);
     }
 
     @Override
     public Node visitBlockExpr(BlockExprContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitBlockExpr(ctx);
+        List<VarRefNode> arguments = new ArrayList<>();
+        for (TerminalNode node : ctx.ID()) {
+            arguments.add(new VarRefNode(node.getText()));
+        }
+        SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
+        return new BlockExprNode(sequence, arguments);
     }
 
     @Override
     public Node visitFalseExpr(FalseExprContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitFalseExpr(ctx);
+        return VarRefNode.FALSE;
     }
 
     @Override
     public Node visitAssignment(AssignmentContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitAssignment(ctx);
+        VarRefNode variable = new VarRefNode(ctx.getText());
+        ExprNode expression = (ExprNode) visit(ctx.expr());
+        return new AssignNode(variable, expression);
     }
 
     @Override
     public Node visitSequence(SequenceContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitSequence(ctx);
+        List<StatNode> statements = new ArrayList<>();
+
+        for (StmtContext context : ctx.stmt()) {
+            statements.add((StatNode) visit(context));
+        }
+
+        return new SequenceNode(statements);
     }
 
     @Override
@@ -95,19 +76,31 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitKeywordSend(KeywordSendContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitKeywordSend(ctx);
+        StatNode statement = (StatNode) visit(ctx.stmt());
+        String selector = "";
+        List<ExprNode> arguments = new ArrayList<>();
+
+        for (int i = 0; i < ctx.ID().size(); i += 1) {
+            selector += ctx.ID(i) + ":";
+            arguments.add((ExprNode) visit(ctx.expr(i)));
+        }
+
+        return new SendNode(statement, selector, arguments);
     }
 
     @Override
     public Node visitGlobalMethodDefinition(GlobalMethodDefinitionContext ctx) {
         String selector = "";
         List<VarRefNode> arguments = new ArrayList<VarRefNode>();
+
         for (int i = 0; i < ctx.ID().size(); i += 2) {
             selector += ctx.ID(i) + ":";
             arguments.add(new VarRefNode(ctx.ID(i + 1).getText()));
         }
-        return new MethodNode(selector, arguments);
+        
+        SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
+
+        return new MethodNode(selector, arguments, sequence);
     }
 
     @Override
@@ -115,57 +108,66 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
         VarRefNode objectName = new VarRefNode(ctx.object.getText());
         String selector = "";
         List<VarRefNode> arguments = new ArrayList<VarRefNode>();
+
         for (int i = 1; i < ctx.ID().size(); i += 2) {
             selector += ctx.ID(i) + ":";
             arguments.add(new VarRefNode(ctx.ID(i + 1).getText()));
         }
-        return new MethodNode(objectName, selector, arguments);
+        
+        SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
+
+        return new MethodNode(objectName, selector, arguments, sequence);
     }
 
     @Override
     public Node visitInfixSend(InfixSendContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitInfixSend(ctx);
+        StatNode statement = (StatNode) visit(ctx.stmt());
+        String selector = ctx.method.getText();
+        List<ExprNode> arguments = new ArrayList<>();
+        arguments.add((ExprNode) visit(ctx.expr()));
+
+        return new SendNode(statement, selector, arguments);
     }
 
     @Override
     public Node visitUnarySend(UnarySendContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitUnarySend(ctx);
+        StatNode statement = (StatNode) visit(ctx.stmt());
+        String selector = ctx.method.getText();
+        List<ExprNode> arguments = new ArrayList<>();
+
+        return new SendNode(statement, selector, arguments);
     }
 
     @Override
     public Node visitStrExpr(StrExprContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitStrExpr(ctx);
+        return new StringLitNode(ctx.string.getText());
     }
 
     @Override
     public Node visitVarExpr(VarExprContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitVarExpr(ctx);
+        return new VarRefNode(ctx.getText());
     }
 
     @Override
     public Node visitIntExpr(IntExprContext ctx) {
-        // TODO Auto-generated method stub
-        ctx.value.getText()
-        return super.visitIntExpr(ctx);
+        return new IntLitNode(ctx.getText());
     }
 
     @Override
     public Node visitParenExpr(ParenExprContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitParenExpr(ctx);
+        return visit(ctx.stmt());
     }
 
     @Override
     public Node visitLoneExpr(LoneExprContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitLoneExpr(ctx);
+        return visit(ctx.expr());
     }
 
-    
+    @Override
+    public Node visit(ParseTree tree) {
+        // TODO Auto-generated method stub
+        return super.visit(tree);
+    }
     
     
 }

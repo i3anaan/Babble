@@ -1,5 +1,8 @@
 package org.twnc.irtree;
 
-public class Node {
+import java.util.List;
 
+public abstract class Node {
+
+    public abstract List<Node> getChildren();
 }
