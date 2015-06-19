@@ -20,4 +20,9 @@ public class SymbolNode extends ExprNode{
         List<Node> children = new ArrayList<Node>();
         return children;
     }
+    
+    @Override
+    public String toString() {
+        return "#"+id;
+    }
 }

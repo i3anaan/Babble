@@ -36,4 +36,9 @@ public class ProgramNode extends Node{
         
         return children;
     }
+    
+    @Override
+    public String toString() {
+        return "Program";
+    }
 }

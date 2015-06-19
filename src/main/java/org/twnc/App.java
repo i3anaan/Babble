@@ -48,12 +48,13 @@ public class App extends BabbleBaseListener implements Opcodes {
             ParseTreeWalker walker = new ParseTreeWalker();
             ParseTree tree = parser.program();
             
+            
+            
             ASTGenerator generator = new ASTGenerator();
-            System.out.println(tree);
             Node irtree = generator.visitProgram((ProgramContext) tree);
-            Graphvizivier graphvizivier = new Graphvizivier();
-            System.out.println(irtree);
-            System.out.println(graphvizivier.nodeToGraph(irtree));
+            PrintWriter out = new PrintWriter("target/classes/" + file.getName().replace(".bla", ".graphviz"));
+            out.print(Graphvizivier.nodeToGraph(irtree));
+            out.close();
             
             App app = new App(file.getName().split("\\.")[0]);
             walker.walk(app, tree);

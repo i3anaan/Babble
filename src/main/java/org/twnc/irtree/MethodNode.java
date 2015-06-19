@@ -44,9 +44,17 @@ public class MethodNode extends Node{
     @Override
     public List<Node> getChildren() {
         List<Node> children = new ArrayList<Node>();
-        children.add(objectName);
+        if (objectName != null) {
+            children.add(objectName);
+        }
         children.addAll(arguments);
+        children.add(sequence);
         
         return children;
+    }
+    
+    @Override
+    public String toString() {
+        return "Method "+selector;
     }
 }

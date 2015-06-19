@@ -4,20 +4,29 @@ import org.twnc.irtree.Node;
 
 public class Graphvizivier {
     
-    private int nodeIndex;
+    private static int nodeIndex;
+    private static String labels;
     
-    public Graphvizivier() {
+    public static String nodeToGraph(Node node) {
         nodeIndex = 0;
+        labels = "";
+        String dotOutput = "digraph g{\n";
+        String edges = nodeToGraph2(node);
+        dotOutput += labels;
+        dotOutput += edges;
+        dotOutput += "}\n";
+        return dotOutput;
     }
     
-    public String nodeToGraph(Node node) {
+    private static String nodeToGraph2(Node node) {
         int parentIndex = nodeIndex;
         String dotOutput = "";
-                
+        labels += parentIndex + "[label=\""+node.toString()+"\"]\n";
         for (Node child : node.getChildren()) {
             nodeIndex++;
-            dotOutput += parentIndex + " -> " + nodeIndex + "\n";
-            dotOutput += nodeToGraph(child);
+            int childIndex = nodeIndex;
+            dotOutput += parentIndex + " -> " + childIndex + "\n";
+            dotOutput += nodeToGraph2(child);
         }
         
         return dotOutput;

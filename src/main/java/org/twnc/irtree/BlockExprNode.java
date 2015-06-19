@@ -36,4 +36,9 @@ public class BlockExprNode extends ExprNode{
         
         return children;
     }
+    
+    @Override
+    public String toString() {
+        return "Block";
+    }
 }

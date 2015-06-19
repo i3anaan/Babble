@@ -29,4 +29,9 @@ public class AssignNode extends StatNode{
         
         return children;
     }
+    
+    @Override
+    public String toString() {
+        return "Assign";
+    }
 }

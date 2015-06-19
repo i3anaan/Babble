@@ -27,7 +27,7 @@ expr : value=INTEGER               # IntExpr
      | ID                          # VarExpr
      | '#' ID                      # SymbolExpr
      | '[' (ID* '|')? sequence ']' # BlockExpr
-     | '(' stmt ')'                # ParenExpr //TODO Shouldn't this be expr?
+     | '(' expr ')'                # ParenExpr //TODO Shouldn't this be expr?
      ;
 //TODO: Array syntax ('{}')
 

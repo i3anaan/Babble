@@ -48,4 +48,9 @@ public class SendNode extends StatNode{
         
         return children;
     }
+    
+    @Override
+    public String toString() {
+        return "Send "+selector;
+    }
 }

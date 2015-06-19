@@ -155,7 +155,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitParenExpr(ParenExprContext ctx) {
-        return visit(ctx.stmt());
+        return visit(ctx.expr());
     }
 
     @Override

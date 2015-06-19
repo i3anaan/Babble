@@ -29,4 +29,9 @@ public class SequenceNode extends Node{
         
         return children;
     }
+    
+    @Override
+    public String toString() {
+        return "Sequence";
+    }
 }
