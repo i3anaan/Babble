@@ -1,10 +1,12 @@
 grammar Babble;
 
+program : sequence ;
+
 sequence : defs? (stmt ('.'+ stmt)*)? '.'? ;
 
 stmt : ID ':=' expr                     # Assignment
-     | stmt ID                          # UnarySend
-     | stmt OPERATOR expr               # InfixSend
+     | stmt method=ID                   # UnarySend
+     | stmt method=OPERATOR expr        # InfixSend
      | stmt (ID ':' expr)+              # KeywordSend
      | (ID ':' expr)+                   # ObjKeywordSend
      | ID (ID ':' ID)+ '[' sequence ']' # MethodDefinition
@@ -15,22 +17,29 @@ stmt : ID ':=' expr                     # Assignment
 
 defs : '|' ID+ '|' ;
 
-expr : ID                          # VarExpr
-     | INTEGER                     # IntExpr
-     | STRING                      # StrExpr
+expr : value=INTEGER               # IntExpr
+     | string=STRING               # StrExpr
+     | TRUE                        # TrueExpr
+     | FALSE                       # FalseExpr
+     | NIL                         # NilExpr
+     | ID                          # VarExpr
      | '#' ID                      # SymbolExpr
      | '[' (ID* '|')? sequence ']' # BlockExpr
      | '(' stmt ')'                # ParenExpr
      ;
 //TODO: Array syntax ('{}')
 
+TRUE : 'true';
+FALSE : 'false';
+NIL : 'nil';
 
 ID: [A-Za-z][a-zA-Z0-9_]*;
-INTEGER   : [0-9]+;
+INTEGER   : '-'? [0-9]+;
 STRING    : '"' (.*?) '"';
 
 //MAYBE: think of something smart for associativity
-OPERATOR  : ('+' | '-' | '*' | '/' | '=' | '!')+;
+OPERATOR  : ('+' | '-' | '*' | '/' | '=' | '!' | ',' )+;
+
 
 COMMENT   : '/*' (.)*? '*/' -> skip;
 SEPARATOR : [ \t\r\n] -> skip;
