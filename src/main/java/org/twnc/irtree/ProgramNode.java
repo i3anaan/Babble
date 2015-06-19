@@ -3,12 +3,12 @@ package org.twnc.irtree;
 import java.util.Arrays;
 import java.util.List;
 
-public class ProgramNode {
+public class ProgramNode extends Node{
 
     private List<MethodNode> methods;
     
-    public ProgramNode(MethodNode... methods) {
-        this.methods = Arrays.asList(methods);
+    public ProgramNode(List<MethodNode> methods) {
+        this.methods = methods;
     }
     
     public List<MethodNode> getMethods() {

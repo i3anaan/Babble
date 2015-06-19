@@ -3,7 +3,7 @@ package org.twnc.irtree;
 import java.util.Arrays;
 import java.util.List;
 
-public class SequenceNode {
+public class SequenceNode extends Node{
 
     private List<StatNode> statements;
     

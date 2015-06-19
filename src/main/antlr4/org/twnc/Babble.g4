@@ -4,8 +4,9 @@ program : mthd* ;
 
 sequence : (stmt ('.'+ stmt)*)? '.'? ;
 
-mthd : ID? (ID ':' ID)+ '[' sequence ']' # MethodDefinition
-       ;
+mthd : object=ID (ID ':' ID)+ '[' sequence ']'  # ClassMethodDefinition
+     | (ID ':' ID)+ '[' sequence ']'            # GlobalMethodDefinition
+     ;
 
 stmt : ID ':=' expr                     # Assignment
      | stmt method=ID                   # UnarySend
