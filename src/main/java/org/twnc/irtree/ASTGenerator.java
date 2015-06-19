@@ -140,7 +140,8 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitStrExpr(StrExprContext ctx) {
-        return new StringLitNode(ctx.string.getText());
+        String quoted = ctx.string.getText();
+        return new StringLitNode(quoted.substring(1, quoted.length()-1));
     }
 
     @Override
