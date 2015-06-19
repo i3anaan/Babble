@@ -1,15 +1,17 @@
 grammar Babble;
 
-program : sequence ;
+program : mthd* ;
 
-sequence : defs? (stmt ('.'+ stmt)*)? '.'? ;
+sequence : (stmt ('.'+ stmt)*)? '.'? ;
+
+mthd : ID? (ID ':' ID)+ '[' sequence ']' # MethodDefinition
+       ;
 
 stmt : ID ':=' expr                     # Assignment
      | stmt method=ID                   # UnarySend
      | stmt method=OPERATOR expr        # InfixSend
      | stmt (ID ':' expr)+              # KeywordSend
-     | (ID ':' expr)+                   # ObjKeywordSend
-     | ID (ID ':' ID)+ '[' sequence ']' # MethodDefinition
+     | (ID ':' expr)+                   # ObjKeywordSend //TODO put in IRtree
 //MAYBE: Add types to method definition     
      | expr                             # LoneExpr
      ;
