@@ -9,7 +9,6 @@ import java.io.*;
 import java.lang.invoke.CallSite;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,10 +28,7 @@ public class App extends BabbleBaseListener implements Opcodes {
     }
 
     public static void main(String[] args) throws Exception {
-        if (args.length < 1) {
-            System.err.println("Usage: babble <file.bla>");
-        } else {
-            String path = args[0];
+        for (String path : args) {
             File file = new File(path);
 
             CharStream chars = new ANTLRInputStream(new FileInputStream(file));
@@ -171,15 +167,14 @@ public class App extends BabbleBaseListener implements Opcodes {
     }
 
     private void visitInvoke(String selector, int numArgs) {
-        MethodType mt = MethodType.methodType(
-                CallSite.class,
-                MethodHandles.Lookup.class,
-                String.class,
-                MethodType.class,
-                Object.class
+        MethodType bmt = MethodType.methodType(
+            CallSite.class,
+            MethodHandles.Lookup.class,
+            String.class,
+            MethodType.class
         );
 
-        Handle bootstrap = new Handle(Opcodes.H_INVOKESTATIC, "Core", "bootstrap", mt.toMethodDescriptorString());
+        Handle bootstrap = new Handle(Opcodes.H_INVOKESTATIC, "Core", "bootstrap", bmt.toMethodDescriptorString());
 
         StringBuilder type = new StringBuilder();
         type.append("(");
@@ -191,36 +186,6 @@ public class App extends BabbleBaseListener implements Opcodes {
         type.append(")LCore$BObject;");
 
         mv.visitInvokeDynamicInsn(selector, type.toString(), bootstrap);
-
-        /*
-        // [ ... receiver args
-        mv.visitIntInsn(BIPUSH, numArgs);
-        // [ ... receiver args n
-        mv.visitTypeInsn(ANEWARRAY, "Core$BObject");
-        // [ ... receiver args array
-
-        for (int i = numArgs - 1; i >= 0; i--) {
-            // [ ... receiver args array
-            mv.visitInsn(DUP_X1);
-            // [ ... receiver args array arg array
-            mv.visitInsn(SWAP);
-            // [ ... receiver args array array arg
-            mv.visitIntInsn(BIPUSH, i);
-            // [ ... receiver args array array arg n
-            mv.visitInsn(SWAP);
-            // [ ... receiver args array array n arg
-            mv.visitInsn(AASTORE);
-            // [ ... receiver args array
-        }
-
-        // [ ... receiver array
-        mv.visitLdcInsn(selector);
-        // [ ... receiver array selector
-        mv.visitInsn(SWAP);
-        // [ ... receiver selector array
-        mv.visitMethodInsn(INVOKESTATIC, "Core", "invoke", "(LCore$BObject;Ljava/lang/String;[LCore$BObject;)LCore$BObject;", false);
-        // [ ... result
-        */
     }
 
     private String mangle(Object... bits) {
@@ -233,6 +198,9 @@ public class App extends BabbleBaseListener implements Opcodes {
         rep.put('*', "star");
         rep.put('!', "bang");
         rep.put(',', "comma");
+        rep.put('=', "eq");
+        rep.put('<', "lt");
+        rep.put('>', "gt");
 
         for (Object bit : bits) {
             sb.append('_');

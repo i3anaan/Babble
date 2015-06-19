@@ -4,64 +4,101 @@
 
 import java.lang.invoke.*;
 import java.math.BigInteger;
-import java.util.Arrays;
+import java.util.function.BinaryOperator;
 
 public class Core {
-    public static BObject invoke(BObject receiver, String selector, BObject... args) {
-        // Collect the *run-time*, dynamic class of the receiver and the args
-        Class receiverClass = receiver.getClass();
-        Class[] classes = new Class[args.length];
-        for (int i = 0; i < args.length; i++) classes[i] = args[i].getClass();
+    private static final MethodType INVOKE_TYPE =
+        MethodType.methodType(BObject.class, MutableCallSite.class, String.class, Object[].class);
+    private static final MethodType CHECK_TYPE =
+        MethodType.methodType(boolean.class, Class.class, Object.class);
 
-        // Collect that information into a method signature
-        MethodType mt = MethodType.methodType(BObject.class, classes);
+    /**
+     * invokedynamic bootstrap method
+     *
+     * This method is called by the Java VM when it is unsure what method it has
+     * to call. We always tell it to call our special invoker method: at this
+     * point, we do not yet know the runtime type of the receiver, and we have
+     * no way of getting to it, so we dynamically call that invoker method
+     * instead of dynamically calling the right method right away.
+     *
+     * @param lookup   The current caller's view of the world.
+     * @param selector Method name (in our case the mangled method selector).
+     * @param type     The (compile-time) type of the method we're looking for.
+     *
+     * @return a CallSite pointing at our invoker method.
+     */
+    public static CallSite bootstrap(MethodHandles.Lookup lookup, String selector, MethodType type) {
+        CallSite cs = new MutableCallSite(type);
 
         try {
-            // Try to find a method matching that signature
-            MethodHandle mh = MethodHandles.lookup().findVirtual(receiverClass, selector, mt);
+            MethodHandle handle = lookup.findStatic(Core.class, "invoke", INVOKE_TYPE);
+            handle = handle.bindTo(cs);
+            handle = handle.bindTo(selector);
+            handle = handle.asCollector(BObject[].class, type.parameterCount());
+            handle = handle.asType(type);
 
-            // Invoke it!
-            return (BObject) mh.bindTo(receiver).invokeWithArguments(Arrays.asList(args));
-        } catch (NoSuchMethodException e) {
-            String complaint = "Class '%s' does not define a matching method named '%s'.";
-            throw new RuntimeException(String.format(complaint, receiverClass.getSimpleName(), selector), e);
-        } catch (Throwable e) {
-            // We *have* to catch Throwable: the method we're invoking could throw anything.
+            cs.setTarget(handle);
+            return cs;
+        } catch (NoSuchMethodException | IllegalAccessException e) {
+            // TODO Dress this exception up a little
             throw new RuntimeException(e);
         }
     }
 
-    public static CallSite bootstrap(MethodHandles.Lookup lookup, String selector, MethodType mt, Object self) throws Throwable {
-        assert Boolean.TRUE;
+    /**
+     * Second stage of the invokedynamic dance. At this point, we do know our
+     * arguments, which means we know the type of our receiver. We have enough
+     * information to look up the correct method and call it.
+     *
+     * As an added bonus, we store the result of our search inside the CallSite
+     * object so that the JVM can use it to optimize calls if it wants to.
+     *
+     * The cached method is only valid for values of the same class. If the
+     * class changes (check returns false), we have to do the bootstrap/invoke
+     * dance again.
+     *
+     * @param cs       The bootstrapped call site.
+     * @param selector The mangled selector we use to find the method.
+     * @param args     All arguments to the method (the receiver is the first).
+     * @return the result of the call, whatever that is.
+     * @throws Throwable as the method we're calling could throw anything.
+     */
+    public static BObject invoke(MutableCallSite cs, String selector, Object[] args) throws Throwable {
+        Class<?> receiverClass = args[0].getClass();
 
-        MethodHandle mh = lookup.findVirtual(
-                        BObject.class,
-                        selector,
-                        mt);
+        // Look for a matching method.
+        MethodHandle target = MethodHandles.lookup().findVirtual(
+            receiverClass,                      // ...on the receiver class
+            selector,                           // ...named after the selector
+            cs.type().dropParameterTypes(0, 1)  // ... and taking the right amount of BObjects.
+        ).asType(cs.type());
 
-        return new MutableCallSite(mh);
+        // Look for the check method.
+        MethodHandle test = MethodHandles.lookup().findStatic(Core.class, "check", CHECK_TYPE).bindTo(receiverClass);
+        test = test.asType(test.type().changeParameterType(0, cs.type().parameterType(0)));
+
+        // Bundle the two together.
+        MethodHandle guard = MethodHandles.guardWithTest(test, target, cs.getTarget());
+
+        // Set the guarded, tested, method as the result.
+        cs.setTarget(guard);
+
+        // Invoke the bare method right now, as well.
+        return (BObject) target.invokeWithArguments(args);
+    }
+
+    public static boolean check(Class klass, Object receiver) {
+        return receiver.getClass() == klass;
     }
 
     public static class BObject extends Object {
-        public BObject _true() {
-            return new BTrue();
-        }
-
-        public BObject _false() {
-            return new BFalse();
-        }
-
-        public BObject _nil() {
-            return new BNil();
-        }
-
         public BObject _print() {
             System.out.println(this.toString());
             return this;
         }
 
         public BObject _isNil() {
-            return new BFalse();
+            return BBool.of(false);
         }
 
         public BObject _asString() {
@@ -69,75 +106,92 @@ public class Core {
         }
 
         public BObject _asBool() {
-            return new BTrue();
+            return BBool.of(true);
         }
 
-        /**
-         * Invoke one of this BObject's methods. The selector must be in
-         * mangled form.
-         */
-        public BObject invoke(String selector, BObject... args) {
-            return Core.invoke(this, selector, args);
+        public BObject _asInt() {
+            return new BInt(0);
+        }
+
+        public BObject _eqeq_(BObject that) {
+            return BBool.of(this.equals(that));
+        }
+
+        public BObject _bangeq_(BObject that) {
+            return BBool.of(!this.equals(that));
         }
     }
 
     /* TODO Port some of these to Babble */
 
     public static abstract class BBool extends BObject {
-        public static BBool of(boolean b) {
+        public static BBool of(final boolean b) {
             return b ? new BTrue() : new BFalse();
         }
-    }
-
-    public static class BTrue extends BBool {
-        public BObject _not() { return new BFalse(); }
-
-        public BObject _and_(BTrue t) { return new BTrue(); }
-        public BObject _and_(BFalse f) { return new BFalse(); }
-
-        public BObject _or_(BTrue b) { return new BTrue(); }
-        public BObject _or_(BFalse b) { return new BTrue(); }
-
-        public BObject _xor_(BTrue t) { return new BFalse(); }
-        public BObject _xor_(BFalse t) { return new BTrue(); }
 
         public BObject _assert() {
-            assert true;
+            assert this instanceof BTrue;
             return this;
         }
 
         public BObject _asBool() {
-            return new BTrue();
+            return this;
+        }
+    }
+
+    public static class BTrue extends BBool {
+        public BObject _not() {
+            return BBool.of(false);
+        }
+
+        public BObject _and_(final BObject that) {
+            return that._asBool();
+        }
+
+        public BObject _or_(final BObject that) {
+            return this._asBool();
+        }
+
+        public BObject _asBool() {
+            return this;
+        }
+
+        public BObject _asInt() {
+            return new BInt(1);
         }
 
         public String toString() {
             return "true";
         }
+
+        public boolean equals(Object that) {
+            return that instanceof BTrue;
+        }
     }
 
     public static class BFalse extends BBool {
-        public BObject _not() { return new BTrue(); }
-
-        public BObject _and_(BTrue t) { return new BFalse(); }
-        public BObject _and_(BFalse f) { return new BFalse(); }
-
-        public BObject _or_(BTrue b) { return new BTrue(); }
-        public BObject _or_(BFalse b) { return new BTrue(); }
-
-        public BObject _xor_(BTrue t) { return new BTrue(); }
-        public BObject _xor_(BFalse t) { return new BFalse(); }
-
-        public BObject _assert() {
-            assert false;
-            return this;
+        public BObject _not() {
+            return BBool.of(true);
         }
 
-        public BObject _asBool() {
-            return new BFalse();
+        public BObject _and_(BObject that) {
+            return this._asBool();
+        }
+
+        public BObject _or_(BObject that) {
+            return that._asBool();
         }
 
         public String toString() {
             return "false";
+        }
+
+        public BObject _asInt() {
+            return new BInt(0);
+        }
+
+        public boolean equals(Object that) {
+            return that instanceof BFalse;
         }
     }
 
@@ -147,11 +201,11 @@ public class Core {
         }
 
         public BObject _isNil() {
-            return new BTrue();
+            return BBool.of(true);
         }
 
         public BObject _asBool() {
-            return new BFalse();
+            return BBool.of(false);
         }
     }
 
@@ -170,43 +224,47 @@ public class Core {
             integer = new BigInteger(s);
         }
 
-        public BInt(BInt bi) {
-            integer = bi.getInteger();
+        public BInt(BInt i) {
+            integer = i.getInteger();
         }
 
-        public BObject _plus_(BInt that) {
-            return new BInt(this.getInteger().add(that.getInteger()));
+        private static BObject op(BObject a, BObject b, BinaryOperator<BigInteger> lambda) {
+            BigInteger ai = ((BInt)a._asInt()).getInteger();
+            BigInteger bi = ((BInt)b._asInt()).getInteger();
+            return new BInt(lambda.apply(ai, bi));
         }
 
-        public BObject _minus_(BInt that) {
-            return new BInt(this.getInteger().subtract(that.getInteger()));
+        private static int cmp(BObject a, BObject b) {
+            BigInteger ai = ((BInt)a._asInt()).getInteger();
+            BigInteger bi = ((BInt)b._asInt()).getInteger();
+            return ai.compareTo(bi);
         }
 
-        public BObject _star_(BInt that) {
-            return new BInt(this.getInteger().multiply(that.getInteger()));
-        }
+        public BObject _plus_(BObject that)   { return op(this, that, BigInteger::add); }
+        public BObject _minus_(BObject that)  { return op(this, that, BigInteger::subtract); }
+        public BObject _star_(BObject that)   { return op(this, that, BigInteger::multiply); }
+        public BObject _slash_(BObject that)  { return op(this, that, BigInteger::divide); }
+        public BObject _mod_(BObject that)    { return op(this, that, BigInteger::mod); }
 
-        public BObject _slash_(BInt that) {
-            return new BInt(this.getInteger().divide(that.getInteger()));
-        }
+        public BObject _lt_(BObject that)     { return BBool.of(cmp(this, that) < 0); }
+        public BObject _eqeq_(BObject that)   { return BBool.of(cmp(this, that) == 0); }
+        public BObject _gt_(BObject that)     { return BBool.of(cmp(this, that) > 0); }
+        public BObject _gteq_(BObject that)   { return BBool.of(cmp(this, that) >= 0); }
+        public BObject _bangeq_(BObject that) { return BBool.of(cmp(this, that) != 0); }
+        public BObject _lteq_(BObject that)   { return BBool.of(cmp(this, that) <= 0); }
 
-        public BObject _negate() {
-            return new BInt(this.getInteger().negate());
-        }
-
-        public BObject _abs() {
-            return new BInt(this.getInteger().abs());
-        }
-
-        public BObject _mod(BInt that) {
-            return new BInt(this.getInteger().mod(that.getInteger()));
-        }
+        public BObject _negate() { return new BInt(this.getInteger().negate()); }
+        public BObject _abs() { return new BInt(this.getInteger().abs()); }
 
         public BObject _asBool() {
-            return BBool.of(integer.equals(BigInteger.ZERO));
+            return BBool.of(false);
         }
 
-        public BigInteger getInteger() {
+        public BInt _asInt() {
+            return new BInt(this);
+        }
+
+        private BigInteger getInteger() {
             return integer;
         }
 
@@ -238,23 +296,23 @@ public class Core {
             return new BStr(str.toLowerCase());
         }
 
-        public BObject _startsWith_(BStr that) {
+        public BObject _startsWith_(BObject that) {
             return BBool.of(str.startsWith(that.toString()));
         }
 
-        public BObject _endsWith_(BStr that) {
+        public BObject _endsWith_(BObject that) {
             return BBool.of(str.endsWith(that.toString()));
         }
 
-        public BObject _contains_(BStr that) {
+        public BObject _contains_(BObject that) {
             return BBool.of(str.contains(that.toString()));
         }
 
-        public BObject _replace_with_(BStr search, BStr replace) {
+        public BObject _replace_with_(BObject search, BObject replace) {
             return new BStr(str.replace(search.toString(), replace.toString()));
         }
 
-        public BObject _comma_(BStr that) {
+        public BObject _comma_(BObject that) {
             return new BStr(str.concat(that.toString()));
         }
 
@@ -262,6 +320,9 @@ public class Core {
             return str;
         }
 
+        public boolean equals(Object that) {
+            return that instanceof BStr && this.toString().equals(that.toString());
+        }
     }
 
     public static class BSymbol extends BObject {
