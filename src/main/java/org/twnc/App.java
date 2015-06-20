@@ -60,7 +60,7 @@ public class App extends BabbleBaseListener implements Opcodes {
 
         cw.visit(52, ACC_PUBLIC + ACC_SUPER, name, null, "java/lang/Object", null);
 
-        cw.visitInnerClass("Core$BObject", "Core", "BObject", ACC_PUBLIC + ACC_STATIC);
+        cw.visitInnerClass("org.twnc.runtime.BObject", "org.twnc.runtime.Core", "BObject", ACC_PUBLIC + ACC_STATIC);
 
         {
             mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
@@ -86,9 +86,9 @@ public class App extends BabbleBaseListener implements Opcodes {
 
     @Override
     public void exitVarExpr(BabbleParser.VarExprContext ctx) {
-        mv.visitTypeInsn(NEW, "Core$BObject");
+        mv.visitTypeInsn(NEW, "org/twnc/runtime/BObject");
         mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "Core$BObject", "<init>", "()V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BObject", "<init>", "()V", false);
     }
 
     @Override
@@ -98,23 +98,23 @@ public class App extends BabbleBaseListener implements Opcodes {
 
     @Override
     public void exitNilExpr(BabbleParser.NilExprContext ctx) {
-        mv.visitTypeInsn(NEW, "Core$BNil");
+        mv.visitTypeInsn(NEW, "org/twnc/runtime/BNil");
         mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "Core$BNil", "<init>", "()V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BNil", "<init>", "()V", false);
     }
 
     @Override
     public void exitFalseExpr(BabbleParser.FalseExprContext ctx) {
-        mv.visitTypeInsn(NEW, "Core$BFalse");
+        mv.visitTypeInsn(NEW, "org/twnc/runtime/BFalse");
         mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "Core$BFalse", "<init>", "()V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BFalse", "<init>", "()V", false);
     }
 
     @Override
     public void exitTrueExpr(BabbleParser.TrueExprContext ctx) {
-        mv.visitTypeInsn(NEW, "Core$BTrue");
+        mv.visitTypeInsn(NEW, "org/twnc/runtime/BTrue");
         mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "Core$BTrue", "<init>", "()V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BTrue", "<init>", "()V", false);
     }
 
     @Override
@@ -129,20 +129,20 @@ public class App extends BabbleBaseListener implements Opcodes {
             symbols.put(sym, num);
         }
 
-        mv.visitTypeInsn(NEW, "Core$BSymbol");
+        mv.visitTypeInsn(NEW, "org/twnc/runtime/BSymbol");
         mv.visitInsn(DUP);
         mv.visitLdcInsn(sym);
         mv.visitIntInsn(BIPUSH, num);
-        mv.visitMethodInsn(INVOKESPECIAL, "Core$BSymbol", "<init>", "(Ljava/lang/String;I)V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BSymbol", "<init>", "(Ljava/lang/String;I)V", false);
     }
 
     @Override
     public void exitStrExpr(BabbleParser.StrExprContext ctx) {
         String str = ctx.STRING().getText();
-        mv.visitTypeInsn(NEW, "Core$BStr");
+        mv.visitTypeInsn(NEW, "org/twnc/runtime/BStr");
         mv.visitInsn(DUP);
         mv.visitLdcInsn(str.substring(1, str.length() - 1));
-        mv.visitMethodInsn(INVOKESPECIAL, "Core$BStr", "<init>", "(Ljava/lang/String;)V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BStr", "<init>", "(Ljava/lang/String;)V", false);
     }
 
     @Override
@@ -152,10 +152,10 @@ public class App extends BabbleBaseListener implements Opcodes {
 
     @Override
     public void exitIntExpr(BabbleParser.IntExprContext ctx) {
-        mv.visitTypeInsn(NEW, "Core$BInt");
+        mv.visitTypeInsn(NEW, "org/twnc/runtime/BInt");
         mv.visitInsn(DUP);
         mv.visitLdcInsn(ctx.getText());
-        mv.visitMethodInsn(INVOKESPECIAL, "Core$BInt", "<init>", "(Ljava/lang/String;)V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BInt", "<init>", "(Ljava/lang/String;)V", false);
     }
 
     @Override
@@ -174,16 +174,16 @@ public class App extends BabbleBaseListener implements Opcodes {
             MethodType.class
         );
 
-        Handle bootstrap = new Handle(Opcodes.H_INVOKESTATIC, "Core", "bootstrap", bmt.toMethodDescriptorString());
+        Handle bootstrap = new Handle(Opcodes.H_INVOKESTATIC, "org/twnc/runtime/Core", "bootstrap", bmt.toMethodDescriptorString());
 
         StringBuilder type = new StringBuilder();
         type.append("(");
 
         for (int i = 0; i < numArgs + 1; i++) {
-            type.append("LCore$BObject;");
+            type.append("Lorg/twnc/runtime/BObject;");
         }
 
-        type.append(")LCore$BObject;");
+        type.append(")Lorg/twnc/runtime/BObject;");
 
         mv.visitInvokeDynamicInsn(selector, type.toString(), bootstrap);
     }
