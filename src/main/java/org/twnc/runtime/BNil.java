@@ -15,7 +15,13 @@ public class BNil extends BObject {
         return BBool.of(false);
     }
 
+    @Override
     public boolean equals(Object that) {
         return that instanceof BNil;
+    }
+
+    @Override
+    public int hashCode() {
+        return -1;
     }
 }

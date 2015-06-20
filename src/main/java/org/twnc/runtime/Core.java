@@ -85,6 +85,7 @@ public class Core {
     }
 
     public static boolean check(Class klass, Object receiver) {
-        return receiver.getClass() == klass;
+        Class<?> receiverClass = receiver.getClass();
+        return receiverClass.equals(klass);
     }
 }

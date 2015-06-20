@@ -18,7 +18,7 @@ public class BTrue extends BBool {
 
     @Override
     public BObject _asBool() {
-        return this;
+        return new BTrue();
     }
 
     @Override
@@ -26,11 +26,18 @@ public class BTrue extends BBool {
         return new BInt(1);
     }
 
+    @Override
     public String toString() {
         return "true";
     }
 
+    @Override
     public boolean equals(Object that) {
         return that instanceof BTrue;
+    }
+
+    @Override
+    public int hashCode() {
+        return 1;
     }
 }

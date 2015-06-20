@@ -10,11 +10,6 @@ public abstract class BBool extends BObject {
         return this;
     }
 
-    @Override
-    public BObject _asBool() {
-        return this;
-    }
-
     public abstract BObject _not();
     public abstract BObject _and_(BObject that);
     public abstract BObject _or_(BObject that);

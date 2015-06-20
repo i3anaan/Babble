@@ -27,7 +27,17 @@ public class BFalse extends BBool {
     }
 
     @Override
+    public BObject _asBool() {
+        return new BFalse();
+    }
+
+    @Override
     public boolean equals(Object that) {
         return that instanceof BFalse;
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
     }
 }

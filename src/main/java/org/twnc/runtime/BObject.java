@@ -1,6 +1,6 @@
 package org.twnc.runtime;
 
-public abstract class BObject extends Object {
+public abstract class BObject {
     public BObject _print() {
         System.out.println(this);
         return this;
