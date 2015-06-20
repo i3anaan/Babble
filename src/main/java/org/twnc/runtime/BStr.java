@@ -11,6 +11,7 @@ public class BStr extends BObject {
         this.str = bstr.toString();
     }
 
+    @Override
     public BObject _asBool() {
         return BBool.of(!str.isEmpty());
     }

@@ -10,6 +10,7 @@ public abstract class BBool extends BObject {
         return this;
     }
 
+    @Override
     public BObject _asBool() {
         return this;
     }

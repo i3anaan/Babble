@@ -44,9 +44,11 @@ public class BInt extends BObject {
     public BObject _max_(BObject that)    { return op(this, that, BigInteger::max); }
 
     public BObject _lt_(BObject that)     { return BBool.of(cmp(this, that) < 0); }
+    @Override
     public BObject _eqeq_(BObject that)   { return BBool.of(cmp(this, that) == 0); }
     public BObject _gt_(BObject that)     { return BBool.of(cmp(this, that) > 0); }
     public BObject _gteq_(BObject that)   { return BBool.of(cmp(this, that) >= 0); }
+    @Override
     public BObject _bangeq_(BObject that) { return BBool.of(cmp(this, that) != 0); }
     public BObject _lteq_(BObject that)   { return BBool.of(cmp(this, that) <= 0); }
 
@@ -54,6 +56,7 @@ public class BInt extends BObject {
     public BObject _negate() { return new BInt(integer.negate()); }
     public BObject _signum() { return new BInt(integer.signum()); }
 
+    @Override
     public BObject _asBool() {
         return BBool.of(!integer.equals(BigInteger.ZERO));
     }

@@ -9,6 +9,7 @@ public class BSymbol extends BObject {
         this.symbol = symbol;
     }
 
+    @Override
     public BObject _asInt() {
         return new BInt(num);
     }
