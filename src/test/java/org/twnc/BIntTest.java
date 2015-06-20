@@ -33,6 +33,16 @@ public class BIntTest {
 
     @Test public void testTenGtEqTen()  { assertEquals(new BTrue(), new BInt(10)._gteq_(new BInt(10))); }
     @Test public void testTenGtEqOne()  { assertEquals(new BTrue(), new BInt(10)._gteq_(new BInt(1))); }
+    @Test public void testTenLtEqOne()  { assertEquals(new BFalse(), new BInt(10)._lteq_(new BInt(1))); }
+
+    @Test public void testTenMaxOne()   { assertEquals(new BInt(10), new BInt(10)._max_(new BInt(1))); }
+    @Test public void testOneMaxTen()   { assertEquals(new BInt(10), new BInt(1)._max_(new BInt(10))); }
+    @Test public void testTenMinOne()   { assertEquals(new BInt(1), new BInt(10)._min_(new BInt(1))); }
+    @Test public void testOneMinTen()   { assertEquals(new BInt(1), new BInt(1)._min_(new BInt(10))); }
+
+    @Test public void testMinusOneAbs() { assertEquals(new BInt(1), new BInt(-1)._abs()); }
+    @Test public void testOneNegate()   { assertEquals(new BInt(-1), new BInt(1)._negate()); }
+    @Test public void testMinusTwoSig() { assertEquals(new BInt(-1), new BInt(-2)._signum()); }
 
     @Test(expected=java.lang.ArithmeticException.class)
     public void testDivByZero() {
