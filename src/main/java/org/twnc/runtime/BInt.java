@@ -98,11 +98,18 @@ public class BInt extends BObject {
         return integer;
     }
 
+    @Override
     public String toString() {
         return integer.toString();
     }
 
+    @Override
     public boolean equals(Object that) {
         return that instanceof BInt && ((BInt)that).getInteger().equals(this.getInteger());
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getInteger().hashCode();
     }
 }

@@ -1,8 +1,5 @@
 package org.twnc.runtime;
 
-/**
- * Created by wander on 6/20/15.
- */
 public class BTrue extends BBool {
     public BObject _not() {
         return BBool.of(false);

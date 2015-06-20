@@ -49,9 +49,10 @@ public class App extends BabbleBaseListener implements Opcodes {
     }
 
     public void writeBytecode(String path) throws IOException {
-        OutputStream out = new FileOutputStream(path);
-        out.write(cw.toByteArray());
-        out.close();
+        try(OutputStream out = new FileOutputStream(path)) {
+            out.write(cw.toByteArray());
+            out.close();
+        }
     }
 
     @Override

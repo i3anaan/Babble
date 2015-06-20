@@ -43,11 +43,18 @@ public class BStr extends BObject {
         return new BStr(str.concat(that.toString()));
     }
 
+    @Override
     public String toString() {
         return str;
     }
 
+    @Override
     public boolean equals(Object that) {
         return that instanceof BStr && this.toString().equals(that.toString());
+    }
+
+    @Override
+    public int hashCode() {
+        return str.hashCode();
     }
 }
