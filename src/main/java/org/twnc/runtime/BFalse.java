@@ -8,7 +8,7 @@ public class BFalse extends BBool {
 
     @Override
     public BObject _and_(BObject that) {
-        return this._asBool();
+        return _asBool();
     }
 
     @Override

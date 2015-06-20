@@ -1,7 +1,7 @@
 package org.twnc.runtime;
 
 public abstract class BBool extends BObject {
-    public static BBool of(final boolean b) {
+    public static BBool of(boolean b) {
         return b ? new BTrue() : new BFalse();
     }
 
@@ -16,6 +16,6 @@ public abstract class BBool extends BObject {
     }
 
     public abstract BObject _not();
-    public abstract BObject _and_(final BObject that);
-    public abstract BObject _or_(final BObject that);
+    public abstract BObject _and_(BObject that);
+    public abstract BObject _or_(BObject that);
 }

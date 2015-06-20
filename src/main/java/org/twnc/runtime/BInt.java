@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import java.util.function.BinaryOperator;
 
 public class BInt extends BObject {
-    private BigInteger integer;
+    private final BigInteger integer;
 
     public BInt(int i) {
         integer = BigInteger.valueOf(i);
@@ -34,23 +34,23 @@ public class BInt extends BObject {
         return ai.compareTo(bi);
     }
 
-    public BObject _plus_(BObject that)   { return op(this, that, BigInteger::add); }
-    public BObject _minus_(BObject that)  { return op(this, that, BigInteger::subtract); }
-    public BObject _star_(BObject that)   { return op(this, that, BigInteger::multiply); }
-    public BObject _slash_(BObject that)  { return op(this, that, BigInteger::divide); }
-    public BObject _mod_(BObject that)    { return op(this, that, BigInteger::mod); }
+    public BObject _plus_(BObject that)   { return BInt.op(this, that, BigInteger::add); }
+    public BObject _minus_(BObject that)  { return BInt.op(this, that, BigInteger::subtract); }
+    public BObject _star_(BObject that)   { return BInt.op(this, that, BigInteger::multiply); }
+    public BObject _slash_(BObject that)  { return BInt.op(this, that, BigInteger::divide); }
+    public BObject _mod_(BObject that)    { return BInt.op(this, that, BigInteger::mod); }
 
-    public BObject _min_(BObject that)    { return op(this, that, BigInteger::min); }
-    public BObject _max_(BObject that)    { return op(this, that, BigInteger::max); }
+    public BObject _min_(BObject that)    { return BInt.op(this, that, BigInteger::min); }
+    public BObject _max_(BObject that)    { return BInt.op(this, that, BigInteger::max); }
 
-    public BObject _lt_(BObject that)     { return BBool.of(cmp(this, that) < 0); }
+    public BObject _lt_(BObject that)     { return BBool.of(BInt.cmp(this, that) < 0); }
     @Override
-    public BObject _eqeq_(BObject that)   { return BBool.of(cmp(this, that) == 0); }
-    public BObject _gt_(BObject that)     { return BBool.of(cmp(this, that) > 0); }
-    public BObject _gteq_(BObject that)   { return BBool.of(cmp(this, that) >= 0); }
+    public BObject _eqeq_(BObject that)   { return BBool.of(BInt.cmp(this, that) == 0); }
+    public BObject _gt_(BObject that)     { return BBool.of(BInt.cmp(this, that) > 0); }
+    public BObject _gteq_(BObject that)   { return BBool.of(BInt.cmp(this, that) >= 0); }
     @Override
-    public BObject _bangeq_(BObject that) { return BBool.of(cmp(this, that) != 0); }
-    public BObject _lteq_(BObject that)   { return BBool.of(cmp(this, that) <= 0); }
+    public BObject _bangeq_(BObject that) { return BBool.of(BInt.cmp(this, that) != 0); }
+    public BObject _lteq_(BObject that)   { return BBool.of(BInt.cmp(this, that) <= 0); }
 
     public BObject _abs()    { return new BInt(integer.abs()); }
     public BObject _negate() { return new BInt(integer.negate()); }

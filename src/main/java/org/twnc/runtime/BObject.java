@@ -2,7 +2,7 @@ package org.twnc.runtime;
 
 public abstract class BObject extends Object {
     public BObject _print() {
-        System.out.println(this.toString());
+        System.out.println(this);
         return this;
     }
 
@@ -11,7 +11,7 @@ public abstract class BObject extends Object {
     }
 
     public BObject _asString() {
-        return new BStr(this.toString());
+        return new BStr(toString());
     }
 
     public BObject _asBool() {
@@ -23,10 +23,10 @@ public abstract class BObject extends Object {
     }
 
     public BObject _eqeq_(BObject that) {
-        return BBool.of(this.equals(that));
+        return BBool.of(equals(that));
     }
 
     public BObject _bangeq_(BObject that) {
-        return BBool.of(!this.equals(that));
+        return BBool.of(!equals(that));
     }
 }

@@ -1,14 +1,14 @@
 package org.twnc.runtime;
 
 public class BStr extends BObject {
-    private String str;
+    private final String str;
 
     public BStr(String str) {
         this.str = str;
     }
 
     public BStr(BStr bstr) {
-        this.str = bstr.toString();
+        str = bstr.toString();
     }
 
     @Override
@@ -51,7 +51,7 @@ public class BStr extends BObject {
 
     @Override
     public boolean equals(Object that) {
-        return that instanceof BStr && this.toString().equals(that.toString());
+        return that instanceof BStr && toString().equals(that.toString());
     }
 
     @Override

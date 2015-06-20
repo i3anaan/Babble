@@ -7,13 +7,13 @@ public class BTrue extends BBool {
     }
 
     @Override
-    public BObject _and_(final BObject that) {
+    public BObject _and_(BObject that) {
         return that._asBool();
     }
 
     @Override
-    public BObject _or_(final BObject that) {
-        return this._asBool();
+    public BObject _or_(BObject that) {
+        return _asBool();
     }
 
     @Override

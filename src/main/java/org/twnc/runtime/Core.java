@@ -1,6 +1,7 @@
 package org.twnc.runtime;
 
 import java.lang.invoke.*;
+import java.lang.invoke.MethodHandles.Lookup;
 
 public class Core {
     private static final MethodType INVOKE_TYPE =
@@ -23,11 +24,11 @@ public class Core {
      *
      * @return a CallSite pointing at our invoker method.
      */
-    public static CallSite bootstrap(MethodHandles.Lookup lookup, String selector, MethodType type) {
+    public static CallSite bootstrap(Lookup lookup, String selector, MethodType type) {
         CallSite cs = new MutableCallSite(type);
 
         try {
-            MethodHandle handle = lookup.findStatic(Core.class, "invoke", INVOKE_TYPE);
+            MethodHandle handle = lookup.findStatic(Core.class, "invoke", Core.INVOKE_TYPE);
             handle = handle.bindTo(cs);
             handle = handle.bindTo(selector);
             handle = handle.asCollector(BObject[].class, type.parameterCount());
@@ -70,7 +71,7 @@ public class Core {
         ).asType(cs.type());
 
         // Look for the check method.
-        MethodHandle test = MethodHandles.lookup().findStatic(Core.class, "check", CHECK_TYPE).bindTo(receiverClass);
+        MethodHandle test = MethodHandles.lookup().findStatic(Core.class, "check", Core.CHECK_TYPE).bindTo(receiverClass);
         test = test.asType(test.type().changeParameterType(0, cs.type().parameterType(0)));
 
         // Bundle the two together.
