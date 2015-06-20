@@ -47,5 +47,3 @@ false asBool not assert.
 nil asBool not assert.
 0 asBool not assert.
 "" asBool not assert.
-
-"ok" print.
