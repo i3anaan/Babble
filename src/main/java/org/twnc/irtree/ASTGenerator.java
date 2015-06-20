@@ -34,7 +34,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
         for (MthdContext context : ctx.mthd()) {
             methods.add((MethodNode) visit(context));
         }
-        
+
         return new ProgramNode(methods);
     }
 
@@ -88,7 +88,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
         } else {
             objectName = null; //GlobalMethodDefinition
         }
-        
+
         String selector = "";
         List<VarRefNode> arguments = new ArrayList<VarRefNode>();
         for (int i = 0; i < ctx.ID().size(); i += 2) {
@@ -141,7 +141,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     public Node visitLoneExpr(LoneExprContext ctx) {
         return visit(ctx.subexpr());
     }
-    
+
     public List<ExprNode> visitExprArguments(ParserRuleContext argument) {
         return visitExprArguments(Arrays.asList(argument));
     }
