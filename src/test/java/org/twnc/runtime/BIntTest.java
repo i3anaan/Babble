@@ -1,13 +1,10 @@
-package org.twnc;
+package org.twnc.runtime;
 
 import org.junit.Test;
-import org.twnc.runtime.BFalse;
-import org.twnc.runtime.BInt;
-import org.twnc.runtime.BTrue;
 
 import java.math.BigInteger;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class BIntTest {
     @Test public void testEquals() { assertEquals(new BInt(10), new BInt(10)); }

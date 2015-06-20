@@ -1,10 +1,8 @@
-package org.twnc;
+package org.twnc.runtime;
 
 import org.junit.Test;
-import org.twnc.runtime.BBlock;
-import org.twnc.runtime.BNil;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class BBlockTest {
     @Test

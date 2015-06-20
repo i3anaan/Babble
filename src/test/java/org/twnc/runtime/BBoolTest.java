@@ -1,12 +1,9 @@
-package org.twnc;
+package org.twnc.runtime;
 
 import org.junit.Test;
-import org.twnc.runtime.BBool;
-import org.twnc.runtime.BFalse;
-import org.twnc.runtime.BInt;
-import org.twnc.runtime.BTrue;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class BBoolTest {
     private BBool TRUE = new BTrue();
