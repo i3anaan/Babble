@@ -27,6 +27,13 @@ public class BIntTest {
     @Test public void testTenTimesTen() { assertEquals(new BInt(100), new BInt(10)._star_(new BInt(10))); }
     @Test public void testTenDivTen()   { assertEquals(new BInt(1), new BInt(10)._slash_(new BInt(10))); }
 
+    @Test public void testTenModThree() { assertEquals(new BInt(1), new BInt(10)._mod_(new BInt(3))); }
+    @Test public void testTenGtThree()  { assertEquals(new BTrue(), new BInt(10)._gt_(new BInt(3))); }
+    @Test public void testThreeLtTen()  { assertEquals(new BTrue(), new BInt(3)._lt_(new BInt(10))); }
+
+    @Test public void testTenGtEqTen()  { assertEquals(new BTrue(), new BInt(10)._gteq_(new BInt(10))); }
+    @Test public void testTenGtEqOne()  { assertEquals(new BTrue(), new BInt(10)._gteq_(new BInt(1))); }
+
     @Test(expected=java.lang.ArithmeticException.class)
     public void testDivByZero() {
         new BInt(10)._slash_(new BInt(0));
