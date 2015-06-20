@@ -1,8 +1,5 @@
 package org.twnc.runtime;
 
-/**
- * Created by wander on 6/20/15.
- */
 public abstract class BBool extends BObject {
     public static BBool of(final boolean b) {
         return b ? new BTrue() : new BFalse();
@@ -16,4 +13,8 @@ public abstract class BBool extends BObject {
     public BObject _asBool() {
         return this;
     }
+
+    public abstract BObject _not();
+    public abstract BObject _and_(final BObject that);
+    public abstract BObject _or_(final BObject that);
 }

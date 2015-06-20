@@ -101,4 +101,8 @@ public class BInt extends BObject {
     public String toString() {
         return integer.toString();
     }
+
+    public boolean equals(Object that) {
+        return that instanceof BInt && ((BInt)that).getInteger().equals(this.getInteger());
+    }
 }

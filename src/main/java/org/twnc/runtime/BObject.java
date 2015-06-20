@@ -1,8 +1,5 @@
 package org.twnc.runtime;
 
-/**
- * Created by wander on 6/20/15.
- */
 public class BObject extends Object {
     public BObject _print() {
         System.out.println(this.toString());
