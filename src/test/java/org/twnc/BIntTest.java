@@ -26,4 +26,9 @@ public class BIntTest {
     @Test public void testTenSubTen()   { assertEquals(new BInt(0), new BInt(10)._minus_(new BInt(10))); }
     @Test public void testTenTimesTen() { assertEquals(new BInt(100), new BInt(10)._star_(new BInt(10))); }
     @Test public void testTenDivTen()   { assertEquals(new BInt(1), new BInt(10)._slash_(new BInt(10))); }
+
+    @Test(expected=java.lang.ArithmeticException.class)
+    public void testDivByZero() {
+        new BInt(10)._slash_(new BInt(0));
+    }
 }
