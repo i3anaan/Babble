@@ -3,6 +3,8 @@ package org.twnc.irtree;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.twnc.BabbleBaseVisitor;
@@ -166,9 +168,13 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visit(ParseTree tree) {
-        // TODO Auto-generated method stub
-        return super.visit(tree);
+        Node n = super.visit(tree);
+
+        if (tree instanceof ParserRuleContext) {
+            Token tok = ((ParserRuleContext)tree).start;
+            n.setLineOffset(tok.getLine(), tok.getCharPositionInLine());
+        }
+
+        return n;
     }
-    
-    
 }
