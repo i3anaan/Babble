@@ -2,8 +2,10 @@ package org.twnc.irtree;
 
 import java.beans.MethodDescriptor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.twnc.BabbleBaseVisitor;
@@ -60,54 +62,39 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitSequence(SequenceContext ctx) {
-        List<ExprNode> statements = new ArrayList<>();
-
-        for (ExprContext context : ctx.expr()) {
-            statements.add((ExprNode) visit(context));
-        }
-
-        return new SequenceNode(statements);
+        return new SequenceNode(visitExprArguments(ctx.expr()));
     }
 
     @Override
     public Node visitGlobalKeywordSend(GlobalKeywordSendContext ctx) {
-        // TODO Auto-generated method stub
-        return super.visitGlobalKeywordSend(ctx);
+        String selector = buildSelector(ctx.ID());
+        List<ExprNode> arguments = visitExprArguments(ctx.subexpr());
+        return new SendNode(selector, arguments);
     }
 
     @Override
     public Node visitKeywordSend(KeywordSendContext ctx) {
-        ExprNode statement = (ExprNode) visit(ctx.expr());
-        String selector = "";
-        List<ExprNode> arguments = new ArrayList<>();
-
-        for (int i = 0; i < ctx.ID().size(); i += 1) {
-            selector += ctx.ID(i) + ":";
-            arguments.add((ExprNode) visit(ctx.subexpr(i)));
-        }
-
-        return new SendNode(statement, selector, arguments);
+        ExprNode expression = (ExprNode) visit(ctx.expr());
+        String selector = buildSelector(ctx.ID());
+        List<ExprNode> arguments = visitExprArguments(ctx.subexpr());
+        return new SendNode(expression, selector, arguments);
     }
 
     @Override
     public Node visitMthd(MthdContext ctx) {
         VarRefNode objectName;
-        
         if (ctx.object != null) {
-            //ObjectMethodDefinition
-            objectName = new VarRefNode(ctx.object.getText());
+            objectName = new VarRefNode(ctx.object.getText()); //ObjectMethodDefinition
         } else {
-            //GlobalMethodDefinition
-            objectName = null;
+            objectName = null; //GlobalMethodDefinition
         }
+        
         String selector = "";
         List<VarRefNode> arguments = new ArrayList<VarRefNode>();
-
         for (int i = 0; i < ctx.ID().size(); i += 2) {
             selector += ctx.ID(i) + ":";
             arguments.add(new VarRefNode(ctx.ID(i + 1).getText()));
         }
-        
         SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
 
         return new MethodNode(objectName, selector, arguments, sequence);
@@ -117,18 +104,15 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     public Node visitInfixSend(InfixSendContext ctx) {
         ExprNode expression = (ExprNode) visit(ctx.expr());
         String selector = ctx.method.getText();
-        List<ExprNode> arguments = new ArrayList<>();
-        arguments.add((ExprNode) visit(ctx.subexpr()));
-
+        List<ExprNode> arguments = visitExprArguments(ctx.subexpr());
         return new SendNode(expression, selector, arguments);
     }
 
     @Override
     public Node visitUnarySend(UnarySendContext ctx) {
         ExprNode expression = (ExprNode) visit(ctx.expr());
-        String selector = ctx.method.getText();
+        String selector = buildSelector(ctx.ID());
         List<ExprNode> arguments = new ArrayList<>();
-
         return new SendNode(expression, selector, arguments);
     }
 
@@ -156,5 +140,29 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     @Override
     public Node visitLoneExpr(LoneExprContext ctx) {
         return visit(ctx.subexpr());
-    }    
+    }
+    
+    public List<ExprNode> visitExprArguments(ParserRuleContext argument) {
+        return visitExprArguments(Arrays.asList(argument));
+    }
+
+    public List<ExprNode> visitExprArguments(List<? extends ParserRuleContext> arguments) {
+        List<ExprNode> output = new ArrayList<>();
+        for (int i = 0; i < arguments.size(); i += 1) {
+            output.add((ExprNode) visit(arguments.get(i)));
+        }
+        return output;
+    }
+
+    public String buildSelector(TerminalNode item) {
+        return buildSelector(Arrays.asList(item));
+    }
+
+    public String buildSelector(List<TerminalNode> list) {
+        String selector = "";
+        for (int i = 0; i < list.size(); i += 1) {
+            selector += list.get(i) + ":";
+        }
+        return selector;
+    }
 }

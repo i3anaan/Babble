@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class AssignNode extends ExprNode{
-
+public class AssignNode extends ExprNode {
     private VarRefNode variable;
     private ExprNode expression;
     

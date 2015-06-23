@@ -3,8 +3,7 @@ package org.twnc.irtree;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SymbolNode extends ExprNode{
-
+public class SymbolNode extends ExprNode {
     private String id;
     
     public SymbolNode(String id) {

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.twnc.compile.exceptions.MainMethodNotFoundException;
+
 public class ProgramNode extends Node {
     private List<MethodNode> methods;
     
@@ -32,7 +34,5 @@ public class ProgramNode extends Node {
     @Override
     public String toString() {
         return "Program";
-    }    
-    
-    public class MainMethodNotFoundException extends RuntimeException {}
+    }
 }

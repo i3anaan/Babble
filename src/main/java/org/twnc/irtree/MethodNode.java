@@ -12,13 +12,13 @@ public class MethodNode extends Node {
     private SequenceNode sequence;
 
     public MethodNode(String selector,  List<VarRefNode> arguments, SequenceNode sequence) {
-        this.objectName = Optional.empty(); //TODO not so pretty
+        this.objectName = Optional.empty();
         this.selector = selector;
         this.arguments = arguments;
         this.sequence = sequence;
     }
     
-    public MethodNode(VarRefNode objectName, String selector,  List<VarRefNode> arguments, SequenceNode sequence) {
+    public MethodNode(VarRefNode objectName, String selector, List<VarRefNode> arguments, SequenceNode sequence) {
         this.objectName = Optional.ofNullable(objectName);
         this.selector = selector;
         this.arguments = arguments;
