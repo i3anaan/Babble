@@ -20,10 +20,6 @@ public class BlockNode extends ExprNode{
         return arguments;
     }
     
-    public VarRefNode getArgument(int index) {
-        return arguments.get(index);
-    }
-    
     public SequenceNode getSequence() {
         return sequence;
     }
@@ -33,7 +29,6 @@ public class BlockNode extends ExprNode{
         List<Node> children = new ArrayList<Node>();
         children.add(sequence);
         children.addAll(arguments);
-        
         return children;
     }
     

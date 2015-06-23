@@ -5,7 +5,7 @@ import java.util.List;
 
 public class IntLitNode extends ExprNode {
 
-    int value;
+    private int value;
     
     public IntLitNode(int value) {
         this.value = value;
@@ -20,13 +20,7 @@ public class IntLitNode extends ExprNode {
     }
     
     @Override
-    public List<Node> getChildren() {
-        List<Node> children = new ArrayList<Node>();
-        return children;
-    }
-    
-    @Override
     public String toString() {
-        return value+"";
+        return String.valueOf(value);
     }
 }

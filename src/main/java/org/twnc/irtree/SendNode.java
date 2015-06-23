@@ -34,12 +34,6 @@ public class SendNode extends ExprNode{
         return arguments;
     }
     
-    public ExprNode getArgument(int index) {
-        return arguments.get(index);
-    }
-    
-
-    
     @Override
     public List<Node> getChildren() {
         List<Node> children = new ArrayList<Node>();

@@ -15,19 +15,10 @@ public class SequenceNode extends Node{
     public List<ExprNode> getStatements() {
         return statements;
     }
-    
-    public ExprNode getStatement(int index) {
-        return statements.get(index);
-    }
-    
-
-    
+        
     @Override
     public List<Node> getChildren() {
-        List<Node> children = new ArrayList<Node>();
-        children.addAll(statements);
-        
-        return children;
+        return new ArrayList<Node>(statements);
     }
     
     @Override

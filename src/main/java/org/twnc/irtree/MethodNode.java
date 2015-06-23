@@ -3,29 +3,29 @@ package org.twnc.irtree;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
-public class MethodNode extends Node{
-
-    private VarRefNode objectName;
+public class MethodNode extends Node {
+    private Optional<VarRefNode> objectName;
     private String selector;
     private List<VarRefNode> arguments;
     private SequenceNode sequence;
 
     public MethodNode(String selector,  List<VarRefNode> arguments, SequenceNode sequence) {
-        this.objectName = null; //TODO not so pretty
+        this.objectName = Optional.empty(); //TODO not so pretty
         this.selector = selector;
         this.arguments = arguments;
         this.sequence = sequence;
     }
     
     public MethodNode(VarRefNode objectName, String selector,  List<VarRefNode> arguments, SequenceNode sequence) {
-        this.objectName = objectName;
+        this.objectName = Optional.ofNullable(objectName);
         this.selector = selector;
         this.arguments = arguments;
         this.sequence = sequence;
     }
 
-    public VarRefNode getObjectName() {
+    public Optional<VarRefNode> getObjectName() {
         return objectName;
     }
 
@@ -37,15 +37,11 @@ public class MethodNode extends Node{
         return arguments;
     }
     
-    public VarRefNode getArgument(int index) {
-        return arguments.get(index);
-    }
-    
     @Override
     public List<Node> getChildren() {
         List<Node> children = new ArrayList<Node>();
-        if (objectName != null) {
-            children.add(objectName);
+        if (objectName.isPresent()) {
+            children.add(objectName.get());
         }
         children.addAll(arguments);
         children.add(sequence);

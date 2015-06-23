@@ -20,12 +20,6 @@ public class VarRefNode extends ExprNode{
     }
     
     @Override
-    public List<Node> getChildren() {
-        List<Node> children = new ArrayList<Node>();
-        return children;
-    }
-    
-    @Override
     public String toString() {
         return "@"+name;
     }

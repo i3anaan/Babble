@@ -1,5 +1,6 @@
 package org.twnc.irtree;
 
+import java.beans.MethodDescriptor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,27 +90,20 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitGlobalMethodDefinition(GlobalMethodDefinitionContext ctx) {
+    public Node visitMthd(MthdContext ctx) {
+        VarRefNode objectName;
+        
+        if (ctx.object != null) {
+            //ObjectMethodDefinition
+            objectName = new VarRefNode(ctx.object.getText());
+        } else {
+            //GlobalMethodDefinition
+            objectName = null;
+        }
         String selector = "";
         List<VarRefNode> arguments = new ArrayList<VarRefNode>();
 
         for (int i = 0; i < ctx.ID().size(); i += 2) {
-            selector += ctx.ID(i) + ":";
-            arguments.add(new VarRefNode(ctx.ID(i + 1).getText()));
-        }
-        
-        SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
-
-        return new MethodNode(selector, arguments, sequence);
-    }
-
-    @Override
-    public Node visitClassMethodDefinition(ClassMethodDefinitionContext ctx) {
-        VarRefNode objectName = new VarRefNode(ctx.object.getText());
-        String selector = "";
-        List<VarRefNode> arguments = new ArrayList<VarRefNode>();
-
-        for (int i = 1; i < ctx.ID().size(); i += 2) {
             selector += ctx.ID(i) + ":";
             arguments.add(new VarRefNode(ctx.ID(i + 1).getText()));
         }
@@ -162,13 +156,5 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     @Override
     public Node visitLoneExpr(LoneExprContext ctx) {
         return visit(ctx.subexpr());
-    }
-
-    @Override
-    public Node visit(ParseTree tree) {
-        // TODO Auto-generated method stub
-        return super.visit(tree);
-    }
-    
-    
+    }    
 }

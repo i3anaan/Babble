@@ -4,8 +4,8 @@ program : mthd* ;
 
 sequence : (expr ('.'+ expr)*)? '.'? ;
 
-mthd : object=ID (ID ':' ID)+ '[' sequence ']'  # ClassMethodDefinition
-     | (ID ':' ID)+ '[' sequence ']'            # GlobalMethodDefinition
+mthd : object=ID (ID ':' ID)+ '[' sequence ']'  // ClassMethodDefinition
+     | (ID ':' ID)+ '[' sequence ']'            // GlobalMethodDefinition
      ;
      //TODO no-argument methods?
 

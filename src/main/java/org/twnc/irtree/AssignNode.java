@@ -1,6 +1,7 @@
 package org.twnc.irtree;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class AssignNode extends ExprNode{
@@ -23,11 +24,7 @@ public class AssignNode extends ExprNode{
     
     @Override
     public List<Node> getChildren() {
-        List<Node> children = new ArrayList<Node>();
-        children.add(variable);
-        children.add(expression);
-        
-        return children;
+        return Arrays.asList(variable, expression);
     }
     
     @Override
