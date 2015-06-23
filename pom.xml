@@ -10,16 +10,16 @@
     <name>babble</name>
     <url>http://maven.apache.org</url>
 
-	<developers>
-		<developer>
-			<id>i3anaan</id>
-			<name>Derk Snijders</name>
-		</developer>
-		<developer>
-			<id>wandernauta</id>
-			<name>Wander Nauta</name>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <id>i3anaan</id>
+            <name>Derk Snijders</name>
+        </developer>
+        <developer>
+            <id>wandernauta</id>
+            <name>Wander Nauta</name>
+        </developer>
+    </developers>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
