@@ -11,17 +11,17 @@ import org.twnc.BabbleParser.*;
 public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
-    public Node visitTrueExpr(TrueExprContext ctx) {
+    public Node visitTrueLit(TrueLitContext ctx) {
         return VarRefNode.TRUE;
     }
 
     @Override
-    public Node visitNilExpr(NilExprContext ctx) {
+    public Node visitNilLit(NilLitContext ctx) {
         return VarRefNode.NIL;
     }
 
     @Override
-    public Node visitSymbolExpr(SymbolExprContext ctx) {
+    public Node visitSymbolLit(SymbolLitContext ctx) {
         return new SymbolNode(ctx.ID().getText());
     }
 
@@ -36,17 +36,17 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitBlockExpr(BlockExprContext ctx) {
+    public Node visitBlock(BlockContext ctx) {
         List<VarRefNode> arguments = new ArrayList<>();
         for (TerminalNode node : ctx.ID()) {
             arguments.add(new VarRefNode(node.getText()));
         }
         SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
-        return new BlockExprNode(sequence, arguments);
+        return new BlockNode(sequence, arguments);
     }
 
     @Override
-    public Node visitFalseExpr(FalseExprContext ctx) {
+    public Node visitFalseLit(FalseLitContext ctx) {
         return VarRefNode.FALSE;
     }
 
@@ -59,30 +59,30 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitSequence(SequenceContext ctx) {
-        List<StatNode> statements = new ArrayList<>();
+        List<ExprNode> statements = new ArrayList<>();
 
-        for (StmtContext context : ctx.stmt()) {
-            statements.add((StatNode) visit(context));
+        for (ExprContext context : ctx.expr()) {
+            statements.add((ExprNode) visit(context));
         }
 
         return new SequenceNode(statements);
     }
 
     @Override
-    public Node visitObjKeywordSend(ObjKeywordSendContext ctx) {
+    public Node visitGlobalKeywordSend(GlobalKeywordSendContext ctx) {
         // TODO Auto-generated method stub
-        return super.visitObjKeywordSend(ctx);
+        return super.visitGlobalKeywordSend(ctx);
     }
 
     @Override
     public Node visitKeywordSend(KeywordSendContext ctx) {
-        StatNode statement = (StatNode) visit(ctx.stmt());
+        ExprNode statement = (ExprNode) visit(ctx.expr());
         String selector = "";
         List<ExprNode> arguments = new ArrayList<>();
 
         for (int i = 0; i < ctx.ID().size(); i += 1) {
             selector += ctx.ID(i) + ":";
-            arguments.add((ExprNode) visit(ctx.expr(i)));
+            arguments.add((ExprNode) visit(ctx.subexpr(i)));
         }
 
         return new SendNode(statement, selector, arguments);
@@ -121,36 +121,36 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitInfixSend(InfixSendContext ctx) {
-        StatNode statement = (StatNode) visit(ctx.stmt());
+        ExprNode expression = (ExprNode) visit(ctx.expr());
         String selector = ctx.method.getText();
         List<ExprNode> arguments = new ArrayList<>();
-        arguments.add((ExprNode) visit(ctx.expr()));
+        arguments.add((ExprNode) visit(ctx.subexpr()));
 
-        return new SendNode(statement, selector, arguments);
+        return new SendNode(expression, selector, arguments);
     }
 
     @Override
     public Node visitUnarySend(UnarySendContext ctx) {
-        StatNode statement = (StatNode) visit(ctx.stmt());
+        ExprNode expression = (ExprNode) visit(ctx.expr());
         String selector = ctx.method.getText();
         List<ExprNode> arguments = new ArrayList<>();
 
-        return new SendNode(statement, selector, arguments);
+        return new SendNode(expression, selector, arguments);
     }
 
     @Override
-    public Node visitStrExpr(StrExprContext ctx) {
+    public Node visitStrLit(StrLitContext ctx) {
         String quoted = ctx.string.getText();
         return new StringLitNode(quoted.substring(1, quoted.length()-1));
     }
 
     @Override
-    public Node visitVarExpr(VarExprContext ctx) {
+    public Node visitVarRef(VarRefContext ctx) {
         return new VarRefNode(ctx.getText());
     }
 
     @Override
-    public Node visitIntExpr(IntExprContext ctx) {
+    public Node visitIntLit(IntLitContext ctx) {
         return new IntLitNode(ctx.getText());
     }
 
@@ -161,7 +161,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitLoneExpr(LoneExprContext ctx) {
-        return visit(ctx.expr());
+        return visit(ctx.subexpr());
     }
 
     @Override

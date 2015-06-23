@@ -3,7 +3,7 @@ package org.twnc.irtree;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AssignNode extends StatNode{
+public class AssignNode extends ExprNode{
 
     private VarRefNode variable;
     private ExprNode expression;

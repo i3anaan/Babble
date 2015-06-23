@@ -4,25 +4,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SendNode extends StatNode{
+public class SendNode extends ExprNode{
 
-    private StatNode statement;
+    private ExprNode statement;
     private String selector;
     private List<ExprNode> arguments;
     
-    public SendNode(StatNode statement, String selector) {
+    public SendNode(ExprNode statement, String selector) {
         this.statement = statement;
         this.selector = selector;
         this.arguments = new ArrayList<>();
     }
     
-    public SendNode(StatNode statement, String selector, List<ExprNode> arguments) {
+    public SendNode(ExprNode statement, String selector, List<ExprNode> arguments) {
         this.statement = statement;
         this.selector = selector;
         this.arguments = arguments;
     }
     
-    public StatNode getStatement() {
+    public ExprNode getStatement() {
         return statement;
     }
     

@@ -56,9 +56,9 @@ public class App extends BabbleBaseListener implements Opcodes {
             out.print(Graphvizivier.nodeToGraph(irtree));
             out.close();
             
-            App app = new App(file.getName().split("\\.")[0]);
-            walker.walk(app, tree);
-            app.writeBytecode(target);
+            //App app = new App(file.getName().split("\\.")[0]);
+            //walker.walk(app, tree);
+            //app.writeBytecode(target);
 
             System.out.println(String.format("[ OK ] Compiled %s", target));
         }
@@ -101,7 +101,7 @@ public class App extends BabbleBaseListener implements Opcodes {
     }
 
     @Override
-    public void exitVarExpr(BabbleParser.VarExprContext ctx) {
+    public void exitVarRef(BabbleParser.VarRefContext ctx) {
         mv.visitTypeInsn(NEW, "Core$BObject");
         mv.visitInsn(DUP);
         mv.visitMethodInsn(INVOKESPECIAL, "Core$BObject", "<init>", "()V", false);
@@ -113,28 +113,28 @@ public class App extends BabbleBaseListener implements Opcodes {
     }
 
     @Override
-    public void exitNilExpr(BabbleParser.NilExprContext ctx) {
+    public void exitNilLit(BabbleParser.NilLitContext ctx) {
         mv.visitTypeInsn(NEW, "Core$BNil");
         mv.visitInsn(DUP);
         mv.visitMethodInsn(INVOKESPECIAL, "Core$BNil", "<init>", "()V", false);
     }
 
     @Override
-    public void exitFalseExpr(BabbleParser.FalseExprContext ctx) {
+    public void exitFalseLit(BabbleParser.FalseLitContext ctx) {
         mv.visitTypeInsn(NEW, "Core$BFalse");
         mv.visitInsn(DUP);
         mv.visitMethodInsn(INVOKESPECIAL, "Core$BFalse", "<init>", "()V", false);
     }
 
     @Override
-    public void exitTrueExpr(BabbleParser.TrueExprContext ctx) {
+    public void exitTrueLit(BabbleParser.TrueLitContext ctx) {
         mv.visitTypeInsn(NEW, "Core$BTrue");
         mv.visitInsn(DUP);
         mv.visitMethodInsn(INVOKESPECIAL, "Core$BTrue", "<init>", "()V", false);
     }
 
     @Override
-    public void exitSymbolExpr(BabbleParser.SymbolExprContext ctx) {
+    public void exitSymbolLit(BabbleParser.SymbolLitContext ctx) {
         String sym = ctx.ID().getText();
 
         int num;
@@ -153,7 +153,7 @@ public class App extends BabbleBaseListener implements Opcodes {
     }
 
     @Override
-    public void exitStrExpr(BabbleParser.StrExprContext ctx) {
+    public void exitStrLit(BabbleParser.StrLitContext ctx) {
         String str = ctx.STRING().getText();
         mv.visitTypeInsn(NEW, "Core$BStr");
         mv.visitInsn(DUP);
@@ -167,7 +167,7 @@ public class App extends BabbleBaseListener implements Opcodes {
     }
 
     @Override
-    public void exitIntExpr(BabbleParser.IntExprContext ctx) {
+    public void exitIntLit(BabbleParser.IntLitContext ctx) {
         mv.visitTypeInsn(NEW, "Core$BInt");
         mv.visitInsn(DUP);
         mv.visitLdcInsn(ctx.getText());

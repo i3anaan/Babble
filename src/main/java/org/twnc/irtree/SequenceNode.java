@@ -6,17 +6,17 @@ import java.util.List;
 
 public class SequenceNode extends Node{
 
-    private List<StatNode> statements;
+    private List<ExprNode> statements;
     
-    public SequenceNode(List<StatNode> statements) {
+    public SequenceNode(List<ExprNode> statements) {
         this.statements = statements;
     }
     
-    public List<StatNode> getStatements() {
+    public List<ExprNode> getStatements() {
         return statements;
     }
     
-    public StatNode getStatement(int index) {
+    public ExprNode getStatement(int index) {
         return statements.get(index);
     }
     
