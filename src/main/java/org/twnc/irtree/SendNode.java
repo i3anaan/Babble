@@ -51,4 +51,10 @@ public class SendNode extends ExprNode {
     public String toString() {
         return "Send "+selector;
     }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        arguments.forEach(x -> x.accept(visitor));
+        visitor.visit(this);
+    }
 }

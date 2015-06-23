@@ -33,4 +33,11 @@ public class BlockNode extends ExprNode {
     public String toString() {
         return "Block";
     }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        arguments.forEach(x -> x.accept(visitor));
+        sequence.accept(visitor);
+        visitor.visit(this);
+    }
 }

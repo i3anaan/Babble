@@ -18,4 +18,9 @@ public class StringLitNode extends ExprNode {
     public String toString() {
         return string;
     }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
+    }
 }

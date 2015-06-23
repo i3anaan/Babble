@@ -48,7 +48,13 @@ public class MethodNode extends Node {
         
         return children;
     }
-    
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        sequence.accept(visitor);
+        visitor.visit(this);
+    }
+
     @Override
     public String toString() {
         return "Method "+selector;

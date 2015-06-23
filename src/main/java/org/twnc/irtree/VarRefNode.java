@@ -22,4 +22,9 @@ public class VarRefNode extends ExprNode {
     public String toString() {
         return "@"+name;
     }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
+    }
 }

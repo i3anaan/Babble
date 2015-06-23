@@ -23,4 +23,9 @@ public class IntLitNode extends ExprNode {
     public String toString() {
         return String.valueOf(value);
     }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
+    }
 }

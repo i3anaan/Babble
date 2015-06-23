@@ -30,4 +30,11 @@ public class AssignNode extends ExprNode {
     public String toString() {
         return "Assign";
     }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        variable.accept(visitor);
+        expression.accept(visitor);
+        visitor.visit(this);
+    }
 }

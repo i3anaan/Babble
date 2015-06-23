@@ -18,4 +18,9 @@ public class SymbolNode extends ExprNode {
     public String toString() {
         return "#"+id;
     }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
+    }
 }
