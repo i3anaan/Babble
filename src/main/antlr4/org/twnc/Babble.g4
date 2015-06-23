@@ -40,7 +40,7 @@ INTEGER   : '-'? [0-9]+;
 STRING    : '"' (.*?) '"';
 
 //MAYBE: think of something smart for associativity
-OPERATOR  : ('+' | '-' | '*' | '/' | '=' | '!' | ',' )+;
+OPERATOR  : ('+' | '-' | '*' | '/' | '=' | '!' | ',' | '<' | '>' )+;
 
 
 COMMENT   : '/*' (.)*? '*/' -> skip;
