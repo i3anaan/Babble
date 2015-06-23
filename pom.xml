@@ -90,19 +90,21 @@
                     <execution>
                         <id>compile-babble-tests</id>
                         <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
+                        <goals><goal>java</goal></goals>
+                        <configuration>
+                            <mainClass>org.twnc.App</mainClass>
+                            <arguments><argument>src/test/bla/SelfTest.bla</argument></arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>run-babble-tests</id>
+                        <phase>integration-test</phase>
+                        <goals><goal>java</goal></goals>
+                        <configuration>
+                            <mainClass>SelfTest</mainClass>
+                        </configuration>
                     </execution>
                 </executions>
-                <configuration>
-                    <executable>java</executable>
-                    <arguments>
-                        <argument>-jar</argument>
-                        <argument>target/${project.artifactId}-${project.version}-jar-with-dependencies.jar</argument>
-                        <argument>src/test/bla/SelfTest.bla</argument>
-                    </arguments>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -113,24 +115,6 @@
                         <exclude>SelfTest.class</exclude>
                     </excludes>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.18.1</version>
-                <configuration>
-                    <includes>
-                        <include>SelfTest.class</include>
-                    </includes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

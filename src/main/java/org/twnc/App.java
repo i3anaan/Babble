@@ -75,17 +75,6 @@ public class App extends BabbleBaseListener implements Opcodes {
         {
             mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
             mv.visitCode();
-            mv.visitTypeInsn(NEW, name);
-            mv.visitInsn(DUP);
-            mv.visitMethodInsn(INVOKESPECIAL, name, "<init>", "()V", false);
-            mv.visitMethodInsn(INVOKEVIRTUAL, name, "testAll", "()V", false);
-            mv.visitInsn(RETURN);
-            mv.visitMaxs(0, 0);
-            mv.visitEnd();
-        }
-        {
-            mv = cw.visitMethod(ACC_PUBLIC, "testAll", "()V", null, null);
-            mv.visitCode();
         }
     }
 

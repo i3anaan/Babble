@@ -8,42 +8,44 @@
 true assert:"true".
 false not assert:"false".
 
-(true or:true) assert:"true or true".
-(true or:false) assert:"true or false".
-(false or:true) assert:"false or true".
+(true or:true) assert:"true or:true".
+(true or:false) assert:"true or:false".
+(false or:true) assert:"false or:true".
 
-false and:true not assert.
+(false and:true) not assert:"false and:true".
 
 /* Maths */
 
-10 == 10 assert.
-(10 > 5) assert.
-10 negate == -10 assert.
-10 + 10 == 20 assert.
-20 / 10 == 2 assert.
-3 + 4 * 5 == 35 assert.
-3 + (4 * 5) == 23 assert.
--10 abs == 10 assert.
+(10 == 10) assert:"int equality".
+(10 > 5) assert:">".
+(10 negate == -10) assert:"negate".
+(10 + 10 == 20) assert:"+".
+(20 / 10 == 2) assert:"/".
+(3 + 4 * 5 == 35) assert:"left-to-right".
+(3 + (4 * 5) == 23) assert:"nested".
+(-10 abs == 10) assert:"abs".
 
 /* Strings */
-"hello" == "hello" assert.
-"WORLD" lower == "world" assert.
-"con", "cat", "e", "nation" == "concatenation" assert.
-"string replacement" replace: "re" with: "dis" == "string displacement" assert.
+("hello" == "hello") assert:"string equality".
+("WORLD" lower == "world") assert:"lower".
+("con", "cat", "e", "nation" == "concatenation") assert:"concat".
+("string replacement" replace: "re" with: "dis" == "string displacement") assert:"replace:with:".
 
 /* Symbols */
-#Monday asString == "#Monday" assert.
-#Monday asInt == 0 assert.
-#Tuesday asString == "#Tuesday" assert.
-#Tuesday asInt == 1 assert.
+(#Monday asString == "#Monday") assert:"symbol asString".
+(#Tuesday asString == "#Tuesday") assert:"symbol asString".
+(#Monday asInt == 0) assert assert:"symbol asInt".
+(#Tuesday asInt == 1) assert assert:"symbol asInt".
 
 /* Truthiness */
-true asBool assert.
-10 asBool assert.
-"hello" asBool assert.
-#symbol asBool assert.
+(true asBool) assert:"true asBool".
+(10 asBool) assert:"ten asBool".
+("hello" asBool) assert:"string asBool".
+(#symbol asBool) assert:"symbol asBool".
 
-false asBool not assert.
-nil asBool not assert.
-0 asBool not assert.
-"" asBool not assert.
+(false asBool not) assert:"false asBool".
+(nil asBool not) assert:"nil asBool".
+(0 asBool not) assert:"zero int asBool".
+("" asBool not) assert: "empty string asBool".
+
+"done." print.
