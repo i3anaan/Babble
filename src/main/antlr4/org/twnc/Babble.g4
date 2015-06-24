@@ -1,32 +1,34 @@
 grammar Babble;
 
-program : sequence ;
+program : mthd* ;
 
-sequence : defs? (stmt ('.'+ stmt)*)? '.'? ;
+sequence : (expr ('.'+ expr)*)? '.'? ;
 
-stmt : ID ':=' expr                     # Assignment
-     | stmt method=ID                   # UnarySend
-     | stmt method=OPERATOR expr        # InfixSend
-     | stmt (ID ':' expr)+              # KeywordSend
-     | (ID ':' expr)+                   # ObjKeywordSend
-     | ID (ID ':' ID)+ '[' sequence ']' # MethodDefinition
+mthd : object=ID (ID ':' ID)+ '[' sequence ']'  // ClassMethodDefinition
+     | (ID ':' ID)+ '[' sequence ']'            // GlobalMethodDefinition
+     ;
+     //TODO no-argument methods?
+
+expr : ID ':=' expr                     # Assignment
+     | expr method=ID                      # UnarySend
+     | expr method=OPERATOR subexpr        # InfixSend
+     | expr (ID ':' subexpr)+              # KeywordSend
+     | (ID ':' subexpr)+                   # GlobalKeywordSend //TODO put in IRtree
 //MAYBE: Add types to method definition     
-     | expr                             # LoneExpr
+     | subexpr                             # LoneExpr
+     ;
+
+subexpr : value=INTEGER            # IntLit
+     | string=STRING               # StrLit
+     | TRUE                        # TrueLit
+     | FALSE                       # FalseLit
+     | NIL                         # NilLit
+     | ID                          # VarRef
+     | '#' ID                      # SymbolLit
+     | '[' (ID* '|')? sequence ']' # Block
+     | '(' expr ')'                # ParenExpr
      ;
 //MAYBE: Add return statement (Currently last expression)
-
-defs : '|' ID+ '|' ;
-
-expr : value=INTEGER               # IntExpr
-     | string=STRING               # StrExpr
-     | TRUE                        # TrueExpr
-     | FALSE                       # FalseExpr
-     | NIL                         # NilExpr
-     | ID                          # VarExpr
-     | '#' ID                      # SymbolExpr
-     | '[' (ID* '|')? sequence ']' # BlockExpr
-     | '(' stmt ')'                # ParenExpr
-     ;
 //TODO: Array syntax ('{}')
 
 TRUE : 'true';

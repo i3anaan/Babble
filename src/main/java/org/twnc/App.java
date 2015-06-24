@@ -3,6 +3,10 @@ package org.twnc;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.twnc.BabbleParser.ProgramContext;
+import org.twnc.irtree.ASTGenerator;
+import org.twnc.irtree.Node;
+import org.twnc.util.Graphvizivier;
 import org.objectweb.asm.*;
 
 import java.io.*;
@@ -40,6 +44,13 @@ public class App extends BabbleBaseListener implements Opcodes {
 
             ParseTreeWalker walker = new ParseTreeWalker();
             ParseTree tree = parser.program();
+            
+            ASTGenerator generator = new ASTGenerator();
+            Node irtree = generator.visitProgram((ProgramContext) tree);
+            PrintWriter out = new PrintWriter("target/classes/" + file.getName().replace(".bla", ".dot"));
+            out.print(Graphvizivier.nodeToGraph(irtree));
+            out.close();
+            
             App app = new App(file.getName().split("\\.")[0]);
             walker.walk(app, tree);
             app.writeBytecode(target);
@@ -86,7 +97,7 @@ public class App extends BabbleBaseListener implements Opcodes {
     }
 
     @Override
-    public void exitVarExpr(BabbleParser.VarExprContext ctx) {
+    public void exitVarRef(BabbleParser.VarRefContext ctx) {
         mv.visitTypeInsn(NEW, "org/twnc/runtime/BObject");
         mv.visitInsn(DUP);
         mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BObject", "<init>", "()V", false);
@@ -98,28 +109,28 @@ public class App extends BabbleBaseListener implements Opcodes {
     }
 
     @Override
-    public void exitNilExpr(BabbleParser.NilExprContext ctx) {
+    public void exitNilLit(BabbleParser.NilLitContext ctx) {
         mv.visitTypeInsn(NEW, "org/twnc/runtime/BNil");
         mv.visitInsn(DUP);
         mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BNil", "<init>", "()V", false);
     }
 
     @Override
-    public void exitFalseExpr(BabbleParser.FalseExprContext ctx) {
+    public void exitFalseLit(BabbleParser.FalseLitContext ctx) {
         mv.visitTypeInsn(NEW, "org/twnc/runtime/BFalse");
         mv.visitInsn(DUP);
         mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BFalse", "<init>", "()V", false);
     }
 
     @Override
-    public void exitTrueExpr(BabbleParser.TrueExprContext ctx) {
+    public void exitTrueLit(BabbleParser.TrueLitContext ctx) {
         mv.visitTypeInsn(NEW, "org/twnc/runtime/BTrue");
         mv.visitInsn(DUP);
         mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BTrue", "<init>", "()V", false);
     }
 
     @Override
-    public void exitSymbolExpr(BabbleParser.SymbolExprContext ctx) {
+    public void exitSymbolLit(BabbleParser.SymbolLitContext ctx) {
         String sym = ctx.ID().getText();
 
         int num;
@@ -138,7 +149,7 @@ public class App extends BabbleBaseListener implements Opcodes {
     }
 
     @Override
-    public void exitStrExpr(BabbleParser.StrExprContext ctx) {
+    public void exitStrLit(BabbleParser.StrLitContext ctx) {
         String str = ctx.STRING().getText();
         mv.visitTypeInsn(NEW, "org/twnc/runtime/BStr");
         mv.visitInsn(DUP);
@@ -152,7 +163,7 @@ public class App extends BabbleBaseListener implements Opcodes {
     }
 
     @Override
-    public void exitIntExpr(BabbleParser.IntExprContext ctx) {
+    public void exitIntLit(BabbleParser.IntLitContext ctx) {
         mv.visitTypeInsn(NEW, "org/twnc/runtime/BInt");
         mv.visitInsn(DUP);
         mv.visitLdcInsn(ctx.getText());

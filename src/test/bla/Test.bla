@@ -3,6 +3,7 @@
  * Functional tests for the Babble language.
  */
 
+Main main: [
 /* Booleans */
 
 true assert.
@@ -49,3 +50,4 @@ nil asBool not assert.
 "" asBool not assert.
 
 "ok" print.
+]
