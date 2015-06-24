@@ -20,7 +20,7 @@ public class StringLitNode extends ExprNode {
     }
 
     @Override
-    public void accept(ASTVisitor visitor) {
-        visitor.visit(this);
+    public <T> T accept(ASTVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

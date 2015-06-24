@@ -53,8 +53,7 @@ public class SendNode extends ExprNode {
     }
 
     @Override
-    public void accept(ASTVisitor visitor) {
-        arguments.forEach(x -> x.accept(visitor));
-        visitor.visit(this);
+    public <T> T accept(ASTVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

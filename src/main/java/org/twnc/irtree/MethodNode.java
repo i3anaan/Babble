@@ -36,6 +36,10 @@ public class MethodNode extends Node {
     public List<VarRefNode> getArguments() {
         return arguments;
     }
+
+    public SequenceNode getSequence() {
+        return sequence;
+    }
     
     @Override
     public List<Node> getChildren() {
@@ -50,13 +54,12 @@ public class MethodNode extends Node {
     }
 
     @Override
-    public void accept(ASTVisitor visitor) {
-        sequence.accept(visitor);
-        visitor.visit(this);
+    public String toString() {
+        return "Method "+selector;
     }
 
     @Override
-    public String toString() {
-        return "Method "+selector;
+    public <T> T accept(ASTVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

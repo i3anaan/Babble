@@ -37,8 +37,7 @@ public class ProgramNode extends Node {
     }
 
     @Override
-    public void accept(ASTVisitor visitor) {
-        methods.forEach(x -> x.accept(visitor));
-        visitor.visit(this);
+    public <T> T accept(ASTVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }
