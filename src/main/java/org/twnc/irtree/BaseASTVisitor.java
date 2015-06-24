@@ -31,14 +31,14 @@ public class BaseASTVisitor<T> extends ASTVisitor<T> {
 
     @Override
     public T visit(SendNode sendNode) {
-        sendNode.getStatement().accept(this);
+        sendNode.getExpression().ifPresent(x-> x.accept(this));
         sendNode.getArguments().forEach(x -> x.accept(this));
         return null;
     }
 
     @Override
     public T visit(SequenceNode sequenceNode) {
-        sequenceNode.getStatements().forEach(x -> x.accept(this));
+        sequenceNode.getExpressions().forEach(x -> x.accept(this));
         return null;
     }
 
