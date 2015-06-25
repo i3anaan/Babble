@@ -1,5 +1,6 @@
 package org.twnc.irtree;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,5 +18,10 @@ public class StringLitNode extends ExprNode {
     @Override
     public String toString() {
         return string;
+    }
+
+    @Override
+    public Color getColor() {
+        return new Color(26, 188, 156);
     }
 }

@@ -1,5 +1,6 @@
 package org.twnc.irtree;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,5 +22,10 @@ public class VarRefNode extends ExprNode {
     @Override
     public String toString() {
         return "@"+name;
+    }
+
+    @Override
+    public Color getColor() {
+        return new Color(233, 139, 57);
     }
 }

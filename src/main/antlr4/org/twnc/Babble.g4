@@ -14,7 +14,7 @@ expr : ID ':=' expr                     # Assignment
      | expr method=OPERATOR subexpr        # InfixSend
      | expr (ID ':' subexpr)+              # KeywordSend
      | (ID ':' subexpr)+                   # GlobalKeywordSend //TODO put in IRtree
-//MAYBE: Add types to method definition     
+//MAYBE: Add types to method definition
      | subexpr                             # LoneExpr
      ;
 
