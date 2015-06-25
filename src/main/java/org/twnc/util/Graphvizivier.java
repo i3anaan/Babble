@@ -25,7 +25,7 @@ public class Graphvizivier {
     private void appendNodes(StringBuilder sb, Node node) {
         sb.append("\t" + node.hashCode() + " [");
         sb.append("label=\"" + node.toString().replace("\"", "\\\"") + "\" ");
-        sb.append("color=\"" + node.describeColor() + "\"");
+        sb.append("color=\"" + describeColor(node) + "\"");
         sb.append("];\n");
 
         node.getChildren().forEach(child -> appendNodes(sb, child));
@@ -39,5 +39,14 @@ public class Graphvizivier {
         }
 
         node.getChildren().forEach(child -> appendEdges(sb, child));
+    }
+
+    private String describeColor(Node node) {
+        return String.format(
+                "#%02x%02x%02x",
+                node.getColor().getRed(),
+                node.getColor().getGreen(),
+                node.getColor().getBlue()
+        );
     }
 }
