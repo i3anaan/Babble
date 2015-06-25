@@ -1,5 +1,7 @@
 package org.twnc.util;
 
+import java.awt.Color;
+
 import org.twnc.irtree.Node;
 
 public class Graphvizivier {
@@ -13,7 +15,7 @@ public class Graphvizivier {
         StringBuilder sb = new StringBuilder();
 
         sb.append("digraph G {\n");
-        sb.append("\tnode [shape=box fontname=Helvetica];\n");
+        sb.append("\tnode [shape=\"box\" fontname=\"Helvetica\" style=\"filled\"];\n");
         appendNodes(sb, tree);
         sb.append("\n");
         appendEdges(sb, tree);
@@ -25,7 +27,8 @@ public class Graphvizivier {
     private void appendNodes(StringBuilder sb, Node node) {
         sb.append("\t" + node.hashCode() + " [");
         sb.append("label=\"" + node.toString().replace("\"", "\\\"") + "\" ");
-        sb.append("color=\"" + describeColor(node) + "\"");
+        sb.append("color=\"" + describeColor(node.getColor()) + "\" ");
+        sb.append("fillcolor=\"" + describeColor(node.getColor().brighter().brighter()) + "\"");
         sb.append("];\n");
 
         node.getChildren().forEach(child -> appendNodes(sb, child));
@@ -41,12 +44,12 @@ public class Graphvizivier {
         node.getChildren().forEach(child -> appendEdges(sb, child));
     }
 
-    private String describeColor(Node node) {
+    private String describeColor(Color color) {
         return String.format(
                 "#%02x%02x%02x",
-                node.getColor().getRed(),
-                node.getColor().getGreen(),
-                node.getColor().getBlue()
+                color.getRed(),
+                color.getGreen(),
+                color.getBlue()
         );
     }
 }
