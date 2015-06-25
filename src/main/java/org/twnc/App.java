@@ -72,7 +72,7 @@ public class App extends BabbleBaseListener implements Opcodes {
 
         cw.visit(52, ACC_PUBLIC + ACC_SUPER, name, null, "java/lang/Object", null);
 
-        cw.visitInnerClass("org.twnc.runtime.BObject", "org.twnc.runtime.Core", "BObject", ACC_PUBLIC + ACC_STATIC);
+        cw.visitInnerClass("org/twnc/runtime/BObject", "org/twnc/runtime/Core", "BObject", ACC_PUBLIC + ACC_STATIC);
 
         {
             mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
