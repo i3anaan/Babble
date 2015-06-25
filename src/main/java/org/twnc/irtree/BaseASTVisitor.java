@@ -1,15 +1,6 @@
 package org.twnc.irtree;
 
-import org.twnc.irtree.nodes.AssignNode;
-import org.twnc.irtree.nodes.BlockNode;
-import org.twnc.irtree.nodes.IntLitNode;
-import org.twnc.irtree.nodes.MethodNode;
-import org.twnc.irtree.nodes.ProgramNode;
-import org.twnc.irtree.nodes.SendNode;
-import org.twnc.irtree.nodes.SequenceNode;
-import org.twnc.irtree.nodes.StringLitNode;
-import org.twnc.irtree.nodes.SymbolNode;
-import org.twnc.irtree.nodes.VarRefNode;
+import org.twnc.irtree.nodes.*;
 
 /** An implementation of ASTVisitor that just crawls through the tree. */
 public class BaseASTVisitor<T> extends ASTVisitor<T> {
@@ -28,7 +19,6 @@ public class BaseASTVisitor<T> extends ASTVisitor<T> {
 
     @Override
     public T visit(MethodNode methodNode) {
-        methodNode.getObjectName().ifPresent(x -> x.accept(this));
         methodNode.getArguments().forEach(x -> x.accept(this));
         methodNode.getSequence().accept(this);
         return null;
@@ -37,6 +27,12 @@ public class BaseASTVisitor<T> extends ASTVisitor<T> {
     @Override
     public T visit(ProgramNode programNode) {
         programNode.getMethods().forEach(x -> x.accept(this));
+        return null;
+    }
+    
+    @Override
+    public T visit(ClazzNode clazzNode) {
+        clazzNode.getMethods().forEach(x -> x.accept(this));
         return null;
     }
 

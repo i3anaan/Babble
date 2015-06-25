@@ -1,15 +1,17 @@
 grammar Babble;
 
-program : mthd* ;
+program : clazz* ;
+
+clazz : classname=ID '[' mthd* '].'
+	  ;
+
+mthd : (ID ':' ID)+ '[' sequence '].'   # KeywordMethod
+	 | ID '[' sequence '].' 			# UnaryMethod
+     ;
 
 sequence : (expr ('.'+ expr)*)? '.'? ;
 
-mthd : object=ID (ID ':' ID)+ '[' sequence ']'  // ClassMethodDefinition
-     | (ID ':' ID)+ '[' sequence ']'            // GlobalMethodDefinition
-     ;
-     //TODO no-argument methods?
-
-expr : ID ':=' expr                     # Assignment
+expr : ID ':=' expr                        # Assignment
      | expr method=ID                      # UnarySend
      | expr method=OPERATOR subexpr        # InfixSend
      | expr (ID ':' subexpr)+              # KeywordSend
@@ -41,7 +43,6 @@ STRING    : '"' (.*?) '"';
 
 //MAYBE: think of something smart for associativity
 OPERATOR  : ('+' | '-' | '*' | '/' | '=' | '!' | ',' | '<' | '>' )+;
-
 
 COMMENT   : '/*' (.)*? '*/' -> skip;
 SEPARATOR : [ \t\r\n] -> skip;
