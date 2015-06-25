@@ -1,27 +1,14 @@
 package org.twnc.irtree;
 
-import java.beans.MethodDescriptor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.twnc.BabbleBaseVisitor;
 import org.twnc.BabbleParser.*;
-import org.twnc.irtree.nodes.AssignNode;
-import org.twnc.irtree.nodes.BlockNode;
-import org.twnc.irtree.nodes.ExprNode;
-import org.twnc.irtree.nodes.IntLitNode;
-import org.twnc.irtree.nodes.MethodNode;
-import org.twnc.irtree.nodes.Node;
-import org.twnc.irtree.nodes.ProgramNode;
-import org.twnc.irtree.nodes.SendNode;
-import org.twnc.irtree.nodes.SequenceNode;
-import org.twnc.irtree.nodes.StringLitNode;
-import org.twnc.irtree.nodes.SymbolNode;
-import org.twnc.irtree.nodes.VarRefNode;
+import org.twnc.irtree.nodes.*;
 
 public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
@@ -42,12 +29,23 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitProgram(ProgramContext ctx) {
-        List<MethodNode> methods = new ArrayList<MethodNode>();
-        for (MthdContext context : ctx.mthd()) {
-            methods.add((MethodNode) visit(context));
+        List<ClazzNode> classes = new ArrayList<ClazzNode>();
+        for (ClazzContext context : ctx.clazz()) {
+            classes.add((ClazzNode) visit(context));
         }
 
-        return new ProgramNode(methods);
+        return new ProgramNode(classes);
+    }
+
+    @Override
+    public Node visitClazz(ClazzContext ctx) {
+        String clazzName = ctx.classname.getText();
+        List<MethodNode> methods = new ArrayList<>();
+        for (MthdContext m : ctx.mthd()) {
+            methods.add((MethodNode) visit(m));
+        }
+        
+        return new ClazzNode(clazzName, methods);
     }
 
     @Override
@@ -93,14 +91,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     }
 
     @Override
-    public Node visitMthd(MthdContext ctx) {
-        VarRefNode objectName;
-        if (ctx.object != null) {
-            objectName = new VarRefNode(ctx.object.getText()); //ObjectMethodDefinition
-        } else {
-            objectName = null; //GlobalMethodDefinition
-        }
-
+    public Node visitKeywordMethod(KeywordMethodContext ctx) {
         String selector = "";
         List<VarRefNode> arguments = new ArrayList<VarRefNode>();
         for (int i = 0; i < ctx.ID().size(); i += 2) {
@@ -109,7 +100,15 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
         }
         SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
 
-        return new MethodNode(objectName, selector, arguments, sequence);
+        return new MethodNode(selector, arguments, sequence);
+    }
+    
+    @Override
+    public Node visitUnaryMethod(UnaryMethodContext ctx) {
+        String selector = ctx.ID().getText();
+        SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
+
+        return new MethodNode(selector, sequence);
     }
 
     @Override

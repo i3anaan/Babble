@@ -2,7 +2,8 @@
  * Test.bla
  * Functional tests for the Babble language.
  */
-main:main [
+Main [
+main [
 /* Booleans */
 
 true assert:"true".
@@ -49,4 +50,5 @@ false not assert:"false".
 ("" asBool not) assert: "empty string asBool".
 
 "done." print.
-]
+].
+].
