@@ -3,7 +3,7 @@
  * Functional tests for the Babble language.
  */
 
-Main main: [
+main:main [
 /* Booleans */
 
 true assert.
