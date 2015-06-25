@@ -1,6 +1,6 @@
 package org.twnc.util;
 
-import org.twnc.irtree.Node;
+import org.twnc.irtree.nodes.Node;
 
 public class Graphvizivier {
     

@@ -5,7 +5,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.twnc.BabbleParser.ProgramContext;
 import org.twnc.irtree.ASTGenerator;
-import org.twnc.irtree.Node;
+import org.twnc.irtree.nodes.Node;
 import org.twnc.util.Graphvizivier;
 import org.objectweb.asm.*;
 

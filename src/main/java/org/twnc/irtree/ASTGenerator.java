@@ -10,6 +10,18 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.twnc.BabbleBaseVisitor;
 import org.twnc.BabbleParser.*;
+import org.twnc.irtree.nodes.AssignNode;
+import org.twnc.irtree.nodes.BlockNode;
+import org.twnc.irtree.nodes.ExprNode;
+import org.twnc.irtree.nodes.IntLitNode;
+import org.twnc.irtree.nodes.MethodNode;
+import org.twnc.irtree.nodes.Node;
+import org.twnc.irtree.nodes.ProgramNode;
+import org.twnc.irtree.nodes.SendNode;
+import org.twnc.irtree.nodes.SequenceNode;
+import org.twnc.irtree.nodes.StringLitNode;
+import org.twnc.irtree.nodes.SymbolNode;
+import org.twnc.irtree.nodes.VarRefNode;
 
 public class ASTGenerator extends BabbleBaseVisitor<Node> {
 

@@ -1,5 +1,16 @@
 package org.twnc.irtree;
 
+import org.twnc.irtree.nodes.AssignNode;
+import org.twnc.irtree.nodes.BlockNode;
+import org.twnc.irtree.nodes.IntLitNode;
+import org.twnc.irtree.nodes.MethodNode;
+import org.twnc.irtree.nodes.ProgramNode;
+import org.twnc.irtree.nodes.SendNode;
+import org.twnc.irtree.nodes.SequenceNode;
+import org.twnc.irtree.nodes.StringLitNode;
+import org.twnc.irtree.nodes.SymbolNode;
+import org.twnc.irtree.nodes.VarRefNode;
+
 public abstract class ASTVisitor<T> {
     public abstract T visit(AssignNode assignNode);
     public abstract T visit(BlockNode blockNode);

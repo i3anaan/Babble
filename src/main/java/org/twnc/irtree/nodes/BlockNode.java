@@ -1,8 +1,10 @@
-package org.twnc.irtree;
+package org.twnc.irtree.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.twnc.irtree.ASTVisitor;
 
 public class BlockNode extends ExprNode {
     private SequenceNode sequence;
