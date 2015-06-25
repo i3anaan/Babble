@@ -1,8 +1,10 @@
-package org.twnc.irtree;
+package org.twnc.irtree.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.twnc.irtree.ASTVisitor;
 
 public class AssignNode extends ExprNode {
     private VarRefNode variable;
@@ -29,5 +31,10 @@ public class AssignNode extends ExprNode {
     @Override
     public String toString() {
         return "Assign";
+    }
+
+    @Override
+    public <T> T accept(ASTVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

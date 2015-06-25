@@ -1,7 +1,9 @@
-package org.twnc.irtree;
+package org.twnc.irtree.nodes;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.twnc.irtree.ASTVisitor;
 
 public class StringLitNode extends ExprNode {
     private String string;
@@ -17,5 +19,10 @@ public class StringLitNode extends ExprNode {
     @Override
     public String toString() {
         return string;
+    }
+
+    @Override
+    public <T> T accept(ASTVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

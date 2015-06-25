@@ -1,9 +1,11 @@
-package org.twnc.irtree;
+package org.twnc.irtree.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import org.twnc.irtree.ASTVisitor;
 
 public class SendNode extends ExprNode {
     private Optional<ExprNode> expression;
@@ -50,5 +52,10 @@ public class SendNode extends ExprNode {
     @Override
     public String toString() {
         return "Send "+selector;
+    }
+
+    @Override
+    public <T> T accept(ASTVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

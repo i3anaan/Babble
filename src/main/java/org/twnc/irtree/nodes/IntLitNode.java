@@ -1,7 +1,9 @@
-package org.twnc.irtree;
+package org.twnc.irtree.nodes;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.twnc.irtree.ASTVisitor;
 
 public class IntLitNode extends ExprNode {
 
@@ -22,5 +24,10 @@ public class IntLitNode extends ExprNode {
     @Override
     public String toString() {
         return String.valueOf(value);
+    }
+
+    @Override
+    public <T> T accept(ASTVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

@@ -1,9 +1,11 @@
-package org.twnc.irtree;
+package org.twnc.irtree.nodes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import org.twnc.irtree.ASTVisitor;
 
 public class MethodNode extends Node {
     private Optional<VarRefNode> objectName;
@@ -36,6 +38,10 @@ public class MethodNode extends Node {
     public List<VarRefNode> getArguments() {
         return arguments;
     }
+
+    public SequenceNode getSequence() {
+        return sequence;
+    }
     
     @Override
     public List<Node> getChildren() {
@@ -48,9 +54,14 @@ public class MethodNode extends Node {
         
         return children;
     }
-    
+
     @Override
     public String toString() {
         return "Method "+selector;
+    }
+
+    @Override
+    public <T> T accept(ASTVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }

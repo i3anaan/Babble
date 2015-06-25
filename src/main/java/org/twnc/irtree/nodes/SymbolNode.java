@@ -1,7 +1,9 @@
-package org.twnc.irtree;
+package org.twnc.irtree.nodes;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.twnc.irtree.ASTVisitor;
 
 public class SymbolNode extends ExprNode {
     private String id;
@@ -17,5 +19,10 @@ public class SymbolNode extends ExprNode {
     @Override
     public String toString() {
         return "#"+id;
+    }
+
+    @Override
+    public <T> T accept(ASTVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }
