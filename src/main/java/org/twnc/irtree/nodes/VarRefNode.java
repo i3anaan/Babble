@@ -1,5 +1,6 @@
 package org.twnc.irtree.nodes;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,5 +29,9 @@ public class VarRefNode extends ExprNode {
     @Override
     public <T> T accept(ASTVisitor<T> visitor) {
         return visitor.visit(this);
+    }
+    
+    public Color getColor() {
+        return new Color(233, 139, 57);
     }
 }

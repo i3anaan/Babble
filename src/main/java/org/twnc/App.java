@@ -44,13 +44,13 @@ public class App extends BabbleBaseListener implements Opcodes {
 
             ParseTreeWalker walker = new ParseTreeWalker();
             ParseTree tree = parser.program();
-            
+
             ASTGenerator generator = new ASTGenerator();
             Node irtree = generator.visitProgram((ProgramContext) tree);
             PrintWriter out = new PrintWriter("target/classes/" + file.getName().replace(".bla", ".dot"));
-            out.print(Graphvizivier.nodeToGraph(irtree));
+            out.print(new Graphvizivier(irtree).toGraph());
             out.close();
-            
+
             App app = new App(file.getName().split("\\.")[0]);
             walker.walk(app, tree);
             app.writeBytecode(target);
