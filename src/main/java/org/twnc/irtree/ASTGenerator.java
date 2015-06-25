@@ -1,15 +1,12 @@
 package org.twnc.irtree;
 
-import java.beans.MethodDescriptor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.twnc.BabbleBaseVisitor;
-import org.twnc.BabbleParser.ClazzContext;
 import org.twnc.BabbleParser.*;
 import org.twnc.irtree.nodes.*;
 

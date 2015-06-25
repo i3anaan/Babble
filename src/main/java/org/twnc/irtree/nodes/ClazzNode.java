@@ -6,8 +6,8 @@ import java.util.List;
 import org.twnc.irtree.ASTVisitor;
 
 public class ClazzNode extends Node {
-    String name;
-    List<MethodNode> methods;
+    private String name;
+    private List<MethodNode> methods;
 
     public ClazzNode(String name, List<MethodNode> methods) {
         this.name = name;

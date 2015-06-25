@@ -6,7 +6,7 @@ clazz : classname=ID '[' mthd* '].'
 	  ;
 
 mthd : (ID ':' ID)+ '[' sequence '].'   # KeywordMethod
-	 | ID '[' sequence '].' 			# UnaryMethod
+     | ID '[' sequence '].'             # UnaryMethod
      ;
 
 sequence : (expr ('.'+ expr)*)? '.'? ;
