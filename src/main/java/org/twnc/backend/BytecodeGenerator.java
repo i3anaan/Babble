@@ -20,18 +20,21 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
     public static final String OUTPUT_PATH = "target/classes/";
 
     private ClassWriter cw;
+    private ClazzNode cn;
     private MethodVisitor mv;
     
     @Override
     public Void visit(ClazzNode clazzNode) {
+        cn = clazzNode;
         cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES + ClassWriter.COMPUTE_MAXS);
-        cw.visit(52, ACC_PUBLIC + ACC_SUPER, clazzNode.getName(), null, "java/lang/Object", null);
+        cw.visit(52, ACC_PUBLIC + ACC_SUPER, clazzNode.getName(), null, "org/twnc/runtime/BObject", null);
+
         cw.visitInnerClass("org/twnc/runtime/BObject", "org/twnc/runtime/Core", "BObject", ACC_PUBLIC + ACC_STATIC);
         
         mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
         mv.visitCode();
         mv.visitVarInsn(ALOAD, 0);
-        mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BObject", "<init>", "()V", false);
         mv.visitInsn(RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -88,7 +91,18 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
         mv.visitInsn(ARETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        
+
+        if (methodNode.isTestMethod()) {
+            mv = cw.visitMethod(ACC_PUBLIC, methodNode.getSelector(), "()V", null, null);
+            mv.visitCode();
+            mv.visitVarInsn(ALOAD, 0);
+            mv.visitMethodInsn(INVOKEVIRTUAL, cn.getName(), methodNode.getSelector(), "()Lorg/twnc/runtime/BObject;", false);
+            mv.visitInsn(POP);
+            mv.visitInsn(RETURN);
+            mv.visitMaxs(0, 0);
+            mv.visitEnd();
+        }
+
         return null;
     }
 
@@ -159,6 +173,7 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
         switch (varRefNode.getName()) {
             case "true": object = "org/twnc/runtime/BTrue"; break;
             case "false": object = "org/twnc/runtime/BFalse"; break;
+            case "this": object = cn.getName(); break; // TODO this is not correct
             default: object = "org/twnc/runtime/BNil"; break;
         }
         mv.visitTypeInsn(NEW, object);

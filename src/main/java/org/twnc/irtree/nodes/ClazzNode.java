@@ -38,12 +38,6 @@ public class ClazzNode extends Node {
     }
 
     public boolean hasMain() {
-        for (MethodNode m : getMethods()) {
-            if (m.getSelector().equals("main")) {
-                return true;
-            }
-        }
-        return false;
+        return methods.stream().anyMatch(MethodNode::isMainMethod);
     }
-
 }

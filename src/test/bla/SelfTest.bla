@@ -3,52 +3,64 @@
  * Functional tests for the Babble language.
  */
 SelfTest [
-main [
-/* Booleans */
+    testBooleans [
+        true assert:"true".
+        false not assert:"false".
 
-true assert:"true".
-false not assert:"false".
+        (true or:true) assert:"true or:true".
+        (true or:false) assert:"true or:false".
+        (false or:true) assert:"false or:true".
 
-(true or:true) assert:"true or:true".
-(true or:false) assert:"true or:false".
-(false or:true) assert:"false or:true".
+        (false and:true) not assert:"false and:true".
+    ].
 
-(false and:true) not assert:"false and:true".
+    testMaths [
+        (10 == 10) assert:"int equality".
+        (10 > 5) assert:">".
+        (10 negate == -10) assert:"negate".
+        (10 + 10 == 20) assert:"+".
+        (20 / 10 == 2) assert:"/".
+        (3 + 4 * 5 == 35) assert:"left-to-right".
+        (3 + (4 * 5) == 23) assert:"nested".
+        (-10 abs == 10) assert:"abs".
+    ].
 
-/* Maths */
+    testStrings [
+        ("hello" == "hello") assert:"string equality".
+        ("WORLD" lower == "world") assert:"lower".
+        ("con", "cat", "e", "nation" == "concatenation") assert:"concat".
+        ("string replacement" replace: "re" with: "dis" == "string displacement") assert:"replace:with:".
+    ].
 
-(10 == 10) assert:"int equality".
-(10 > 5) assert:">".
-(10 negate == -10) assert:"negate".
-(10 + 10 == 20) assert:"+".
-(20 / 10 == 2) assert:"/".
-(3 + 4 * 5 == 35) assert:"left-to-right".
-(3 + (4 * 5) == 23) assert:"nested".
-(-10 abs == 10) assert:"abs".
+    testSymbols [
+        (#Monday asString == "#Monday") assert:"symbol asString".
+        (#Tuesday asString == "#Tuesday") assert:"symbol asString".
+        (#Monday asInt != #Tuesday asInt) assert:"symbol asInt".
+        (#Monday asInt == #Monday asInt) assert:"symbol asInt".
+    ].
 
-/* Strings */
-("hello" == "hello") assert:"string equality".
-("WORLD" lower == "world") assert:"lower".
-("con", "cat", "e", "nation" == "concatenation") assert:"concat".
-("string replacement" replace: "re" with: "dis" == "string displacement") assert:"replace:with:".
+    testTruthy [
+        (true asBool) assert:"true asBool".
+        (10 asBool) assert:"ten asBool".
+        ("hello" asBool) assert:"string asBool".
+        (#symbol asBool) assert:"symbol asBool".
+    ].
 
-/* Symbols */
-(#Monday asString == "#Monday") assert:"symbol asString".
-(#Tuesday asString == "#Tuesday") assert:"symbol asString".
-(#Monday asInt != #Tuesday asInt) assert:"symbol asInt".
-(#Monday asInt == #Monday asInt) assert:"symbol asInt".
+    testFalsy [
+        (false asBool not) assert:"false asBool".
+        (nil asBool not) assert:"nil asBool".
+        (0 asBool not) assert:"zero int asBool".
+        ("" asBool not) assert: "empty string asBool".
 
-/* Truthiness */
-(true asBool) assert:"true asBool".
-(10 asBool) assert:"ten asBool".
-("hello" asBool) assert:"string asBool".
-(#symbol asBool) assert:"symbol asBool".
+        "done." print.
+    ].
 
-(false asBool not) assert:"false asBool".
-(nil asBool not) assert:"nil asBool".
-(0 asBool not) assert:"zero int asBool".
-("" asBool not) assert: "empty string asBool".
-
-"done." print.
-].
+    main [
+        this testBooleans.
+        this testMaths.
+        this testStrings.
+        this testSymbols.
+        this testTruthy.
+        this testFalsy.
+    ].
 ].

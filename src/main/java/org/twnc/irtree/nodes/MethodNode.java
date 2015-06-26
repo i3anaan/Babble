@@ -50,4 +50,12 @@ public class MethodNode extends Node {
     public <T> T accept(ASTVisitor<T> visitor) {
         return visitor.visit(this);
     }
+
+    public boolean isMainMethod() {
+        return selector.equals("main");
+    }
+
+    public boolean isTestMethod() {
+        return selector.startsWith("test") && arguments.isEmpty();
+    }
 }
