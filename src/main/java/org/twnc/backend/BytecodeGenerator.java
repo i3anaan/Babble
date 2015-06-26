@@ -17,12 +17,16 @@ import org.twnc.irtree.BaseASTVisitor;
 import org.twnc.irtree.nodes.*;
 
 public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
-    public static final String OUTPUT_PATH = "target/classes/";
-
     private ClassWriter cw;
     private ClazzNode cn;
     private MethodVisitor mv;
-    
+
+    private String outDir;
+
+    public BytecodeGenerator(String targetDirectory) {
+        outDir = targetDirectory;
+    }
+
     @Override
     public Void visit(ClazzNode clazzNode) {
         cn = clazzNode;
@@ -56,7 +60,7 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
         
         cw.visitEnd();
         
-        String path = OUTPUT_PATH + clazzNode.getName() + ".class";
+        String path = outDir + clazzNode.getName() + ".class";
         
         try (OutputStream out = new FileOutputStream(path)) {
             out.write(cw.toByteArray());
@@ -96,7 +100,7 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
             mv = cw.visitMethod(ACC_PUBLIC, methodNode.getSelector(), "()V", null, null);
             mv.visitCode();
             mv.visitVarInsn(ALOAD, 0);
-            mv.visitMethodInsn(INVOKEVIRTUAL, cn.getName(), methodNode.getSelector(), "()Lorg/twnc/runtime/BObject;", false);
+            mv.visitMethodInsn(INVOKEVIRTUAL, cn.getName(), mangle(methodNode.getSelector()), "()Lorg/twnc/runtime/BObject;", false);
             mv.visitInsn(POP);
             mv.visitInsn(RETURN);
             mv.visitMaxs(0, 0);

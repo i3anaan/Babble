@@ -11,27 +11,28 @@ import java.io.*;
 
 public final class App {
     public static void main(String[] args) throws IOException {
-        for (String path : args) {
-            File file = new File(path);
+        String inPath = args[0];
+        String outDir = args.length > 1 ? args[1] : "target/classes/";
 
-            CharStream chars = new ANTLRInputStream(new FileInputStream(file));
-            Lexer lexer = new BabbleLexer(chars);
-            TokenStream tokens = new CommonTokenStream(lexer);
-            BabbleParser parser = new BabbleParser(tokens);
+        File file = new File(inPath);
 
-            ASTGenerator generator = new ASTGenerator();
-            Node irtree = generator.visitProgram(parser.program());
+        CharStream chars = new ANTLRInputStream(new FileInputStream(file));
+        Lexer lexer = new BabbleLexer(chars);
+        TokenStream tokens = new CommonTokenStream(lexer);
+        BabbleParser parser = new BabbleParser(tokens);
 
-            String dotFile = "target/classes/" + file.getName().replace(".bla", ".dot");
-            try (PrintWriter out = new PrintWriter(dotFile)) {
-                out.print(new Graphvizivier(irtree).toGraph());
-                out.close();
-            }
+        ASTGenerator generator = new ASTGenerator();
+        Node irtree = generator.visitProgram(parser.program());
 
-            ASTVisitor<Void> visitor = new BytecodeGenerator();
-            irtree.accept(visitor);
-
-            System.out.println(String.format("[ OK ] Compiled %s", file));
+        String dotFile = "target/classes/" + file.getName().replace(".bla", ".dot");
+        try (PrintWriter out = new PrintWriter(dotFile)) {
+            out.print(new Graphvizivier(irtree).toGraph());
+            out.close();
         }
+
+        ASTVisitor<Void> visitor = new BytecodeGenerator(outDir);
+        irtree.accept(visitor);
+
+        System.out.println(String.format("[ OK ] Compiled %s", file));
     }
 }
