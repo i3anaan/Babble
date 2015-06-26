@@ -41,7 +41,7 @@ public class ClazzNode extends Node {
 
     public boolean hasMain() {
         for (MethodNode m : getMethods()) {
-            if (m.getSelector().equals("babble")) {
+            if (m.getSelector().equals("main")) {
                 return true;
             }
         }
