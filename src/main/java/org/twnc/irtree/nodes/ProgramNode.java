@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProgramNode extends Node {
-    private List<ClazzNode> classes;
+    private final List<ClazzNode> classes;
 
     public ProgramNode(List<ClazzNode> methods) {
         this.classes = methods;

@@ -123,8 +123,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     public Node visitUnarySend(UnarySendContext ctx) {
         ExprNode expression = (ExprNode) visit(ctx.expr());
         String selector = ctx.ID().getText();
-        List<ExprNode> arguments = new ArrayList<>();
-        return new SendNode(expression, selector, arguments);
+        return new SendNode(expression, selector);
     }
 
     @Override

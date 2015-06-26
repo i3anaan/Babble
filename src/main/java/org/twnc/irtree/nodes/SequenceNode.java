@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SequenceNode extends Node {
-    private List<ExprNode> expressions;
+    private final List<ExprNode> expressions;
 
     public SequenceNode(List<ExprNode> expressions) {
         this.expressions = expressions;

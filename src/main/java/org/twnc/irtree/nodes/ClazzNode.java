@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClazzNode extends Node {
-    private String name;
-    private List<MethodNode> methods;
+    private final String name;
+    private final List<MethodNode> methods;
 
     public ClazzNode(String name, List<MethodNode> methods) {
         this.name = name;

@@ -5,7 +5,7 @@ import org.twnc.irtree.ASTVisitor;
 import java.awt.Color;
 
 public class SymbolNode extends ExprNode {
-    private String id;
+    private final String id;
     
     public SymbolNode(String id) {
         this.id = id;
@@ -21,7 +21,7 @@ public class SymbolNode extends ExprNode {
     
     @Override
     public String toString() {
-        return "#"+id;
+        return '#' + id;
     }
 
     @Override

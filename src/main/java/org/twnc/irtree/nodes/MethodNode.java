@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MethodNode extends Node {
-    private String selector;
-    private List<VarRefNode> arguments;
-    private SequenceNode sequence;
+    private final String selector;
+    private final List<VarRefNode> arguments;
+    private final SequenceNode sequence;
 
     public MethodNode(String selector,  List<VarRefNode> arguments, SequenceNode sequence) {
         this.selector = selector;

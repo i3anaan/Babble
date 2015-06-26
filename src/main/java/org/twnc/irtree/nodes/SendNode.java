@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public class SendNode extends ExprNode {
-    private Optional<ExprNode> expression;
-    private String selector;
-    private List<ExprNode> arguments;
+    private final Optional<ExprNode> expression;
+    private final String selector;
+    private final List<ExprNode> arguments;
 
     public SendNode(ExprNode expression, String selector, List<ExprNode> arguments) {
         this.expression = Optional.ofNullable(expression);

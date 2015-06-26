@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class AssignNode extends ExprNode {
-    private VarRefNode variable;
-    private ExprNode expression;
+    private final VarRefNode variable;
+    private final ExprNode expression;
     
     public AssignNode(VarRefNode variable, ExprNode expression) {
         this.variable = variable;

@@ -5,10 +5,8 @@ import org.twnc.irtree.ASTVisitor;
 import java.awt.Color;
 
 public class IntLitNode extends ExprNode {
+    private final String value;
 
-    private String value;
-    
-    
     public IntLitNode(String value) {
         this.value = value;
     }

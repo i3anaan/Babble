@@ -5,7 +5,7 @@ import org.twnc.irtree.ASTVisitor;
 import java.awt.Color;
 
 public class StringLitNode extends ExprNode {
-    private String string;
+    private final String string;
     
     public StringLitNode(String string) {
         this.string = string;
