@@ -14,17 +14,7 @@ import org.objectweb.asm.Handle;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.twnc.irtree.BaseASTVisitor;
-import org.twnc.irtree.nodes.AssignNode;
-import org.twnc.irtree.nodes.BlockNode;
-import org.twnc.irtree.nodes.ClazzNode;
-import org.twnc.irtree.nodes.IntLitNode;
-import org.twnc.irtree.nodes.MethodNode;
-import org.twnc.irtree.nodes.ProgramNode;
-import org.twnc.irtree.nodes.SendNode;
-import org.twnc.irtree.nodes.SequenceNode;
-import org.twnc.irtree.nodes.StringLitNode;
-import org.twnc.irtree.nodes.SymbolNode;
-import org.twnc.irtree.nodes.VarRefNode;
+import org.twnc.irtree.nodes.*;
 
 public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
 
