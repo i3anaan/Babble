@@ -113,9 +113,9 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitInfixSend(InfixSendContext ctx) {
-        ExprNode expression = (ExprNode) visit(ctx.expr());
-        String selector = ctx.method.getText() + ":";
-        List<ExprNode> arguments = visitExprArguments(ctx.subexpr());
+        ExprNode expression = (ExprNode) visit(ctx.rcv);
+        String selector = ctx.method.getText() + ':';
+        List<ExprNode> arguments = visitExprArguments(ctx.arg);
         return new SendNode(expression, selector, arguments);
     }
 

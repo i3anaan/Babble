@@ -12,9 +12,9 @@ mthd : (ID ':' ID)+ '[' sequence '].'   # KeywordMethod
 sequence : (expr ('.'+ expr)*)? '.'? ;
 
 expr : ID ':=' expr                        # Assignment
-     | expr method=ID                      # UnarySend
-     | expr method=OPERATOR subexpr        # InfixSend
-     | expr (ID ':' subexpr)+              # KeywordSend
+     | rcv=expr method=ID                  # UnarySend
+     | rcv=expr method=OPERATOR arg=expr   # InfixSend
+     | rcv=expr (ID ':' subexpr)+          # KeywordSend
      | (ID ':' subexpr)+                   # GlobalKeywordSend //TODO put in IRtree
 //MAYBE: Add types to method definition
      | subexpr                             # LoneExpr

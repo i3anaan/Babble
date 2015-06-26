@@ -35,8 +35,8 @@ false not assert:"false".
 /* Symbols */
 (#Monday asString == "#Monday") assert:"symbol asString".
 (#Tuesday asString == "#Tuesday") assert:"symbol asString".
-(#Monday asInt != (#Tuesday asInt)) assert:"symbol asInt".
-(#Monday asInt == (#Monday asInt)) assert:"symbol asInt".
+(#Monday asInt != #Tuesday asInt) assert:"symbol asInt".
+(#Monday asInt == #Monday asInt) assert:"symbol asInt".
 
 /* Truthiness */
 (true asBool) assert:"true asBool".
