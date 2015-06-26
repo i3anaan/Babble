@@ -1,12 +1,9 @@
 package org.twnc.irtree.nodes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
-import org.twnc.compile.exceptions.MainMethodNotFoundException;
 import org.twnc.irtree.ASTVisitor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProgramNode extends Node {
     private List<ClazzNode> classes;
@@ -17,21 +14,6 @@ public class ProgramNode extends Node {
 
     public List<ClazzNode> getMethods() {
         return classes;
-    }
-
-    public ClazzNode getMain() {
-        List<ClazzNode> list =  new ArrayList<>();
-        for (ClazzNode c : classes) {
-            for (MethodNode m : c.getMethods()) {
-                if (m.getSelector().equals("main")) {
-                    list.add(c);
-                }
-            }
-        }
-        if (!list.isEmpty()) {
-            return list.get(new Random().nextInt(list.size()));
-        }
-        throw new MainMethodNotFoundException();
     }
 
     @Override

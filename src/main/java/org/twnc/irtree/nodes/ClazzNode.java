@@ -1,11 +1,9 @@
 package org.twnc.irtree.nodes;
 
+import org.twnc.irtree.ASTVisitor;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import org.twnc.compile.exceptions.MainMethodNotFoundException;
-import org.twnc.irtree.ASTVisitor;
 
 public class ClazzNode extends Node {
     private String name;

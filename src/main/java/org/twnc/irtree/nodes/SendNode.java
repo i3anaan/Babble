@@ -1,12 +1,11 @@
 package org.twnc.irtree.nodes;
 
+import org.twnc.irtree.ASTVisitor;
+
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import org.twnc.irtree.ASTVisitor;
 
 public class SendNode extends ExprNode {
     private Optional<ExprNode> expression;

@@ -1,11 +1,9 @@
 package org.twnc.irtree.nodes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import org.twnc.irtree.ASTVisitor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MethodNode extends Node {
     private String selector;

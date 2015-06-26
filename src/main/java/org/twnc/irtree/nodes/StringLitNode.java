@@ -1,10 +1,8 @@
 package org.twnc.irtree.nodes;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.twnc.irtree.ASTVisitor;
+
+import java.awt.Color;
 
 public class StringLitNode extends ExprNode {
     private String string;
