@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import org.twnc.BabbleBaseVisitor;
 import org.twnc.BabbleParser.*;
 import org.twnc.irtree.nodes.*;
+import org.twnc.irtree.nodes.LiteralNode.Type;
 
 public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
@@ -24,7 +25,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitSymbolLit(SymbolLitContext ctx) {
-        return new SymbolNode(ctx.ID().getText());
+        return new LiteralNode(Type.SYMBOL, ctx.ID().getText());
     }
 
     @Override
@@ -130,7 +131,8 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     @Override
     public Node visitStrLit(StrLitContext ctx) {
         String quoted = ctx.string.getText();
-        return new StringLitNode(quoted.substring(1, quoted.length()-1));
+        String unquoted = quoted.substring(1, quoted.length() - 1);
+        return new LiteralNode(Type.STRING, unquoted);
     }
 
     @Override
@@ -140,7 +142,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitIntLit(IntLitContext ctx) {
-        return new IntLitNode(ctx.getText());
+        return new LiteralNode(Type.INTEGER, ctx.getText());
     }
 
     @Override
