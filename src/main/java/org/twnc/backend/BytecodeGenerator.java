@@ -17,18 +17,11 @@ import org.twnc.irtree.BaseASTVisitor;
 import org.twnc.irtree.nodes.*;
 
 public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
-
     public static final String OUTPUT_PATH = "target/classes/";
-    public static final String PROGRAM_NAME = "Babble";
-    
+
     private ClassWriter cw;
     private MethodVisitor mv;
     
-    @Override
-    public Void visit(ProgramNode programNode) {
-        return super.visit(programNode);
-    }
-
     @Override
     public Void visit(ClazzNode clazzNode) {
         cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES + ClassWriter.COMPUTE_MAXS);
@@ -75,7 +68,7 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
     @Override
     public Void visit(MethodNode methodNode) {
         StringBuilder type = new StringBuilder();
-        type.append("(");
+        type.append('(');
 
         for (int i = 0; i < methodNode.getArguments().size(); i++) {
             type.append("Lorg/twnc/runtime/BObject;");
@@ -100,12 +93,6 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
     }
 
     @Override
-    public Void visit(BlockNode blockNode) {
-        // TODO Auto-generated method stub
-        return super.visit(blockNode);
-    }
-
-    @Override
     public Void visit(SendNode sendNode) {
         super.visit(sendNode);
         
@@ -121,7 +108,7 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
                 bmt.toMethodDescriptorString());
 
         StringBuilder type = new StringBuilder();
-        type.append("(");
+        type.append('(');
 
         for (int i = 0; i < sendNode.getArguments().size() + 1; i++) {
             type.append("Lorg/twnc/runtime/BObject;");
@@ -132,12 +119,6 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
         mv.visitInvokeDynamicInsn(mangle(sendNode.getSelector()), type.toString(), bootstrap);
         
         return null;
-    }
-
-    @Override
-    public Void visit(AssignNode assignNode) {
-        // TODO Auto-generated method stub
-        return super.visit(assignNode);
     }
 
     @Override
@@ -186,8 +167,9 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
         return super.visit(varRefNode);
     }
     
-    private String mangle(Object... bits) {
+    private static String mangle(String str) {
         StringBuilder sb = new StringBuilder();
+        sb.append('_');
 
         Map<Character, String> rep = new HashMap<>();
         rep.put('+', "plus");
@@ -201,12 +183,10 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
         rep.put('>', "gt");
         rep.put(':', "_");
 
-        for (Object bit : bits) {
-            for (char c : bit.toString().toCharArray()) {
-                sb.append(rep.getOrDefault(c, "" + c));
-            }
+        for (char c : str.toCharArray()) {
+            sb.append(rep.getOrDefault(c, String.valueOf(c)));
         }
 
-        return "_" + sb.toString();
+        return sb.toString();
     }
 }
