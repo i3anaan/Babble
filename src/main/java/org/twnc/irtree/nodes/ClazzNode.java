@@ -2,7 +2,9 @@ package org.twnc.irtree.nodes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import org.twnc.compile.exceptions.MainMethodNotFoundException;
 import org.twnc.irtree.ASTVisitor;
 
 public class ClazzNode extends Node {
@@ -35,6 +37,15 @@ public class ClazzNode extends Node {
     @Override
     public String toString() {
         return "Class: " + name;
+    }
+
+    public boolean hasMain() {
+        for (MethodNode m : getMethods()) {
+            if (m.getSelector().equals("babble")) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

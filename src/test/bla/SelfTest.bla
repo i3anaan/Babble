@@ -2,8 +2,8 @@
  * Test.bla
  * Functional tests for the Babble language.
  */
-Main [
-main [
+SelfTest [
+babble [
 /* Booleans */
 
 true assert:"true".
@@ -35,8 +35,8 @@ false not assert:"false".
 /* Symbols */
 (#Monday asString == "#Monday") assert:"symbol asString".
 (#Tuesday asString == "#Tuesday") assert:"symbol asString".
-(#Monday asInt == 0) assert assert:"symbol asInt".
-(#Tuesday asInt == 1) assert assert:"symbol asInt".
+/* (#Monday asInt == 0) assert assert:"symbol asInt".
+(#Tuesday asInt == 1) assert assert:"symbol asInt". */
 
 /* Truthiness */
 (true asBool) assert:"true asBool".

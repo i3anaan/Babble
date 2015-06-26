@@ -17,6 +17,10 @@ public class SymbolNode extends ExprNode {
         return id;
     }
     
+    public int getNum() {
+        return this.hashCode();
+    }
+    
     @Override
     public String toString() {
         return "#"+id;

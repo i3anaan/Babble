@@ -4,7 +4,9 @@ import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.twnc.BabbleParser.ProgramContext;
+import org.twnc.backend.BytecodeGenerator;
 import org.twnc.irtree.ASTGenerator;
+import org.twnc.irtree.ASTVisitor;
 import org.twnc.irtree.nodes.Node;
 import org.twnc.util.Graphvizivier;
 import org.objectweb.asm.*;
@@ -52,8 +54,10 @@ public class App extends BabbleBaseListener implements Opcodes {
             out.close();
 
             App app = new App(file.getName().split("\\.")[0]);
-            walker.walk(app, tree);
-            app.writeBytecode(target);
+            //walker.walk(app, tree);
+            //app.writeBytecode(target);
+            ASTVisitor<Void> visitor = new BytecodeGenerator();
+            irtree.accept(visitor);           
 
             System.out.println(String.format("[ OK ] Compiled %s", target));
         }

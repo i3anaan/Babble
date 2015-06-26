@@ -19,12 +19,12 @@ public class ProgramNode extends Node {
         return classes;
     }
 
-    public MethodNode getMain() {
-        List<MethodNode> list =  new ArrayList<>();
+    public ClazzNode getMain() {
+        List<ClazzNode> list =  new ArrayList<>();
         for (ClazzNode c : classes) {
             for (MethodNode m : c.getMethods()) {
                 if (m.getSelector().equals("main")) {
-                    list.add(m);
+                    list.add(c);
                 }
             }
         }

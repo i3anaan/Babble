@@ -29,4 +29,9 @@ public abstract class BObject {
     public BObject _bangeq_(BObject that) {
         return BBool.of(!equals(that));
     }
+
+    public void main() {
+        // TODO Auto-generated method stub
+        
+    }
 }

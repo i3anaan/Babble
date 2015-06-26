@@ -8,23 +8,20 @@ import org.twnc.irtree.ASTVisitor;
 
 public class IntLitNode extends ExprNode {
 
-    private int value;
+    private String value;
     
-    public IntLitNode(int value) {
+    
+    public IntLitNode(String value) {
         this.value = value;
     }
     
-    public IntLitNode(String value) {
-        this.value = Integer.parseInt(value);
-    }
-    
-    public int getValue() {
+    public String getValue() {
         return value;
     }
     
     @Override
     public String toString() {
-        return String.valueOf(value);
+        return value;
     }
 
     @Override
