@@ -4,6 +4,7 @@
  */
 
 SelfTest [
+
     testAssert [
         true assert.
         false not assert.
@@ -42,6 +43,7 @@ SelfTest [
     ].
 
     testSymbols [
+        (#Monday == #Monday) assert.
         (#Monday asString == "#Monday") assert.
         (#Tuesday asString == "#Tuesday") assert.
         (#Monday asInt != #Tuesday asInt) assert.
@@ -62,9 +64,24 @@ SelfTest [
         ("" asBool not) assert.
     ].
 
-    testBlock [
+    testBlocks [
         [ true ] value assert.
         [ false ] value not assert.
+    ].
+
+    testNestedBlocks [
+        ([ [ [ [ 10 ] value. ] value. ] value. ] value == 10) assert.
+    ].
+
+    testIf [
+        (true  ifTrue: [ #yea ] == #yea) assert.
+        (false ifTrue: [ #yea ] == nil) assert.
+
+        (true  ifFalse: [ #yea ] == nil) assert.
+        (false ifFalse: [ #yea ] == #yea) assert.
+
+        (true  ifTrue: [ #a ] ifFalse: [ #b ] == #a) assert.
+        (false ifTrue: [ #a ] ifFalse: [ #b ] == #b) assert.
     ].
 
     main [

@@ -17,6 +17,11 @@ public class BTrue extends BBool {
     }
 
     @Override
+    public BObject _ifTrue_ifFalse_(BObject t, BObject f) {
+        return ((BBlock)t)._value();
+    }
+
+    @Override
     public BObject _asBool() {
         return new BTrue();
     }

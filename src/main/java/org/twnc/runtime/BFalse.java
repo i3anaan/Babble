@@ -17,6 +17,11 @@ public class BFalse extends BBool {
     }
 
     @Override
+    public BObject _ifTrue_ifFalse_(BObject t, BObject f) {
+        return ((BBlock)f)._value();
+    }
+
+    @Override
     public String toString() {
         return "false";
     }
