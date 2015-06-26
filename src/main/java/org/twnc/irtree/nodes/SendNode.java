@@ -39,17 +39,6 @@ public class SendNode extends ExprNode {
     }
 
     @Override
-    public List<Node> getChildren() {
-        List<Node> children = new ArrayList<Node>();
-        if(expression.isPresent()) {
-            children.add(expression.get());
-        }
-        children.addAll(arguments);
-
-        return children;
-    }
-
-    @Override
     public String toString() {
         return "Send "+selector;
     }

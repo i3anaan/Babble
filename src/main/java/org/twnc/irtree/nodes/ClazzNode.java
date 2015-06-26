@@ -2,7 +2,6 @@ package org.twnc.irtree.nodes;
 
 import org.twnc.irtree.ASTVisitor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ClazzNode extends Node {
@@ -21,12 +20,7 @@ public class ClazzNode extends Node {
     public List<MethodNode> getMethods() {
         return methods;
     }
-    
-    @Override
-    public List<Node> getChildren() {
-        return new ArrayList<>(methods);
-    }
-    
+
     @Override
     public <T> T accept(ASTVisitor<T> visitor) {
         return visitor.visit(this);

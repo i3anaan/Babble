@@ -6,7 +6,7 @@ import org.twnc.irtree.nodes.*;
 public class BaseASTVisitor<T> extends ASTVisitor<T> {
     @Override
     public T visit(ProgramNode programNode) {
-        programNode.getMethods().forEach(x -> x.accept(this));
+        programNode.getClasses().forEach(x -> x.accept(this));
         return null;
     }
     

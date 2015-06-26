@@ -2,7 +2,6 @@ package org.twnc.irtree.nodes;
 
 import org.twnc.irtree.ASTVisitor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProgramNode extends Node {
@@ -12,13 +11,8 @@ public class ProgramNode extends Node {
         this.classes = methods;
     }
 
-    public List<ClazzNode> getMethods() {
+    public List<ClazzNode> getClasses() {
         return classes;
-    }
-
-    @Override
-    public List<Node> getChildren() {
-        return new ArrayList<Node>(classes);
     }
 
     @Override

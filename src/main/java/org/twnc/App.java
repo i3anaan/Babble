@@ -5,7 +5,7 @@ import org.twnc.backend.BytecodeGenerator;
 import org.twnc.irtree.ASTGenerator;
 import org.twnc.irtree.ASTVisitor;
 import org.twnc.irtree.nodes.Node;
-import org.twnc.util.Graphvizivier;
+import org.twnc.util.Graphvizitor;
 
 import java.io.*;
 
@@ -24,14 +24,11 @@ public final class App {
         ASTGenerator generator = new ASTGenerator();
         Node irtree = generator.visitProgram(parser.program());
 
-        String dotFile = "target/classes/" + file.getName().replace(".bla", ".dot");
-        try (PrintWriter out = new PrintWriter(dotFile)) {
-            out.print(new Graphvizivier(irtree).toGraph());
-            out.close();
-        }
+        ASTVisitor<Void> graphVisitor = new Graphvizitor(outDir);
+        irtree.accept(graphVisitor);
 
-        ASTVisitor<Void> visitor = new BytecodeGenerator(outDir);
-        irtree.accept(visitor);
+        ASTVisitor<Void> bytecodeVisitor = new BytecodeGenerator(outDir);
+        irtree.accept(bytecodeVisitor);
 
         System.out.println(String.format("[ OK ] Compiled %s", file));
     }

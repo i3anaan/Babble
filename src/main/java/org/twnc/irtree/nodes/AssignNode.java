@@ -2,9 +2,6 @@ package org.twnc.irtree.nodes;
 
 import org.twnc.irtree.ASTVisitor;
 
-import java.util.Arrays;
-import java.util.List;
-
 public class AssignNode extends ExprNode {
     private final VarRefNode variable;
     private final ExprNode expression;
@@ -21,12 +18,7 @@ public class AssignNode extends ExprNode {
     public ExprNode getExpression() {
         return expression;
     }
-    
-    @Override
-    public List<Node> getChildren() {
-        return Arrays.asList(variable, expression);
-    }
-    
+
     @Override
     public String toString() {
         return "Assign";

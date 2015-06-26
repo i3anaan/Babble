@@ -31,15 +31,6 @@ public class MethodNode extends Node {
     public SequenceNode getSequence() {
         return sequence;
     }
-    
-    @Override
-    public List<Node> getChildren() {
-        List<Node> children = new ArrayList<Node>();
-        children.addAll(arguments);
-        children.add(sequence);
-        
-        return children;
-    }
 
     @Override
     public String toString() {

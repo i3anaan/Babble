@@ -2,7 +2,6 @@ package org.twnc.irtree.nodes;
 
 import org.twnc.irtree.ASTVisitor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BlockNode extends ExprNode {
@@ -21,15 +20,7 @@ public class BlockNode extends ExprNode {
     public SequenceNode getSequence() {
         return sequence;
     }
-    
-    @Override
-    public List<Node> getChildren() {
-        List<Node> children = new ArrayList<Node>();
-        children.add(sequence);
-        children.addAll(arguments);
-        return children;
-    }
-    
+
     @Override
     public String toString() {
         return "Block";
