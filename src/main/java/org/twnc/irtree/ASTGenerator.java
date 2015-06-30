@@ -114,18 +114,17 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitInfixSend(InfixSendContext ctx) {
-        ExprNode expression = (ExprNode) visit(ctx.expr());
-        String selector = ctx.method.getText();
-        List<ExprNode> arguments = visitExprArguments(ctx.subexpr());
+        ExprNode expression = (ExprNode) visit(ctx.rcv);
+        String selector = ctx.method.getText() + ':';
+        List<ExprNode> arguments = visitExprArguments(ctx.arg);
         return new SendNode(expression, selector, arguments);
     }
 
     @Override
     public Node visitUnarySend(UnarySendContext ctx) {
         ExprNode expression = (ExprNode) visit(ctx.expr());
-        String selector = buildSelector(ctx.ID());
-        List<ExprNode> arguments = new ArrayList<>();
-        return new SendNode(expression, selector, arguments);
+        String selector = ctx.ID().getText();
+        return new SendNode(expression, selector);
     }
 
     @Override
@@ -166,15 +165,11 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
         }
         return output;
     }
-
-    public String buildSelector(TerminalNode item) {
-        return buildSelector(Arrays.asList(item));
-    }
-
+    
     public String buildSelector(List<TerminalNode> list) {
         String selector = "";
         for (int i = 0; i < list.size(); i += 1) {
-            selector += list.get(i) + ":";
+            selector += list.get(i).toString() + ":";
         }
         return selector;
     }

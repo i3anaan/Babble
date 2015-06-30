@@ -1,20 +1,23 @@
 package org.twnc.runtime;
 
 public class BSymbol extends BObject {
-    private int num;
     private String symbol;
 
-    public BSymbol(String symbol, int num) {
-        this.num = num;
+    public BSymbol(String symbol) {
         this.symbol = symbol;
     }
 
     @Override
     public BObject _asInt() {
-        return new BInt(num);
+        return new BInt(symbol.hashCode());
     }
 
+    @Override
     public String toString() {
         return "#" + symbol;
+    }
+
+    public boolean equals(Object that) {
+        return that instanceof BSymbol && ((BSymbol)that).symbol.equals(this.symbol);
     }
 }

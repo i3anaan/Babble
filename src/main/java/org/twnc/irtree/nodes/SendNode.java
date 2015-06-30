@@ -1,17 +1,16 @@
 package org.twnc.irtree.nodes;
 
+import org.twnc.irtree.ASTVisitor;
+
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.twnc.irtree.ASTVisitor;
-
 public class SendNode extends ExprNode {
-    private Optional<ExprNode> expression;
-    private String selector;
-    private List<ExprNode> arguments;
+    private final Optional<ExprNode> expression;
+    private final String selector;
+    private final List<ExprNode> arguments;
 
     public SendNode(ExprNode expression, String selector, List<ExprNode> arguments) {
         this.expression = Optional.ofNullable(expression);
@@ -37,17 +36,6 @@ public class SendNode extends ExprNode {
 
     public List<ExprNode> getArguments() {
         return arguments;
-    }
-
-    @Override
-    public List<Node> getChildren() {
-        List<Node> children = new ArrayList<Node>();
-        if(expression.isPresent()) {
-            children.add(expression.get());
-        }
-        children.addAll(arguments);
-
-        return children;
     }
 
     @Override

@@ -1,13 +1,11 @@
 package org.twnc.irtree.nodes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import org.twnc.irtree.ASTVisitor;
 
+import java.util.List;
+
 public class SequenceNode extends Node {
-    private List<ExprNode> expressions;
+    private final List<ExprNode> expressions;
 
     public SequenceNode(List<ExprNode> expressions) {
         this.expressions = expressions;
@@ -15,11 +13,6 @@ public class SequenceNode extends Node {
 
     public List<ExprNode> getExpressions() {
         return expressions;
-    }
-
-    @Override
-    public List<Node> getChildren() {
-        return new ArrayList<Node>(expressions);
     }
 
     @Override

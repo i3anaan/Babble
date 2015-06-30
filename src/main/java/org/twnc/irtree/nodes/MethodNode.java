@@ -1,16 +1,14 @@
 package org.twnc.irtree.nodes;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import org.twnc.irtree.ASTVisitor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MethodNode extends Node {
-    private String selector;
-    private List<VarRefNode> arguments;
-    private SequenceNode sequence;
+    private final String selector;
+    private final List<VarRefNode> arguments;
+    private final SequenceNode sequence;
 
     public MethodNode(String selector,  List<VarRefNode> arguments, SequenceNode sequence) {
         this.selector = selector;
@@ -33,15 +31,6 @@ public class MethodNode extends Node {
     public SequenceNode getSequence() {
         return sequence;
     }
-    
-    @Override
-    public List<Node> getChildren() {
-        List<Node> children = new ArrayList<Node>();
-        children.addAll(arguments);
-        children.add(sequence);
-        
-        return children;
-    }
 
     @Override
     public String toString() {
@@ -51,5 +40,13 @@ public class MethodNode extends Node {
     @Override
     public <T> T accept(ASTVisitor<T> visitor) {
         return visitor.visit(this);
+    }
+
+    public boolean isMainMethod() {
+        return selector.equals("main");
+    }
+
+    public boolean isTestMethod() {
+        return selector.startsWith("test") && arguments.isEmpty();
     }
 }
