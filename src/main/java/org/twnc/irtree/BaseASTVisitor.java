@@ -50,23 +50,12 @@ public class BaseASTVisitor<T> extends ASTVisitor<T> {
     }
 
     @Override
-    public T visit(IntLitNode intLitNode) {
-        return null;
-    }
-
-
-    @Override
-    public T visit(StringLitNode stringLitNode) {
-        return null;
-    }
-
-    @Override
-    public T visit(SymbolNode symbolNode) {
-        return null;
-    }
-
-    @Override
     public T visit(VarRefNode varRefNode) {
+        return null;
+    }
+
+    @Override
+    public T visit(LiteralNode literalNode) {
         return null;
     }
 }
