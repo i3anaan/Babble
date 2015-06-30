@@ -1,6 +1,6 @@
 package org.twnc.util;
 
-import org.twnc.irtree.BaseASTVisitor;
+import org.twnc.irtree.ASTBaseVisitor;
 import org.twnc.irtree.nodes.*;
 
 import java.awt.Color;
@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Optional;
 
-public class Graphvizitor extends BaseASTVisitor<Void> {
+public class Graphvizitor extends ASTBaseVisitor<Void> {
     private final String outDir;
     private StringBuilder nodes;
     private StringBuilder edges;
@@ -87,6 +87,13 @@ public class Graphvizitor extends BaseASTVisitor<Void> {
         return makeNode(node);
     }
 
+    @Override
+    public Void visit(VarDeclNode node) {
+        makeNode(node);
+        makeEdges(node, node.getDecls());
+        return super.visit(node);
+    }
+
     private Void makeNode(Node node) {
         nodes.append("  ");
         nodes.append(node.hashCode());
@@ -100,6 +107,7 @@ public class Graphvizitor extends BaseASTVisitor<Void> {
 
     private Void makeEdge(Node node, Node otherNode) {
         edges.append("  ").append(node.hashCode()).append(" -> ").append(otherNode.hashCode()).append(";\n");
+        makeNode(otherNode);
         return null;
     }
 

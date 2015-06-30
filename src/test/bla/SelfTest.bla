@@ -62,6 +62,15 @@ SelfTest [
         ("" asBool not) assert.
     ].
 
+    testVarDecl [
+        | x |.
+        x := 2.
+        (x == 2) assert.
+        | x y z |.
+        z := 5.
+        (z == 5) assert.
+    ].
+
     main [
         "Please use `mvn verify` to run integration tests." print.
     ].

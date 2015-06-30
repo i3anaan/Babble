@@ -15,7 +15,7 @@ expr : ID ':=' expr                        # Assignment
      | rcv=expr method=ID                  # UnarySend
      | rcv=expr method=OPERATOR arg=expr   # InfixSend
      | rcv=expr (ID ':' subexpr)+          # KeywordSend
-     | (ID ':' subexpr)+                   # GlobalKeywordSend //TODO put in IRtree
+     | (ID ':' subexpr)+                   # GlobalKeywordSend
 //MAYBE: Add types to method definition
      | subexpr                             # LoneExpr
      ;
@@ -29,6 +29,7 @@ subexpr : value=INTEGER            # IntLit
      | '#' ID                      # SymbolLit
      | '[' (ID* '|')? sequence ']' # Block
      | '(' expr ')'                # ParenExpr
+     | '|' ID+ '|'                 # VarDecl
      ;
 //MAYBE: Add return statement (Currently last expression)
 //TODO: Array syntax ('{}')

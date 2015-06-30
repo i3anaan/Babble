@@ -13,10 +13,10 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.twnc.irtree.BaseASTVisitor;
+import org.twnc.irtree.ASTBaseVisitor;
 import org.twnc.irtree.nodes.*;
 
-public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
+public class BytecodeGenerator extends ASTBaseVisitor<Void> implements Opcodes {
     private ClassWriter cw;
     private ClazzNode cn;
     private MethodVisitor mv;

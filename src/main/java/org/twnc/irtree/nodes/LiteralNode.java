@@ -36,11 +36,11 @@ public class LiteralNode extends ExprNode {
     public Color getColor() {
         switch (type) {
             case INTEGER:
-                return new Color(52, 152, 219);
+                return new Color(52, 152, 255);
             case STRING:
-                return new Color(26, 188, 156);
+                return new Color(204, 88, 56);
             case SYMBOL:
-                return new Color(46, 204, 113);
+                return new Color(46, 204, 50);
             default:
                 return new Color(0, 0, 0);
         }

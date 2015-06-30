@@ -3,7 +3,7 @@ package org.twnc.irtree;
 import org.twnc.irtree.nodes.*;
 
 /** An implementation of ASTVisitor that just crawls through the tree. */
-public class BaseASTVisitor<T> extends ASTVisitor<T> {
+public class ASTBaseVisitor<T> extends ASTVisitor<T> {
     @Override
     public T visit(ProgramNode programNode) {
         programNode.getClasses().forEach(x -> x.accept(this));
@@ -49,6 +49,12 @@ public class BaseASTVisitor<T> extends ASTVisitor<T> {
     }
 
     @Override
+    public T visit(VarDeclNode varDeclNode) {
+        varDeclNode.getDecls().forEach(x -> x.accept(this));
+        return null;
+    }
+
+    @Override
     public T visit(VarRefNode varRefNode) {
         return null;
     }
@@ -56,5 +62,9 @@ public class BaseASTVisitor<T> extends ASTVisitor<T> {
     @Override
     public T visit(LiteralNode literalNode) {
         return null;
+    }
+    
+    public void visitError(Node node, String message) {
+        System.err.println(message);
     }
 }

@@ -2,6 +2,7 @@ package org.twnc;
 
 import org.antlr.v4.runtime.*;
 import org.twnc.backend.BytecodeGenerator;
+import org.twnc.backend.ScopeChecker;
 import org.twnc.irtree.ASTGenerator;
 import org.twnc.irtree.ASTVisitor;
 import org.twnc.irtree.nodes.Node;
@@ -26,6 +27,9 @@ public final class App {
 
         ASTVisitor<Void> graphVisitor = new Graphvizitor(outDir);
         irtree.accept(graphVisitor);
+        
+        ASTVisitor<Void> scopeVisitor = new ScopeChecker();
+        irtree.accept(scopeVisitor);
 
         ASTVisitor<Void> bytecodeVisitor = new BytecodeGenerator(outDir);
         irtree.accept(bytecodeVisitor);

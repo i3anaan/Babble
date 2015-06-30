@@ -1,14 +1,14 @@
 package org.twnc;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Scope extends HashMap<String, Variable>{
     
     public Scope() {
-        
     }
     
-    public Scope(Scope scope) {
+    public Scope(Map scope) {
         super(scope);
     }
 }

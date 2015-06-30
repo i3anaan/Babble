@@ -7,6 +7,7 @@ import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.twnc.BabbleBaseVisitor;
+import org.twnc.BabbleParser.VarDeclContext;
 import org.twnc.BabbleParser.*;
 import org.twnc.irtree.nodes.*;
 import org.twnc.irtree.nodes.LiteralNode.Type;
@@ -66,7 +67,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitAssignment(AssignmentContext ctx) {
-        VarRefNode variable = new VarRefNode(ctx.getText());
+        VarRefNode variable = new VarRefNode(ctx.ID().getText());
         ExprNode expression = (ExprNode) visit(ctx.expr());
         return new AssignNode(variable, expression);
     }
@@ -152,6 +153,15 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     @Override
     public Node visitLoneExpr(LoneExprContext ctx) {
         return visit(ctx.subexpr());
+    }
+
+    @Override
+    public Node visitVarDecl(VarDeclContext ctx) {
+        List<VarRefNode> list = new ArrayList<>();
+        for (TerminalNode n : ctx.ID()) {
+            list.add(new VarRefNode(n.getText()));
+        }
+        return new VarDeclNode(list);
     }
 
     public List<ExprNode> visitExprArguments(ParserRuleContext argument) {
