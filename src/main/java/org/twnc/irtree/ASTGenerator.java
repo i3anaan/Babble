@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.twnc.BabbleBaseVisitor;
 import org.twnc.BabbleParser.VarDeclContext;
@@ -162,6 +164,22 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
             list.add(new VarRefNode(n.getText()));
         }
         return new VarDeclNode(list);
+    }
+    
+    @Override
+    public Node visit(ParseTree tree) {
+        Node n = super.visit(tree);
+        if (tree instanceof ParserRuleContext) {
+            Token tok = ((ParserRuleContext)tree).start;
+            n.setLine(tok.getLine());
+            n.setLineOffset(tok.getLine(), tok.getCharPositionInLine());
+        }
+
+        return n;
+        
+        // TODO:
+        // use more than one VarRefNode for true/false/nil
+        // visit is never called on VarRefNode, thus no linenumber is assigned.
     }
 
     public List<ExprNode> visitExprArguments(ParserRuleContext argument) {

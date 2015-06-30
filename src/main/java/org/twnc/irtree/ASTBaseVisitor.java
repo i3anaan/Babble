@@ -65,6 +65,6 @@ public class ASTBaseVisitor<T> extends ASTVisitor<T> {
     }
     
     public void visitError(Node node, String message) {
-        System.err.println(message);
+        System.err.println(String.format("%d:%d - %s", node.getLine(), node.getLineOffset(), message));
     }
 }
