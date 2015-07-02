@@ -1,5 +1,7 @@
 package org.twnc.runtime;
 
+import java.util.Objects;
+
 public abstract class BObject {
     public BObject _print() {
         System.out.println(this);
@@ -11,7 +13,7 @@ public abstract class BObject {
     }
 
     public BObject _asString() {
-        return new BStr(toString());
+        return new BStr("Object");
     }
 
     public BObject _asBool() {
@@ -22,11 +24,25 @@ public abstract class BObject {
         return new BInt(0);
     }
 
+    public BObject _hashCode() {
+        return new BInt(Objects.hashCode(this));
+    }
+
     public BObject _eqeq_(BObject that) {
         return BBool.of(equals(that));
     }
 
     public BObject _bangeq_(BObject that) {
         return BBool.of(!equals(that));
+    }
+
+    @Override
+    public String toString() {
+        return _asString().toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return ((BInt)_hashCode()).hashCode();
     }
 }

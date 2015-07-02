@@ -1,0 +1,23 @@
+True extends:org\twnc\runtime\BTrue [
+    asString [ "true" ].
+    not      [ false ].
+    asBool   [ true ].
+    asInt    [ 1 ].
+    hashCode [ 1 ].
+].
+
+False extends:org\twnc\runtime\BFalse [
+    asString [ "false" ].
+    not      [ true ].
+    asBool   [ false ].
+    asInt    [ 0 ].
+    hashCode [ 0 ].
+].
+
+Nil extends:org\twnc\runtime\BNil [
+    asString [ "nil" ].
+    asBool   [ false ].
+    isNil    [ true ].
+    asInt    [ -1 ].
+    hashCode [ -1 ].
+].

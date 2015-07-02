@@ -1,16 +1,12 @@
 package org.twnc.runtime;
 
 public abstract class BBool extends BObject {
-    public static BBool of(boolean b) {
-        return b ? new BTrue() : new BFalse();
+    public static BObject of(boolean b) {
+        return b ? Core.newTrue() : Core.newFalse();
     }
 
     public BObject _assert() {
         assert this instanceof BTrue;
-        return this;
-    }
-
-    public BObject _asBool() {
         return this;
     }
 

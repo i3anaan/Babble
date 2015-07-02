@@ -86,9 +86,9 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
                 type.toString(), null, null);
         mv.visitCode();
         
-        mv.visitTypeInsn(NEW, "org/twnc/runtime/BNil");
+        mv.visitTypeInsn(NEW, "Nil");
         mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BNil", "<init>", "()V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, "Nil", "<init>", "()V", false);
 
         super.visit(methodNode);
         
@@ -162,10 +162,10 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
         //TODO actually refer to a variable.
         String object;
         switch (varRefNode.getName()) {
-            case "true": object = "org/twnc/runtime/BTrue"; break;
-            case "false": object = "org/twnc/runtime/BFalse"; break;
+            case "true": object = "True"; break;
+            case "false": object = "False"; break;
             case "this": object = cn.getName(); break; // TODO this is not correct
-            default: object = "org/twnc/runtime/BNil"; break;
+            default: object = "Nil"; break;
         }
         mv.visitTypeInsn(NEW, object);
         mv.visitInsn(DUP);

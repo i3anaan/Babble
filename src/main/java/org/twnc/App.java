@@ -16,7 +16,12 @@ public final class App {
 
         File file = new File(inPath);
 
-        CharStream chars = new ANTLRInputStream(new FileInputStream(file));
+        InputStream input = new SequenceInputStream(
+            App.class.getResourceAsStream("Prelude.bla"),
+            new FileInputStream(file)
+        );
+
+        CharStream chars = new ANTLRInputStream(input);
         Lexer lexer = new BabbleLexer(chars);
         TokenStream tokens = new CommonTokenStream(lexer);
         BabbleParser parser = new BabbleParser(tokens);

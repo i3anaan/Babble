@@ -7,6 +7,6 @@ import static org.junit.Assert.assertEquals;
 public class BBlockTest {
     @Test
     public void testDefaultBlockReturnsNil() {
-        assertEquals(new BNil(), new BBlock()._value());
+        assertEquals(Core.newNil(), new BBlock()._value());
     }
 }
