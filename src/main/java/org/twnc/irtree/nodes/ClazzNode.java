@@ -22,16 +22,16 @@ public class ClazzNode extends Node {
     }
 
     @Override
-    public <T> T accept(ASTVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
-    
-    @Override
     public String toString() {
         return "Class: " + name;
     }
 
     public boolean hasMain() {
         return methods.stream().anyMatch(MethodNode::isMainMethod);
+    }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
     }
 }

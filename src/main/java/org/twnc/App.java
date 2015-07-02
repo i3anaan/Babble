@@ -24,10 +24,10 @@ public final class App {
         ASTGenerator generator = new ASTGenerator();
         Node irtree = generator.visitProgram(parser.program());
 
-        ASTVisitor<Void> graphVisitor = new Graphvizitor(outDir);
+        ASTVisitor graphVisitor = new Graphvizitor(outDir);
         irtree.accept(graphVisitor);
 
-        ASTVisitor<Void> bytecodeVisitor = new BytecodeGenerator(outDir);
+        ASTVisitor bytecodeVisitor = new BytecodeGenerator(outDir);
         irtree.accept(bytecodeVisitor);
 
         System.out.println(String.format("[ OK ] Compiled %s", file));

@@ -16,7 +16,7 @@ import org.objectweb.asm.Opcodes;
 import org.twnc.irtree.BaseASTVisitor;
 import org.twnc.irtree.nodes.*;
 
-public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
+public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
     private ClassWriter cw;
     private ClazzNode cn;
     private MethodVisitor mv;
@@ -28,7 +28,7 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
     }
 
     @Override
-    public Void visit(ClazzNode clazzNode) {
+    public void visit(ClazzNode clazzNode) {
         cn = clazzNode;
         cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES + ClassWriter.COMPUTE_MAXS);
         cw.visit(52, ACC_PUBLIC + ACC_SUPER, clazzNode.getName(), null, "org/twnc/runtime/BObject", null);
@@ -68,12 +68,10 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
-        return null;
     }
 
     @Override
-    public Void visit(MethodNode methodNode) {
+    public void visit(MethodNode methodNode) {
         StringBuilder type = new StringBuilder();
         type.append('(');
 
@@ -106,12 +104,10 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
-
-        return null;
     }
 
     @Override
-    public Void visit(SendNode sendNode) {
+    public void visit(SendNode sendNode) {
         super.visit(sendNode);
         
         MethodType bmt = MethodType.methodType(
@@ -135,12 +131,10 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
         type.append(")Lorg/twnc/runtime/BObject;");
 
         mv.visitInvokeDynamicInsn(mangle(sendNode.getSelector()), type.toString(), bootstrap);
-        
-        return null;
     }
 
     @Override
-    public Void visit(LiteralNode literalNode) {
+    public void visit(LiteralNode literalNode) {
         String t = "";
 
         switch (literalNode.getType()) {
@@ -153,12 +147,12 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
         mv.visitInsn(DUP);
         mv.visitLdcInsn(literalNode.getValue());
         mv.visitMethodInsn(INVOKESPECIAL, t, "<init>", "(Ljava/lang/String;)V", false);
-        
-        return super.visit(literalNode);
+
+        super.visit(literalNode);
     }
 
     @Override
-    public Void visit(VarRefNode varRefNode) {
+    public void visit(VarRefNode varRefNode) {
         //TODO actually refer to a variable.
         String object;
         switch (varRefNode.getName()) {
@@ -170,7 +164,8 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
         mv.visitTypeInsn(NEW, object);
         mv.visitInsn(DUP);
         mv.visitMethodInsn(INVOKESPECIAL, object, "<init>", "()V", false);
-        return super.visit(varRefNode);
+
+        super.visit(varRefNode);
     }
     
     private static String mangle(String str) {

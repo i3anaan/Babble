@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Optional;
 
-public class Graphvizitor extends BaseASTVisitor<Void> {
+public class Graphvizitor extends BaseASTVisitor {
     private final String outDir;
     private StringBuilder nodes;
     private StringBuilder edges;
@@ -19,7 +19,7 @@ public class Graphvizitor extends BaseASTVisitor<Void> {
     }
 
     @Override
-    public Void visit(ClazzNode node) {
+    public void visit(ClazzNode node) {
         nodes = new StringBuilder();
         edges = new StringBuilder();
 
@@ -39,55 +39,53 @@ public class Graphvizitor extends BaseASTVisitor<Void> {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        return null;
     }
 
     @Override
-    public Void visit(MethodNode node) {
+    public void visit(MethodNode node) {
         makeNode(node);
         makeEdges(node, node.getArguments());
         makeEdge(node, node.getSequence());
-        return super.visit(node);
+        super.visit(node);
     }
 
     @Override
-    public Void visit(SendNode node) {
+    public void visit(SendNode node) {
         makeNode(node);
         makeEdge(node, node.getExpression());
         makeEdges(node, node.getArguments());
-        return super.visit(node);
+        super.visit(node);
     }
 
     @Override
-    public Void visit(SequenceNode node) {
+    public void visit(SequenceNode node) {
         makeNode(node);
         makeEdges(node, node.getExpressions());
-        return super.visit(node);
+        super.visit(node);
     }
 
     @Override
-    public Void visit(AssignNode node) {
+    public void visit(AssignNode node) {
         makeNode(node);
         makeEdge(node, node.getVariable());
         makeEdge(node, node.getExpression());
-        return super.visit(node);
+        super.visit(node);
     }
 
     @Override
-    public Void visit(BlockNode node) {
+    public void visit(BlockNode node) {
         makeNode(node);
         makeEdges(node, node.getArguments());
         makeEdge(node, node.getSequence());
-        return super.visit(node);
+        super.visit(node);
     }
 
     @Override
-    public Void visit(VarRefNode node) {
-        return makeNode(node);
+    public void visit(VarRefNode node) {
+        makeNode(node);
     }
 
-    private Void makeNode(Node node) {
+    private void makeNode(Node node) {
         nodes.append("  ");
         nodes.append(node.hashCode());
         nodes.append(" [");
@@ -95,22 +93,18 @@ public class Graphvizitor extends BaseASTVisitor<Void> {
         nodes.append("color=\"" + describeColor(node.getColor()) + "\" ");;
         nodes.append("fillcolor=\"" + describeColor(node.getColor().brighter().brighter()) + "\"");
         nodes.append("];\n");
-        return null;
     }
 
-    private Void makeEdge(Node node, Node otherNode) {
+    private void makeEdge(Node node, Node otherNode) {
         edges.append("  ").append(node.hashCode()).append(" -> ").append(otherNode.hashCode()).append(";\n");
-        return null;
     }
 
-    private Void makeEdge(Node node, Optional<? extends Node> otherNode) {
+    private void makeEdge(Node node, Optional<? extends Node> otherNode) {
         otherNode.ifPresent(child -> makeEdge(node, child));
-        return null;
     }
 
-    private Void makeEdges(Node node, Collection<? extends Node> children) {
+    private void makeEdges(Node node, Collection<? extends Node> children) {
         children.forEach(child -> makeEdge(node, child));
-        return null;
     }
 
     private static String describeColor(Color color) {

@@ -37,16 +37,16 @@ public class MethodNode extends Node {
         return "Method "+selector;
     }
 
-    @Override
-    public <T> T accept(ASTVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
-
     public boolean isMainMethod() {
         return selector.equals("main");
     }
 
     public boolean isTestMethod() {
         return selector.startsWith("test") && arguments.isEmpty();
+    }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
     }
 }
