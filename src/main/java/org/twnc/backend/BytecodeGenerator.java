@@ -7,6 +7,7 @@ import java.lang.invoke.CallSite;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.objectweb.asm.ClassWriter;
@@ -86,10 +87,6 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
                 type.toString(), null, null);
         mv.visitCode();
         
-        mv.visitTypeInsn(NEW, "org/twnc/runtime/BNil");
-        mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BNil", "<init>", "()V", false);
-
         super.visit(methodNode);
         
         mv.visitInsn(ARETURN);
@@ -136,6 +133,21 @@ public class BytecodeGenerator extends BaseASTVisitor<Void> implements Opcodes {
 
         mv.visitInvokeDynamicInsn(mangle(sendNode.getSelector()), type.toString(), bootstrap);
         
+        return null;
+    }
+
+    @Override
+    public Void visit(SequenceNode sequenceNode) {
+        List<ExprNode> exprs = sequenceNode.getExpressions();
+
+        for (int i = 0; i < exprs.size(); i++) {
+            if (i > 0) {
+                mv.visitInsn(POP);
+            }
+
+            exprs.get(i).accept(this);
+        }
+
         return null;
     }
 
