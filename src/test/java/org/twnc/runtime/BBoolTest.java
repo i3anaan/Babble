@@ -6,12 +6,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 public class BBoolTest {
-    private static BObject TRUE;
-    private static BObject FALSE;
+    private static final BObject TRUE;
+    private static final BObject FALSE;
 
     static {
-        TRUE = BBool.of(true);
-        FALSE = BBool.of(false);
+        TRUE = Core.newTrue();
+        FALSE = Core.newFalse();
     }
 
     @Test public void testTrueEqTrue()    { assertEquals(TRUE, TRUE); }
