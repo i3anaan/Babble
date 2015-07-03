@@ -1,11 +1,6 @@
 package org.twnc.runtime;
 
-public class BFalse extends BBool {
-    @Override
-    public BObject _not() {
-        return BBool.of(true);
-    }
-
+public abstract class BFalse extends BBool {
     @Override
     public BObject _and_(BObject that) {
         return _asBool();
@@ -20,29 +15,9 @@ public class BFalse extends BBool {
     public BObject _ifTrue_ifFalse_(BObject t, BObject f) {
         return ((BBlock)f)._value();
     }
-
-    @Override
-    public String toString() {
-        return "false";
-    }
-
-    @Override
-    public BObject _asInt() {
-        return new BInt(0);
-    }
-
-    @Override
-    public BObject _asBool() {
-        return new BFalse();
-    }
-
+    
     @Override
     public boolean equals(Object that) {
         return that instanceof BFalse;
-    }
-
-    @Override
-    public int hashCode() {
-        return 0;
     }
 }

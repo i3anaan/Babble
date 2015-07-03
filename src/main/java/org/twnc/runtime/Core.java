@@ -2,6 +2,7 @@ package org.twnc.runtime;
 
 import java.lang.invoke.*;
 import java.lang.invoke.MethodHandles.Lookup;
+import java.lang.reflect.InvocationTargetException;
 
 public class Core {
     private static final MethodType INVOKE_TYPE =
@@ -87,5 +88,47 @@ public class Core {
     public static boolean check(Class klass, Object receiver) {
         Class<?> receiverClass = receiver.getClass();
         return receiverClass.equals(klass);
+    }
+
+    /**
+     * Construct a BObject. This is made a lot easier by the fact that all
+     * BObjects have zero-arg constructors.
+     *
+     * Trying to construct an instance of a class that doesn't exist will
+     * result in a nil value.
+     *
+     * @param name The name of the BObject subclass to be constructed.
+     */
+    public static BObject construct(String name) {
+        try {
+            return (BObject) Class.forName(name).getConstructor().newInstance();
+        } catch (InstantiationException e) {
+            e.printStackTrace(); // TODO
+        } catch (IllegalAccessException e) {
+            e.printStackTrace(); // TODO
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace(); // TODO
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace(); // TODO
+        } catch (InvocationTargetException e) {
+            e.printStackTrace(); // TODO
+        }
+
+        return newNil();
+    }
+
+    /** Return a new instance of the True BObject. */
+    public static BObject newTrue() {
+        return construct("True");
+    }
+
+    /** Return a new instance of the False BObject. */
+    public static BObject newFalse() {
+        return construct("False");
+    }
+
+    /** Return a new instance of the Nil BObject. */
+    public static BObject newNil() {
+        return construct("Nil");
     }
 }

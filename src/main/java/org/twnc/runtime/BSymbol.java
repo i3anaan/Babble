@@ -12,9 +12,8 @@ public class BSymbol extends BObject {
         return new BInt(symbol.hashCode());
     }
 
-    @Override
-    public String toString() {
-        return "#" + symbol;
+    public BObject _asString() {
+        return new BStr("#" + symbol);
     }
 
     public boolean equals(Object that) {

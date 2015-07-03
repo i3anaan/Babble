@@ -30,6 +30,11 @@ SelfTest [
         false and:false not assert.
     ].
 
+    testAsString [
+        (true asString == "true") assert.
+        (false asString == "false") assert.
+    ].
+
     testMaths [
         (10 == 10) assert.
         (10 > 5) assert.

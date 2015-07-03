@@ -216,15 +216,14 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
     @Override
     public void visit(VarRefNode varRefNode) {
         //TODO actually refer to a variable.
-
         if (varRefNode.getName().equals("this")) {
             mv.visitIntInsn(ALOAD, 0);
         } else {
             String object;
             switch (varRefNode.getName()) {
-                case "true": object = "org/twnc/runtime/BTrue"; break;
-                case "false": object = "org/twnc/runtime/BFalse"; break;
-                default: object = "org/twnc/runtime/BNil"; break;
+                case "true": object = "True"; break;
+                case "false": object = "False"; break;
+                default: object = "Nil"; break;
             }
             mv.visitTypeInsn(NEW, object);
             mv.visitInsn(DUP);

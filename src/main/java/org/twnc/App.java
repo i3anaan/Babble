@@ -72,10 +72,17 @@ public final class App {
     }
 
     private static Node compileFile(File file, String outDir) throws IOException {
-        CharStream chars = new ANTLRInputStream(new FileInputStream(file));
+        InputStream input = new SequenceInputStream(
+            App.class.getResourceAsStream("Prelude.bla"),
+            new FileInputStream(file)
+        );
+
+        CharStream chars = new ANTLRInputStream(input);
         Lexer lexer = new BabbleLexer(chars);
         TokenStream tokens = new CommonTokenStream(lexer);
         BabbleParser parser = new BabbleParser(tokens);
+
+        new File(outDir).mkdirs();
 
         ASTGenerator generator = new ASTGenerator();
         Node irtree = generator.visitProgram(parser.program());
