@@ -2,7 +2,7 @@ grammar Babble;
 
 program : clazz* ;
 
-clazz : classname=ID '[' mthd* '].'
+clazz : classname=ID (EXTENDS ':' superclass=ID)? '[' mthd* '].'
 	  ;
 
 mthd : (ID ':' ID)+ '[' sequence '].'   # KeywordMethod
@@ -37,7 +37,9 @@ TRUE : 'true';
 FALSE : 'false';
 NIL : 'nil';
 
-ID: [A-Za-z][a-zA-Z0-9_]*;
+EXTENDS : 'extends';
+
+ID: [A-Za-z][a-zA-Z0-9_\\]*;
 INTEGER   : '-'? [0-9]+;
 STRING    : '"' (.*?) '"';
 

@@ -3,6 +3,12 @@
  * Integration tests for the Babble language.
  */
 
+Animal [
+].
+
+Duck extends: Animal [
+].
+
 SelfTest [
     testAssert [
         true assert.

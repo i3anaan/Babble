@@ -40,13 +40,21 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitClazz(ClazzContext ctx) {
+        String superclass;
         String clazzName = ctx.classname.getText();
+
+        if (ctx.superclass != null) {
+            superclass = ctx.superclass.getText().replace('\\', '/');
+        } else {
+            superclass = "org/twnc/runtime/BObject";
+        }
+
         List<MethodNode> methods = new ArrayList<>();
         for (MthdContext m : ctx.mthd()) {
             methods.add((MethodNode) visit(m));
         }
         
-        return new ClazzNode(clazzName, methods);
+        return new ClazzNode(clazzName, superclass, methods);
     }
 
     @Override
