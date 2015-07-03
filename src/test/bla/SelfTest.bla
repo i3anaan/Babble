@@ -62,6 +62,14 @@ SelfTest [
         ("" asBool not) assert.
     ].
 
+    testThis [
+        this someMethod assert.
+    ].
+
+    someMethod [
+        true.
+    ].
+
     main [
         "Please use `mvn verify` to run integration tests." print.
     ].
