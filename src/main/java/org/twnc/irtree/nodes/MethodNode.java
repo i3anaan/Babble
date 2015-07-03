@@ -38,8 +38,12 @@ public class MethodNode extends Node {
         this.scope = scope;
     }
     
-    public Scope getScope(Scope scope) {
+    public Scope getScope() {
         return scope;
+    }
+    
+    public int getArity() {
+        return arguments.size();
     }
 
     @Override

@@ -19,12 +19,14 @@ public class ScopeChecker extends ASTBaseVisitor<Void> {
     @Override
     public Void visit(ProgramNode programNode) {
         scopeStack = new ScopeStack();
+        programNode.setScope(scopeStack.peek());
         return super.visit(programNode);
     }
 
     @Override
     public Void visit(ClazzNode clazzNode) {
         scopeStack.enterScope();
+        clazzNode.setScope(scopeStack.peek());
         super.visit(clazzNode);
         scopeStack.exitScope();
         
@@ -44,6 +46,7 @@ public class ScopeChecker extends ASTBaseVisitor<Void> {
     @Override
     public Void visit(BlockNode blockNode) {
         scopeStack.enterScope();
+        blockNode.setScope(scopeStack.peek());
         super.visit(blockNode);
         scopeStack.exitScope();
         

@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Handle;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.twnc.irtree.ASTBaseVisitor;
@@ -89,11 +90,23 @@ public class BytecodeGenerator extends ASTBaseVisitor<Void> implements Opcodes {
         mv.visitTypeInsn(NEW, "org/twnc/runtime/BNil");
         mv.visitInsn(DUP);
         mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BNil", "<init>", "()V", false);
+        
+        Label start = new Label();
+        Label end = new Label();
+        mv.visitLabel(start);
+        
+
+        mv.visitLocalVariable("this", "Lorg/twnc/runtime/BObject;", null, start, end, 0);
+        for (VarDeclNode decl : methodNode.getScope().values()) {
+            mv.visitLocalVariable(decl.getName(), "Lorg/twnc/runtime/BObject;", null, start, end, 1 + methodNode.getArity() + decl.getOffset());
+        }
 
         super.visit(methodNode);
+
+        mv.visitLabel(end);
         
         mv.visitInsn(ARETURN);
-        mv.visitMaxs(0, 0);
+        mv.visitMaxs(-1, -1);
         mv.visitEnd();
 
         if (methodNode.isTestMethod()) {

@@ -6,10 +6,21 @@ import java.util.List;
 import org.twnc.irtree.ASTVisitor;
 
 public class VarDeclNode extends VarRefNode {
+    private int offset;
+    
     public VarDeclNode(String name) {
         super(name);
     }
-        
+   
+    public int getOffset() {
+        return offset;
+    }
+    
+    public void setOffset(int offset) {
+        this.offset = offset;
+    }
+    
+    
     @Override
     public String toString() {
         return "| |";

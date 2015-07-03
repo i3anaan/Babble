@@ -66,7 +66,7 @@ SelfTest [
         | x |.
         x := 2.
         (x == 2) assert.
-        | x y z |.
+        | y z |.
         z := 5.
         (z == 5) assert.
     ].

@@ -10,7 +10,9 @@ public class Scope extends HashMap<String, VarDeclNode>{
     public Scope() {
     }
     
-    public Scope(Map scope) {
-        super(scope);
+    @Override
+    public VarDeclNode put(String name, VarDeclNode decl) {
+        decl.setOffset(this.size());        
+        return super.put(name, decl);
     }
 }
