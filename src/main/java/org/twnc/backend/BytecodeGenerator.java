@@ -23,6 +23,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
     private MethodVisitor mv;
 
     private String outDir;
+    private int blockCount;
 
     public BytecodeGenerator(String targetDirectory) {
         outDir = targetDirectory;
@@ -31,6 +32,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
     @Override
     public void visit(ClazzNode clazzNode) {
         cn = clazzNode;
+        blockCount = 0;
         cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES + ClassWriter.COMPUTE_MAXS);
         cw.visit(52, ACC_PUBLIC + ACC_SUPER, clazzNode.getName(), null, clazzNode.getSuperclass(), null);
 
@@ -65,7 +67,6 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         
         try (OutputStream out = new FileOutputStream(path)) {
             out.write(cw.toByteArray());
-            out.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,6 +102,57 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
+    }
+
+    @Override
+    public void visit(BlockNode blockNode) {
+        // Come up with a name for the closure class, i.e. Foo$0
+        String blockClassName = cn.getName() + "$" + blockCount;
+        // Make sure the next block is not called Foo$0
+        blockCount++;
+        // Put it in the same directory as Foo
+        String path = outDir + blockClassName + ".class";
+
+        // KEEP a reference to the parent method
+        MethodVisitor parentMethod = mv;
+
+        ClassWriter bw = new ClassWriter(ClassWriter.COMPUTE_FRAMES + ClassWriter.COMPUTE_MAXS);
+        bw.visit(52, ACC_PUBLIC + ACC_SUPER, blockClassName, null, "org/twnc/runtime/BBlock", null);
+
+        // Plain constructor.
+        mv = bw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
+        mv.visitCode();
+        mv.visitVarInsn(ALOAD, 0);
+        mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BBlock", "<init>", "()V", false);
+        mv.visitInsn(RETURN);
+        mv.visitMaxs(0, 0);
+        mv.visitEnd();
+
+        // #value method override.
+        mv = bw.visitMethod(ACC_PUBLIC, mangle("value"), "()Lorg/twnc/runtime/BObject;", null, null);
+        mv.visitCode();
+
+        super.visit(blockNode);
+
+        mv.visitInsn(ARETURN);
+        mv.visitMaxs(0, 0);
+        mv.visitEnd();
+
+        bw.visitEnd();
+
+        try (OutputStream out = new FileOutputStream(path)) {
+            out.write(bw.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // RESTORE the reference to the parent method as the current method
+        mv = parentMethod;
+
+        // Create a new instance of our closure class
+        mv.visitTypeInsn(NEW, blockClassName);
+        mv.visitInsn(DUP);
+        mv.visitMethodInsn(INVOKESPECIAL, blockClassName, "<init>", "()V", false);
     }
 
     @Override
