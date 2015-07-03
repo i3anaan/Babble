@@ -26,6 +26,8 @@ public final class App {
         TokenStream tokens = new CommonTokenStream(lexer);
         BabbleParser parser = new BabbleParser(tokens);
 
+        new File(outDir).mkdirs();
+
         ASTGenerator generator = new ASTGenerator();
         Node irtree = generator.visitProgram(parser.program());
 
