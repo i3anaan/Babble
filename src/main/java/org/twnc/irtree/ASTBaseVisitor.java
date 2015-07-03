@@ -50,7 +50,12 @@ public class ASTBaseVisitor<T> extends ASTVisitor<T> {
 
     @Override
     public T visit(VarDeclNode varDeclNode) {
-        varDeclNode.getDecls().forEach(x -> x.accept(this));
+        return null;
+    }
+
+    @Override
+    public T visit(DeclExprNode declExprNode) {
+        declExprNode.getDeclarations().forEach(x -> x.accept(this));
         return null;
     }
 

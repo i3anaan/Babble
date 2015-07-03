@@ -90,7 +90,12 @@ public class Graphvizitor extends ASTBaseVisitor<Void> {
     @Override
     public Void visit(VarDeclNode node) {
         makeNode(node);
-        makeEdges(node, node.getDecls());
+        return super.visit(node);
+    }
+    
+    public Void visit(DeclExprNode node) {
+        makeNode(node);
+        makeEdges(node, node.getDeclarations());
         return super.visit(node);
     }
 

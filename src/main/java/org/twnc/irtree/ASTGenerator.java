@@ -9,7 +9,7 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.twnc.BabbleBaseVisitor;
-import org.twnc.BabbleParser.VarDeclContext;
+import org.twnc.BabbleParser.DeclExprContext;
 import org.twnc.BabbleParser.*;
 import org.twnc.irtree.nodes.*;
 import org.twnc.irtree.nodes.LiteralNode.Type;
@@ -18,12 +18,12 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitTrueLit(TrueLitContext ctx) {
-        return VarRefNode.TRUE;
+        return VarRefNode.newTrue();
     }
 
     @Override
     public Node visitNilLit(NilLitContext ctx) {
-        return VarRefNode.NIL;
+        return VarRefNode.newNil();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitFalseLit(FalseLitContext ctx) {
-        return VarRefNode.FALSE;
+        return VarRefNode.newFalse();
     }
 
     @Override
@@ -155,17 +155,19 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     @Override
     public Node visitLoneExpr(LoneExprContext ctx) {
         return visit(ctx.subexpr());
-    }
-
+    }    
+    
     @Override
-    public Node visitVarDecl(VarDeclContext ctx) {
-        List<VarRefNode> list = new ArrayList<>();
-        for (TerminalNode n : ctx.ID()) {
-            list.add(new VarRefNode(n.getText()));
-        }
-        return new VarDeclNode(list);
+    public Node visitDecl(DeclContext ctx) {
+        return new VarDeclNode(ctx.getText());
     }
     
+    @Override
+    public Node visitDeclExpr(DeclExprContext ctx) {
+        return new DeclExprNode(visitDecls(ctx.decl()));
+        
+    }
+
     @Override
     public Node visit(ParseTree tree) {
         Node n = super.visit(tree);
@@ -190,6 +192,14 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
         List<ExprNode> output = new ArrayList<>();
         for (int i = 0; i < arguments.size(); i += 1) {
             output.add((ExprNode) visit(arguments.get(i)));
+        }
+        return output;
+    }
+    
+    public List<VarDeclNode> visitDecls(List<? extends ParserRuleContext> decls) {
+        List<VarDeclNode> output = new ArrayList<>();
+        for (int i = 0; i < decls.size(); i += 1) {
+            output.add((VarDeclNode) visit(decls.get(i)));
         }
         return output;
     }

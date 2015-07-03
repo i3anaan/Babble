@@ -5,18 +5,11 @@ import java.util.List;
 
 import org.twnc.irtree.ASTVisitor;
 
-public class VarDeclNode extends ExprNode {
-    
-    private List<VarRefNode> decls;
-
-    public VarDeclNode(List<VarRefNode> decls) {
-        this.decls = decls;
+public class VarDeclNode extends VarRefNode {
+    public VarDeclNode(String name) {
+        super(name);
     }
-    
-    public List<VarRefNode> getDecls() {
-        return decls;
-    }
-    
+        
     @Override
     public String toString() {
         return "| |";

@@ -49,18 +49,17 @@ public class ScopeChecker extends ASTBaseVisitor<Void> {
     @Override
     public Void visit(VarRefNode varRefNode) {
         if (!scopeStack.contains(varRefNode)) {
-            visitError(varRefNode, "Variable not declared.");
+            visitError(varRefNode, String.format("Variable %s is not declared.", varRefNode.getName()));
         }
         return super.visit(varRefNode);
     }
 
     @Override
-    public Void visit(VarDeclNode varDeclNode) {
-        for (VarRefNode node : varDeclNode.getDecls()) {
-            if (!scopeStack.putVarRefNode(node)) {
-                visitError(node, "Variable already declared.");
-            }
+    public Void visit(VarDeclNode node) {
+        if (!scopeStack.putVarDeclNode(node)) {
+            VarDeclNode previousDecl = scopeStack.getVarDeclNode(node.getName());
+            visitError(node, String.format("Variable %s is already declared at %s:%s.", node.getName(), previousDecl.getLine(), previousDecl.getLineOffset()));
         }
-        return super.visit(varDeclNode);
+        return super.visit(node);
     } 
 }

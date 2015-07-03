@@ -3,7 +3,9 @@ package org.twnc;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Scope extends HashMap<String, Variable>{
+import org.twnc.irtree.nodes.VarDeclNode;
+
+public class Scope extends HashMap<String, VarDeclNode>{
     
     public Scope() {
     }

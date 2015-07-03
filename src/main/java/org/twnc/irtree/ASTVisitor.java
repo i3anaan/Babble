@@ -13,4 +13,5 @@ public abstract class ASTVisitor<T> {
     public abstract T visit(VarRefNode varRefNode);
     public abstract T visit(LiteralNode literalNode);
     public abstract T visit(VarDeclNode varDeclNode);
+    public abstract T visit(DeclExprNode declExprNode);
 }

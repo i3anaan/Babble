@@ -3,6 +3,7 @@ package org.twnc;
 import java.util.EmptyStackException;
 import java.util.Stack;
 
+import org.twnc.irtree.nodes.VarDeclNode;
 import org.twnc.irtree.nodes.VarRefNode;
 
 public class ScopeStack extends Stack<Scope>{
@@ -25,18 +26,17 @@ public class ScopeStack extends Stack<Scope>{
         }
     }
     
-    public Variable getVariable(VarRefNode node) {
-        return this.peek().get(node.getName());
+    public VarDeclNode getVarDeclNode(String name) {
+        return this.peek().get(name);
     }
     
     public boolean contains(VarRefNode node) {
         return this.peek().containsKey(node.getName());
     }
     
-    public boolean putVarRefNode(VarRefNode node) {
+    public boolean putVarDeclNode(VarDeclNode node) {
         if (!this.peek().containsKey(node.getName())) {
-            Variable var = new Variable(); //TODO: construct this Variable based on the VarRefNode.
-            this.peek().put(node.getName(), var);
+            this.peek().put(node.getName(), node);
             return true;
         }
         return false;

@@ -29,8 +29,10 @@ subexpr : value=INTEGER            # IntLit
      | '#' ID                      # SymbolLit
      | '[' (ID* '|')? sequence ']' # Block
      | '(' expr ')'                # ParenExpr
-     | '|' ID+ '|'                 # VarDecl
+     | '|' decl+ '|'                 # declExpr
      ;
+     
+decl : ID;
 //MAYBE: Add return statement (Currently last expression)
 //TODO: Array syntax ('{}')
 
