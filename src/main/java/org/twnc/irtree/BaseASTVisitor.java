@@ -3,58 +3,49 @@ package org.twnc.irtree;
 import org.twnc.irtree.nodes.*;
 
 /** An implementation of ASTVisitor that just crawls through the tree. */
-public class BaseASTVisitor<T> extends ASTVisitor<T> {
+public class BaseASTVisitor extends ASTVisitor {
     @Override
-    public T visit(ProgramNode programNode) {
+    public void visit(ProgramNode programNode) {
         programNode.getClasses().forEach(x -> x.accept(this));
-        return null;
     }
     
     @Override
-    public T visit(ClazzNode clazzNode) {
+    public void visit(ClazzNode clazzNode) {
         clazzNode.getMethods().forEach(x -> x.accept(this));
-        return null;
     }
 
     @Override
-    public T visit(MethodNode methodNode) {
+    public void visit(MethodNode methodNode) {
         methodNode.getSequence().accept(this);
-        return null;
     }
 
     @Override
-    public T visit(SequenceNode sequenceNode) {
+    public void visit(SequenceNode sequenceNode) {
         sequenceNode.getExpressions().forEach(x -> x.accept(this));
-        return null;
     }
 
     @Override
-    public T visit(BlockNode blockNode) {
+    public void visit(BlockNode blockNode) {
         blockNode.getSequence().accept(this);
-        return null;
     }
 
     @Override
-    public T visit(SendNode sendNode) {
+    public void visit(SendNode sendNode) {
         sendNode.getExpression().ifPresent(x-> x.accept(this));
         sendNode.getArguments().forEach(x -> x.accept(this));
-        return null;
     }
     
     @Override
-    public T visit(AssignNode assignNode) {
+    public void visit(AssignNode assignNode) {
         assignNode.getVariable().accept(this);
         assignNode.getExpression().accept(this);
-        return null;
     }
 
     @Override
-    public T visit(VarRefNode varRefNode) {
-        return null;
+    public void visit(VarRefNode varRefNode) {
     }
 
     @Override
-    public T visit(LiteralNode literalNode) {
-        return null;
+    public void visit(LiteralNode literalNode) {
     }
 }

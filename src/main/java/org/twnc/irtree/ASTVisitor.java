@@ -2,14 +2,14 @@ package org.twnc.irtree;
 
 import org.twnc.irtree.nodes.*;
 
-public abstract class ASTVisitor<T> {
-    public abstract T visit(AssignNode assignNode);
-    public abstract T visit(BlockNode blockNode);
-    public abstract T visit(MethodNode methodNode);
-    public abstract T visit(ProgramNode programNode);
-    public abstract T visit(ClazzNode clazzNode);
-    public abstract T visit(SendNode sendNode);
-    public abstract T visit(SequenceNode sequenceNode);
-    public abstract T visit(VarRefNode varRefNode);
-    public abstract T visit(LiteralNode literalNode);
+public abstract class ASTVisitor {
+    public abstract void visit(AssignNode assignNode);
+    public abstract void visit(BlockNode blockNode);
+    public abstract void visit(MethodNode methodNode);
+    public abstract void visit(ProgramNode programNode);
+    public abstract void visit(ClazzNode clazzNode);
+    public abstract void visit(SendNode sendNode);
+    public abstract void visit(SequenceNode sequenceNode);
+    public abstract void visit(VarRefNode varRefNode);
+    public abstract void visit(LiteralNode literalNode);
 }

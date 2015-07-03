@@ -25,12 +25,12 @@ public class VarRefNode extends ExprNode {
     }
 
     @Override
-    public <T> T accept(ASTVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
-    
-    @Override
     public Color getColor() {
         return new Color(233, 139, 57);
+    }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
     }
 }

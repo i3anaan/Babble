@@ -44,12 +44,12 @@ public class SendNode extends ExprNode {
     }
 
     @Override
-    public <T> T accept(ASTVisitor<T> visitor) {
-        return visitor.visit(this);
-    }
-    
-    @Override
     public Color getColor() {
         return new Color(189, 195, 199);
+    }
+
+    @Override
+    public void accept(ASTVisitor visitor) {
+        visitor.visit(this);
     }
 }
