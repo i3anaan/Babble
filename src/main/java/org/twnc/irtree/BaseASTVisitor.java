@@ -2,7 +2,7 @@ package org.twnc.irtree;
 
 import org.twnc.irtree.nodes.*;
 
-/** An implementation of ASvoidVisitor that just crawls through the tree. */
+/** An implementation of ASTVisitor that just crawls through the tree. */
 public class BaseASTVisitor extends ASTVisitor {
     @Override
     public void visit(ProgramNode programNode) {
