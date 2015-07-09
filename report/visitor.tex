@@ -1,0 +1,186 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k+kn}{package} \PY{n+nn}{org.twnc.irtree}\PY{o}{;}
+
+\PY{k+kn}{import} \PY{n+nn}{java.util.ArrayList}\PY{o}{;}
+\PY{k+kn}{import} \PY{n+nn}{java.util.Arrays}\PY{o}{;}
+\PY{k+kn}{import} \PY{n+nn}{java.util.List}\PY{o}{;}
+
+\PY{k+kn}{import} \PY{n+nn}{org.antlr.v4.runtime.ParserRuleContext}\PY{o}{;}
+\PY{k+kn}{import} \PY{n+nn}{org.antlr.v4.runtime.tree.TerminalNode}\PY{o}{;}
+\PY{k+kn}{import} \PY{n+nn}{org.twnc.BabbleBaseVisitor}\PY{o}{;}
+\PY{k+kn}{import} \PY{n+nn}{org.twnc.BabbleParser.*}\PY{o}{;}
+\PY{k+kn}{import} \PY{n+nn}{org.twnc.irtree.nodes.*}\PY{o}{;}
+\PY{k+kn}{import} \PY{n+nn}{org.twnc.irtree.nodes.LiteralNode.Type}\PY{o}{;}
+
+\PY{k+kd}{public} \PY{k+kd}{class} \PY{n+nc}{ASTGenerator} \PY{k+kd}{extends} \PY{n}{BabbleBaseVisitor}\PY{o}{\PYZlt{}}\PY{n}{Node}\PY{o}{\PYZgt{}} \PY{o}{\PYZob{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitTrueLit}\PY{o}{(}\PY{n}{TrueLitContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{k}{return} \PY{n}{VarRefNode}\PY{o}{.}\PY{n+na}{TRUE}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitNilLit}\PY{o}{(}\PY{n}{NilLitContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{k}{return} \PY{n}{VarRefNode}\PY{o}{.}\PY{n+na}{NIL}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitSymbolLit}\PY{o}{(}\PY{n}{SymbolLitContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{k}{return} \PY{k}{new} \PY{n}{LiteralNode}\PY{o}{(}\PY{n}{Type}\PY{o}{.}\PY{n+na}{SYMBOL}\PY{o}{,} \PY{n}{ctx}\PY{o}{.}\PY{n+na}{ID}\PY{o}{(}\PY{o}{)}\PY{o}{.}\PY{n+na}{getText}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitProgram}\PY{o}{(}\PY{n}{ProgramContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{n}{List}\PY{o}{\PYZlt{}}\PY{n}{ClazzNode}\PY{o}{\PYZgt{}} \PY{n}{classes} \PY{o}{=} \PY{k}{new} \PY{n}{ArrayList}\PY{o}{\PYZlt{}}\PY{n}{ClazzNode}\PY{o}{\PYZgt{}}\PY{o}{(}\PY{o}{)}\PY{o}{;}
+        \PY{k}{for} \PY{o}{(}\PY{n}{ClazzContext} \PY{n}{context} \PY{o}{:} \PY{n}{ctx}\PY{o}{.}\PY{n+na}{clazz}\PY{o}{(}\PY{o}{)}\PY{o}{)} \PY{o}{\PYZob{}}
+            \PY{n}{classes}\PY{o}{.}\PY{n+na}{add}\PY{o}{(}\PY{o}{(}\PY{n}{ClazzNode}\PY{o}{)} \PY{n}{visit}\PY{o}{(}\PY{n}{context}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+        \PY{o}{\PYZcb{}}
+
+        \PY{k}{return} \PY{k}{new} \PY{n}{ProgramNode}\PY{o}{(}\PY{n}{classes}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitClazz}\PY{o}{(}\PY{n}{ClazzContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{n}{String} \PY{n}{superclass}\PY{o}{;}
+        \PY{n}{String} \PY{n}{clazzName} \PY{o}{=} \PY{n}{ctx}\PY{o}{.}\PY{n+na}{classname}\PY{o}{.}\PY{n+na}{getText}\PY{o}{(}\PY{o}{)}\PY{o}{;}
+
+        \PY{k}{if} \PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{superclass} \PY{o}{!}\PY{o}{=} \PY{k+kc}{null}\PY{o}{)} \PY{o}{\PYZob{}}
+            \PY{n}{superclass} \PY{o}{=} \PY{n}{ctx}\PY{o}{.}\PY{n+na}{superclass}\PY{o}{.}\PY{n+na}{getText}\PY{o}{(}\PY{o}{)}\PY{o}{.}\PY{n+na}{replace}\PY{o}{(}\PY{l+s+sc}{\PYZsq{}\PYZbs{}\PYZbs{}\PYZsq{}}\PY{o}{,} \PY{l+s+sc}{\PYZsq{}/\PYZsq{}}\PY{o}{)}\PY{o}{;}
+        \PY{o}{\PYZcb{}} \PY{k}{else} \PY{o}{\PYZob{}}
+            \PY{n}{superclass} \PY{o}{=} \PY{l+s}{\PYZdq{}org/twnc/runtime/BObject\PYZdq{}}\PY{o}{;}
+        \PY{o}{\PYZcb{}}
+
+        \PY{n}{List}\PY{o}{\PYZlt{}}\PY{n}{MethodNode}\PY{o}{\PYZgt{}} \PY{n}{methods} \PY{o}{=} \PY{k}{new} \PY{n}{ArrayList}\PY{o}{\PYZlt{}}\PY{o}{\PYZgt{}}\PY{o}{(}\PY{o}{)}\PY{o}{;}
+        \PY{k}{for} \PY{o}{(}\PY{n}{MthdContext} \PY{n}{m} \PY{o}{:} \PY{n}{ctx}\PY{o}{.}\PY{n+na}{mthd}\PY{o}{(}\PY{o}{)}\PY{o}{)} \PY{o}{\PYZob{}}
+            \PY{n}{methods}\PY{o}{.}\PY{n+na}{add}\PY{o}{(}\PY{o}{(}\PY{n}{MethodNode}\PY{o}{)} \PY{n}{visit}\PY{o}{(}\PY{n}{m}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+        \PY{o}{\PYZcb{}}
+        
+        \PY{k}{return} \PY{k}{new} \PY{n}{ClazzNode}\PY{o}{(}\PY{n}{clazzName}\PY{o}{,} \PY{n}{superclass}\PY{o}{,} \PY{n}{methods}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitBlock}\PY{o}{(}\PY{n}{BlockContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{n}{List}\PY{o}{\PYZlt{}}\PY{n}{VarRefNode}\PY{o}{\PYZgt{}} \PY{n}{arguments} \PY{o}{=} \PY{k}{new} \PY{n}{ArrayList}\PY{o}{\PYZlt{}}\PY{o}{\PYZgt{}}\PY{o}{(}\PY{o}{)}\PY{o}{;}
+        \PY{k}{for} \PY{o}{(}\PY{n}{TerminalNode} \PY{n}{node} \PY{o}{:} \PY{n}{ctx}\PY{o}{.}\PY{n+na}{ID}\PY{o}{(}\PY{o}{)}\PY{o}{)} \PY{o}{\PYZob{}}
+            \PY{n}{arguments}\PY{o}{.}\PY{n+na}{add}\PY{o}{(}\PY{k}{new} \PY{n}{VarRefNode}\PY{o}{(}\PY{n}{node}\PY{o}{.}\PY{n+na}{getText}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+        \PY{o}{\PYZcb{}}
+        \PY{n}{SequenceNode} \PY{n}{sequence} \PY{o}{=} \PY{o}{(}\PY{n}{SequenceNode}\PY{o}{)} \PY{n}{visit}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{sequence}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+        \PY{k}{return} \PY{k}{new} \PY{n}{BlockNode}\PY{o}{(}\PY{n}{sequence}\PY{o}{,} \PY{n}{arguments}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitFalseLit}\PY{o}{(}\PY{n}{FalseLitContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{k}{return} \PY{n}{VarRefNode}\PY{o}{.}\PY{n+na}{FALSE}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitAssignment}\PY{o}{(}\PY{n}{AssignmentContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{n}{VarRefNode} \PY{n}{variable} \PY{o}{=} \PY{k}{new} \PY{n}{VarRefNode}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{getText}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+        \PY{n}{ExprNode} \PY{n}{expression} \PY{o}{=} \PY{o}{(}\PY{n}{ExprNode}\PY{o}{)} \PY{n}{visit}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{expr}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+        \PY{k}{return} \PY{k}{new} \PY{n}{AssignNode}\PY{o}{(}\PY{n}{variable}\PY{o}{,} \PY{n}{expression}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitSequence}\PY{o}{(}\PY{n}{SequenceContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{k}{return} \PY{k}{new} \PY{n}{SequenceNode}\PY{o}{(}\PY{n}{visitExprArguments}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{expr}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitGlobalKeywordSend}\PY{o}{(}\PY{n}{GlobalKeywordSendContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{n}{String} \PY{n}{selector} \PY{o}{=} \PY{n}{buildSelector}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{ID}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+        \PY{n}{List}\PY{o}{\PYZlt{}}\PY{n}{ExprNode}\PY{o}{\PYZgt{}} \PY{n}{arguments} \PY{o}{=} \PY{n}{visitExprArguments}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{subexpr}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+        \PY{k}{return} \PY{k}{new} \PY{n}{SendNode}\PY{o}{(}\PY{n}{selector}\PY{o}{,} \PY{n}{arguments}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitKeywordSend}\PY{o}{(}\PY{n}{KeywordSendContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{n}{ExprNode} \PY{n}{expression} \PY{o}{=} \PY{o}{(}\PY{n}{ExprNode}\PY{o}{)} \PY{n}{visit}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{expr}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+        \PY{n}{String} \PY{n}{selector} \PY{o}{=} \PY{n}{buildSelector}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{ID}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+        \PY{n}{List}\PY{o}{\PYZlt{}}\PY{n}{ExprNode}\PY{o}{\PYZgt{}} \PY{n}{arguments} \PY{o}{=} \PY{n}{visitExprArguments}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{subexpr}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+        \PY{k}{return} \PY{k}{new} \PY{n}{SendNode}\PY{o}{(}\PY{n}{expression}\PY{o}{,} \PY{n}{selector}\PY{o}{,} \PY{n}{arguments}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitKeywordMethod}\PY{o}{(}\PY{n}{KeywordMethodContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{n}{String} \PY{n}{selector} \PY{o}{=} \PY{l+s}{\PYZdq{}\PYZdq{}}\PY{o}{;}
+        \PY{n}{List}\PY{o}{\PYZlt{}}\PY{n}{VarRefNode}\PY{o}{\PYZgt{}} \PY{n}{arguments} \PY{o}{=} \PY{k}{new} \PY{n}{ArrayList}\PY{o}{\PYZlt{}}\PY{n}{VarRefNode}\PY{o}{\PYZgt{}}\PY{o}{(}\PY{o}{)}\PY{o}{;}
+        \PY{k}{for} \PY{o}{(}\PY{k+kt}{int} \PY{n}{i} \PY{o}{=} \PY{l+m+mi}{0}\PY{o}{;} \PY{n}{i} \PY{o}{\PYZlt{}} \PY{n}{ctx}\PY{o}{.}\PY{n+na}{ID}\PY{o}{(}\PY{o}{)}\PY{o}{.}\PY{n+na}{size}\PY{o}{(}\PY{o}{)}\PY{o}{;} \PY{n}{i} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{2}\PY{o}{)} \PY{o}{\PYZob{}}
+            \PY{n}{selector} \PY{o}{+}\PY{o}{=} \PY{n}{ctx}\PY{o}{.}\PY{n+na}{ID}\PY{o}{(}\PY{n}{i}\PY{o}{)} \PY{o}{+} \PY{l+s}{\PYZdq{}:\PYZdq{}}\PY{o}{;}
+            \PY{n}{arguments}\PY{o}{.}\PY{n+na}{add}\PY{o}{(}\PY{k}{new} \PY{n}{VarRefNode}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{ID}\PY{o}{(}\PY{n}{i} \PY{o}{+} \PY{l+m+mi}{1}\PY{o}{)}\PY{o}{.}\PY{n+na}{getText}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+        \PY{o}{\PYZcb{}}
+        \PY{n}{SequenceNode} \PY{n}{sequence} \PY{o}{=} \PY{o}{(}\PY{n}{SequenceNode}\PY{o}{)} \PY{n}{visit}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{sequence}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+
+        \PY{k}{return} \PY{k}{new} \PY{n}{MethodNode}\PY{o}{(}\PY{n}{selector}\PY{o}{,} \PY{n}{arguments}\PY{o}{,} \PY{n}{sequence}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+    
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitUnaryMethod}\PY{o}{(}\PY{n}{UnaryMethodContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{n}{String} \PY{n}{selector} \PY{o}{=} \PY{n}{ctx}\PY{o}{.}\PY{n+na}{ID}\PY{o}{(}\PY{o}{)}\PY{o}{.}\PY{n+na}{getText}\PY{o}{(}\PY{o}{)}\PY{o}{;}
+        \PY{n}{SequenceNode} \PY{n}{sequence} \PY{o}{=} \PY{o}{(}\PY{n}{SequenceNode}\PY{o}{)} \PY{n}{visit}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{sequence}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+
+        \PY{k}{return} \PY{k}{new} \PY{n}{MethodNode}\PY{o}{(}\PY{n}{selector}\PY{o}{,} \PY{n}{sequence}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitInfixSend}\PY{o}{(}\PY{n}{InfixSendContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{n}{ExprNode} \PY{n}{expression} \PY{o}{=} \PY{o}{(}\PY{n}{ExprNode}\PY{o}{)} \PY{n}{visit}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{rcv}\PY{o}{)}\PY{o}{;}
+        \PY{n}{String} \PY{n}{selector} \PY{o}{=} \PY{n}{ctx}\PY{o}{.}\PY{n+na}{method}\PY{o}{.}\PY{n+na}{getText}\PY{o}{(}\PY{o}{)} \PY{o}{+} \PY{l+s+sc}{\PYZsq{}:\PYZsq{}}\PY{o}{;}
+        \PY{n}{List}\PY{o}{\PYZlt{}}\PY{n}{ExprNode}\PY{o}{\PYZgt{}} \PY{n}{arguments} \PY{o}{=} \PY{n}{visitExprArguments}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{arg}\PY{o}{)}\PY{o}{;}
+        \PY{k}{return} \PY{k}{new} \PY{n}{SendNode}\PY{o}{(}\PY{n}{expression}\PY{o}{,} \PY{n}{selector}\PY{o}{,} \PY{n}{arguments}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitUnarySend}\PY{o}{(}\PY{n}{UnarySendContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{n}{ExprNode} \PY{n}{expression} \PY{o}{=} \PY{o}{(}\PY{n}{ExprNode}\PY{o}{)} \PY{n}{visit}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{expr}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+        \PY{n}{String} \PY{n}{selector} \PY{o}{=} \PY{n}{ctx}\PY{o}{.}\PY{n+na}{ID}\PY{o}{(}\PY{o}{)}\PY{o}{.}\PY{n+na}{getText}\PY{o}{(}\PY{o}{)}\PY{o}{;}
+        \PY{k}{return} \PY{k}{new} \PY{n}{SendNode}\PY{o}{(}\PY{n}{expression}\PY{o}{,} \PY{n}{selector}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitStrLit}\PY{o}{(}\PY{n}{StrLitContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{n}{String} \PY{n}{quoted} \PY{o}{=} \PY{n}{ctx}\PY{o}{.}\PY{n+na}{string}\PY{o}{.}\PY{n+na}{getText}\PY{o}{(}\PY{o}{)}\PY{o}{;}
+        \PY{n}{String} \PY{n}{unquoted} \PY{o}{=} \PY{n}{quoted}\PY{o}{.}\PY{n+na}{substring}\PY{o}{(}\PY{l+m+mi}{1}\PY{o}{,} \PY{n}{quoted}\PY{o}{.}\PY{n+na}{length}\PY{o}{(}\PY{o}{)} \PY{o}{\PYZhy{}} \PY{l+m+mi}{1}\PY{o}{)}\PY{o}{;}
+        \PY{k}{return} \PY{k}{new} \PY{n}{LiteralNode}\PY{o}{(}\PY{n}{Type}\PY{o}{.}\PY{n+na}{STRING}\PY{o}{,} \PY{n}{unquoted}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitVarRef}\PY{o}{(}\PY{n}{VarRefContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{k}{return} \PY{k}{new} \PY{n}{VarRefNode}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{getText}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitIntLit}\PY{o}{(}\PY{n}{IntLitContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{k}{return} \PY{k}{new} \PY{n}{LiteralNode}\PY{o}{(}\PY{n}{Type}\PY{o}{.}\PY{n+na}{INTEGER}\PY{o}{,} \PY{n}{ctx}\PY{o}{.}\PY{n+na}{getText}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitParenExpr}\PY{o}{(}\PY{n}{ParenExprContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{k}{return} \PY{n}{visit}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{expr}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{n+nd}{@Override}
+    \PY{k+kd}{public} \PY{n}{Node} \PY{n+nf}{visitLoneExpr}\PY{o}{(}\PY{n}{LoneExprContext} \PY{n}{ctx}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{k}{return} \PY{n}{visit}\PY{o}{(}\PY{n}{ctx}\PY{o}{.}\PY{n+na}{subexpr}\PY{o}{(}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{k+kd}{public} \PY{n}{List}\PY{o}{\PYZlt{}}\PY{n}{ExprNode}\PY{o}{\PYZgt{}} \PY{n+nf}{visitExprArguments}\PY{o}{(}\PY{n}{ParserRuleContext} \PY{n}{argument}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{k}{return} \PY{n}{visitExprArguments}\PY{o}{(}\PY{n}{Arrays}\PY{o}{.}\PY{n+na}{asList}\PY{o}{(}\PY{n}{argument}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+
+    \PY{k+kd}{public} \PY{n}{List}\PY{o}{\PYZlt{}}\PY{n}{ExprNode}\PY{o}{\PYZgt{}} \PY{n+nf}{visitExprArguments}\PY{o}{(}\PY{n}{List}\PY{o}{\PYZlt{}}\PY{o}{?} \PY{k+kd}{extends} \PY{n}{ParserRuleContext}\PY{o}{\PYZgt{}} \PY{n}{arguments}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{n}{List}\PY{o}{\PYZlt{}}\PY{n}{ExprNode}\PY{o}{\PYZgt{}} \PY{n}{output} \PY{o}{=} \PY{k}{new} \PY{n}{ArrayList}\PY{o}{\PYZlt{}}\PY{o}{\PYZgt{}}\PY{o}{(}\PY{o}{)}\PY{o}{;}
+        \PY{k}{for} \PY{o}{(}\PY{k+kt}{int} \PY{n}{i} \PY{o}{=} \PY{l+m+mi}{0}\PY{o}{;} \PY{n}{i} \PY{o}{\PYZlt{}} \PY{n}{arguments}\PY{o}{.}\PY{n+na}{size}\PY{o}{(}\PY{o}{)}\PY{o}{;} \PY{n}{i} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}\PY{o}{)} \PY{o}{\PYZob{}}
+            \PY{n}{output}\PY{o}{.}\PY{n+na}{add}\PY{o}{(}\PY{o}{(}\PY{n}{ExprNode}\PY{o}{)} \PY{n}{visit}\PY{o}{(}\PY{n}{arguments}\PY{o}{.}\PY{n+na}{get}\PY{o}{(}\PY{n}{i}\PY{o}{)}\PY{o}{)}\PY{o}{)}\PY{o}{;}
+        \PY{o}{\PYZcb{}}
+        \PY{k}{return} \PY{n}{output}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+    
+    \PY{k+kd}{public} \PY{n}{String} \PY{n+nf}{buildSelector}\PY{o}{(}\PY{n}{List}\PY{o}{\PYZlt{}}\PY{n}{TerminalNode}\PY{o}{\PYZgt{}} \PY{n}{list}\PY{o}{)} \PY{o}{\PYZob{}}
+        \PY{n}{String} \PY{n}{selector} \PY{o}{=} \PY{l+s}{\PYZdq{}\PYZdq{}}\PY{o}{;}
+        \PY{k}{for} \PY{o}{(}\PY{k+kt}{int} \PY{n}{i} \PY{o}{=} \PY{l+m+mi}{0}\PY{o}{;} \PY{n}{i} \PY{o}{\PYZlt{}} \PY{n}{list}\PY{o}{.}\PY{n+na}{size}\PY{o}{(}\PY{o}{)}\PY{o}{;} \PY{n}{i} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}\PY{o}{)} \PY{o}{\PYZob{}}
+            \PY{n}{selector} \PY{o}{+}\PY{o}{=} \PY{n}{list}\PY{o}{.}\PY{n+na}{get}\PY{o}{(}\PY{n}{i}\PY{o}{)}\PY{o}{.}\PY{n+na}{toString}\PY{o}{(}\PY{o}{)} \PY{o}{+} \PY{l+s}{\PYZdq{}:\PYZdq{}}\PY{o}{;}
+        \PY{o}{\PYZcb{}}
+        \PY{k}{return} \PY{n}{selector}\PY{o}{;}
+    \PY{o}{\PYZcb{}}
+\PY{o}{\PYZcb{}}
+\end{Verbatim}
