@@ -170,7 +170,7 @@ public class BytecodeGenerator extends ASTBaseVisitor<Void> implements Opcodes {
             mv.visitVarInsn(ASTORE, 1 + decl.getOffset());
             //TODO method.getArity() should be called here.
         } catch (VariableNotDeclaredException e) {
-            // TODO This should not happen (ScopeChecker should have detected this and aborted compiling).
+            // This should not happen (ScopeChecker should have detected this and aborted compiling).
             e.printStackTrace();
         }
         
@@ -197,33 +197,31 @@ public class BytecodeGenerator extends ASTBaseVisitor<Void> implements Opcodes {
 
     @Override
     public Void visit(VarRefNode varRefNode) {
-        String object;
-        switch (varRefNode.getName()) {
-            case "true": object = "org/twnc/runtime/BTrue"; break;
-            case "false": object = "org/twnc/runtime/BFalse"; break;
-            case "this": object = cn.getName(); break; // TODO this is not correct
-            default: 
-                //TODO this should always happen, true, false and this should be global scope.
-                object = "";
-                try {
-                    VarDeclNode decl = scope.getVarDeclNode(varRefNode.getName());
-                    mv.visitVarInsn(ALOAD, 1 + decl.getOffset());
-                    //TODO method.getArity() should be called here.
-                } catch (VariableNotDeclaredException e) {
-                    object = "org/twnc/runtime/BNil";
-                }
-        }
-        
-        if (!object.isEmpty()) {
+        String name = varRefNode.getName();
+        if (ScopeStack.isSpecial(name)) {
+            String object;
+            switch (name) {
+                case "true": object = "org/twnc/runtime/BTrue"; break;
+                case "false": object = "org/twnc/runtime/BFalse"; break;
+                case "this": object = cn.getName(); break; // TODO this is not correct
+                default: object = "org/twnc/runtime/BNil"; break;
+            }
+
             mv.visitTypeInsn(NEW, object);
             mv.visitInsn(DUP);
             mv.visitMethodInsn(INVOKESPECIAL, object, "<init>", "()V", false);
+        } else {
+            try {
+                VarDeclNode decl = scope.getVarDeclNode(varRefNode.getName());
+                mv.visitVarInsn(ALOAD, 1 + decl.getOffset());
+                // TODO method.getArity() should be called here.
+            } catch (VariableNotDeclaredException e) {
+                // This should not happen (ScopeChecker should have detected this and aborted compiling).
+                e.printStackTrace();
+            }
         }
-        
         return super.visit(varRefNode);
-    }
-    
-    
+    }    
     
     @Override
     public Void visit(VarDeclNode varDeclNode) {
