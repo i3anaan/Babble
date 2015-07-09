@@ -7,10 +7,10 @@ import java.util.List;
 
 public class MethodNode extends Node {
     private final String selector;
-    private final List<VarRefNode> arguments;
+    private final List<VarDeclNode> arguments;
     private final SequenceNode sequence;
 
-    public MethodNode(String selector,  List<VarRefNode> arguments, SequenceNode sequence) {
+    public MethodNode(String selector,  List<VarDeclNode> arguments, SequenceNode sequence) {
         this.selector = selector;
         this.arguments = arguments;
         this.sequence = sequence;
@@ -24,7 +24,7 @@ public class MethodNode extends Node {
         return selector;
     }
 
-    public List<VarRefNode> getArguments() {
+    public List<VarDeclNode> getArguments() {
         return arguments;
     }
 

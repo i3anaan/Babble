@@ -7,7 +7,7 @@ import org.twnc.irtree.nodes.VarDeclNode;
 
 public class ScopeStack {
     private Scope bottomScope;
-    public static final String[] SPECIAL_VARS = {"true", "false", "nil", "this"}; 
+    public static final String[] SPECIAL_VARS = {"true", "false", "nil"};
 
     public ScopeStack() {
         bottomScope = new Scope(null);

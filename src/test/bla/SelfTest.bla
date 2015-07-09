@@ -10,7 +10,6 @@ Duck extends: Animal [
 ].
 
 SelfTest [
-
     testAssert [
         true assert.
         false not assert.
@@ -81,6 +80,14 @@ SelfTest [
 
     someMethod [
         true.
+    ].
+
+    testAdd [
+        (this add:10 to:20 == 30) assert.
+    ].
+
+    add:left to:right [
+        left + right.
     ].
 
     testBlocks [

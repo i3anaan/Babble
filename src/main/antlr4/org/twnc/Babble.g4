@@ -4,7 +4,7 @@ program : clazz* ;
 
 clazz : classname=ID (EXTENDS ':' superclass=ID)? '[' mthd* '].' ;
 
-mthd : (ID ':' ID)+ '[' sequence '].'   # KeywordMethod
+mthd : (ID ':' decl)+ '[' sequence '].' # KeywordMethod
      | ID '[' sequence '].'             # UnaryMethod
      ;
 
