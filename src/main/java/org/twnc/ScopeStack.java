@@ -7,6 +7,7 @@ import org.twnc.irtree.nodes.VarDeclNode;
 
 public class ScopeStack {
     private Scope bottomScope;
+    public static final String[] SPECIAL_VARS = {"true", "false", "nil", "this"}; 
     
     public ScopeStack() {
         bottomScope = new Scope(null);
@@ -36,7 +37,7 @@ public class ScopeStack {
     }
     
     public boolean putVarDeclNode(VarDeclNode node) {
-        if (!bottomScope.containsKey(node.getName())) {
+        if (!bottomScope.containsKey(node.getName()) && !isSpecial(node.getName())) {
             bottomScope.put(node.getName(), node);
             return true;
         }
@@ -45,5 +46,15 @@ public class ScopeStack {
     
     public Scope peek() {
         return bottomScope;
+    }
+    
+    public static boolean isSpecial(String varName) {
+        for (String s : SPECIAL_VARS) {
+            if (varName.equals(s)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }
