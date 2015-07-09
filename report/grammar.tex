@@ -19,18 +19,22 @@
 \PY{+w}{     }\PY{o}{|}\PY{+w}{ }\PY{n+nv}{subexpr}\PY{+w}{                             }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{LoneExpr}
 \PY{+w}{     }\PY{p}{;}
 
-\PY{n+nl}{subexpr}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{n+nv}{value}\PY{o}{=}\PY{n+no}{INTEGER}\PY{+w}{               }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{IntLit}
-\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{n+nv}{string}\PY{o}{=}\PY{n+no}{STRING}\PY{+w}{               }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{StrLit}
-\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{n+no}{TRUE}\PY{+w}{                        }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{TrueLit}
-\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{n+no}{FALSE}\PY{+w}{                       }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{FalseLit}
-\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{n+no}{NIL}\PY{+w}{                         }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{NilLit}
-\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{n+no}{ID}\PY{+w}{                          }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{VarRef}
-\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}\PYZsh{}\PYZsq{}}\PY{+w}{ }\PY{n+no}{ID}\PY{+w}{                      }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{SymbolLit}
-\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}[\PYZsq{}}\PY{+w}{ }\PY{o}{(}\PY{n+no}{ID}\PY{o}{*}\PY{+w}{ }\PY{l+s}{\PYZsq{}|\PYZsq{}}\PY{o}{)}\PY{o}{?}\PY{+w}{ }\PY{n+nv}{sequence}\PY{+w}{ }\PY{l+s}{\PYZsq{}]\PYZsq{}}\PY{+w}{ }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{Block}
-\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}(\PYZsq{}}\PY{+w}{ }\PY{n+nv}{expr}\PY{+w}{ }\PY{l+s}{\PYZsq{})\PYZsq{}}\PY{+w}{                }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{ParenExpr}
+\PY{n+nl}{subexpr}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{n+nv}{value}\PY{o}{=}\PY{n+no}{INTEGER}\PY{+w}{                 }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{IntLit}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{n+nv}{string}\PY{o}{=}\PY{n+no}{STRING}\PY{+w}{                 }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{StrLit}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{n+no}{TRUE}\PY{+w}{                          }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{TrueLit}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{n+no}{FALSE}\PY{+w}{                         }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{FalseLit}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{n+no}{NIL}\PY{+w}{                           }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{NilLit}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{n+no}{ID}\PY{+w}{                            }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{VarRef}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}\PYZsh{}\PYZsq{}}\PY{+w}{ }\PY{n+no}{ID}\PY{+w}{                        }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{SymbolLit}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}[\PYZsq{}}\PY{+w}{ }\PY{o}{(}\PY{n+nv}{decl}\PY{o}{*}\PY{+w}{ }\PY{l+s}{\PYZsq{}|\PYZsq{}}\PY{o}{)}\PY{o}{?}\PY{+w}{ }\PY{n+nv}{sequence}\PY{+w}{ }\PY{l+s}{\PYZsq{}]\PYZsq{}}\PY{+w}{ }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{Block}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}(\PYZsq{}}\PY{+w}{ }\PY{n+nv}{expr}\PY{+w}{ }\PY{l+s}{\PYZsq{})\PYZsq{}}\PY{+w}{                  }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{ParenExpr}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}|\PYZsq{}}\PY{+w}{ }\PY{n+nv}{decl}\PY{o}{+}\PY{+w}{ }\PY{l+s}{\PYZsq{}|\PYZsq{}}\PY{+w}{                 }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{DeclExpr}
 \PY{+w}{        }\PY{p}{;}
-\PY{c}{// MAYBE: Add return statement (Currently last expression)}
-\PY{c}{// TODO: Array syntax (\PYZsq{}\PYZob{}\PYZcb{}\PYZsq{})}
+
+\PY{n+nl}{decl}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{n+no}{ID}\PY{p}{;}
+
+\PY{c}{//MAYBE: Add return statement (Currently last expression)}
+\PY{c}{//TODO: Array syntax (\PYZsq{}\PYZob{}\PYZcb{}\PYZsq{})}
 
 \PY{n+nl}{TRUE}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{l+s}{\PYZsq{}true\PYZsq{}}\PY{p}{;}
 \PY{n+nl}{FALSE}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{l+s}{\PYZsq{}false\PYZsq{}}\PY{p}{;}
