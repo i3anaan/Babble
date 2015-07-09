@@ -1,0 +1,49 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{k}{grammar}\PY{+w}{ }\PY{n+nc}{Babble}\PY{p}{;}
+
+\PY{n+nl}{program}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{n+nv}{clazz}\PY{o}{*}\PY{+w}{ }\PY{p}{;}
+
+\PY{n+nl}{clazz}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{n+nv}{classname}\PY{o}{=}\PY{n+no}{ID}\PY{+w}{ }\PY{o}{(}\PY{n+no}{EXTENDS}\PY{+w}{ }\PY{l+s}{\PYZsq{}:\PYZsq{}}\PY{+w}{ }\PY{n+nv}{superclass}\PY{o}{=}\PY{n+no}{ID}\PY{o}{)}\PY{o}{?}\PY{+w}{ }\PY{l+s}{\PYZsq{}[\PYZsq{}}\PY{+w}{ }\PY{n+nv}{mthd}\PY{o}{*}\PY{+w}{ }\PY{l+s}{\PYZsq{}].\PYZsq{}}\PY{+w}{ }\PY{p}{;}
+
+\PY{n+nl}{mthd}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{o}{(}\PY{n+no}{ID}\PY{+w}{ }\PY{l+s}{\PYZsq{}:\PYZsq{}}\PY{+w}{ }\PY{n+no}{ID}\PY{o}{)}\PY{o}{+}\PY{+w}{ }\PY{l+s}{\PYZsq{}[\PYZsq{}}\PY{+w}{ }\PY{n+nv}{sequence}\PY{+w}{ }\PY{l+s}{\PYZsq{}].\PYZsq{}}\PY{+w}{   }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{KeywordMethod}
+\PY{+w}{     }\PY{o}{|}\PY{+w}{ }\PY{n+no}{ID}\PY{+w}{ }\PY{l+s}{\PYZsq{}[\PYZsq{}}\PY{+w}{ }\PY{n+nv}{sequence}\PY{+w}{ }\PY{l+s}{\PYZsq{}].\PYZsq{}}\PY{+w}{             }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{UnaryMethod}
+\PY{+w}{     }\PY{p}{;}
+
+\PY{n+nl}{sequence}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{o}{(}\PY{n+nv}{expr}\PY{+w}{ }\PY{o}{(}\PY{l+s}{\PYZsq{}.\PYZsq{}}\PY{o}{+}\PY{+w}{ }\PY{n+nv}{expr}\PY{o}{)}\PY{o}{*}\PY{o}{)}\PY{o}{?}\PY{+w}{ }\PY{l+s}{\PYZsq{}.\PYZsq{}}\PY{o}{?}\PY{+w}{ }\PY{p}{;}
+
+\PY{n+nl}{expr}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{n+no}{ID}\PY{+w}{ }\PY{l+s}{\PYZsq{}:=\PYZsq{}}\PY{+w}{ }\PY{n+nv}{expr}\PY{+w}{                        }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{Assignment}
+\PY{+w}{     }\PY{o}{|}\PY{+w}{ }\PY{n+nv}{rcv}\PY{o}{=}\PY{n+nv}{expr}\PY{+w}{ }\PY{n+nv}{method}\PY{o}{=}\PY{n+no}{ID}\PY{+w}{                  }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{UnarySend}
+\PY{+w}{     }\PY{o}{|}\PY{+w}{ }\PY{n+nv}{rcv}\PY{o}{=}\PY{n+nv}{expr}\PY{+w}{ }\PY{n+nv}{method}\PY{o}{=}\PY{n+no}{OPERATOR}\PY{+w}{ }\PY{n+nv}{arg}\PY{o}{=}\PY{n+nv}{expr}\PY{+w}{   }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{InfixSend}
+\PY{+w}{     }\PY{o}{|}\PY{+w}{ }\PY{n+nv}{rcv}\PY{o}{=}\PY{n+nv}{expr}\PY{+w}{ }\PY{o}{(}\PY{n+no}{ID}\PY{+w}{ }\PY{l+s}{\PYZsq{}:\PYZsq{}}\PY{+w}{ }\PY{n+nv}{subexpr}\PY{o}{)}\PY{o}{+}\PY{+w}{          }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{KeywordSend}
+\PY{+w}{     }\PY{o}{|}\PY{+w}{ }\PY{o}{(}\PY{n+no}{ID}\PY{+w}{ }\PY{l+s}{\PYZsq{}:\PYZsq{}}\PY{+w}{ }\PY{n+nv}{subexpr}\PY{o}{)}\PY{o}{+}\PY{+w}{                   }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{GlobalKeywordSend}\PY{+w}{ }\PY{c}{//TODO put in IRtree}
+\PY{+w}{     }\PY{o}{|}\PY{+w}{ }\PY{n+nv}{subexpr}\PY{+w}{                             }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{LoneExpr}
+\PY{+w}{     }\PY{p}{;}
+
+\PY{n+nl}{subexpr}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{n+nv}{value}\PY{o}{=}\PY{n+no}{INTEGER}\PY{+w}{               }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{IntLit}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{n+nv}{string}\PY{o}{=}\PY{n+no}{STRING}\PY{+w}{               }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{StrLit}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{n+no}{TRUE}\PY{+w}{                        }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{TrueLit}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{n+no}{FALSE}\PY{+w}{                       }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{FalseLit}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{n+no}{NIL}\PY{+w}{                         }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{NilLit}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{n+no}{ID}\PY{+w}{                          }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{VarRef}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}\PYZsh{}\PYZsq{}}\PY{+w}{ }\PY{n+no}{ID}\PY{+w}{                      }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{SymbolLit}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}[\PYZsq{}}\PY{+w}{ }\PY{o}{(}\PY{n+no}{ID}\PY{o}{*}\PY{+w}{ }\PY{l+s}{\PYZsq{}|\PYZsq{}}\PY{o}{)}\PY{o}{?}\PY{+w}{ }\PY{n+nv}{sequence}\PY{+w}{ }\PY{l+s}{\PYZsq{}]\PYZsq{}}\PY{+w}{ }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{Block}
+\PY{+w}{        }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}(\PYZsq{}}\PY{+w}{ }\PY{n+nv}{expr}\PY{+w}{ }\PY{l+s}{\PYZsq{})\PYZsq{}}\PY{+w}{                }\PY{o}{\PYZsh{}}\PY{+w}{ }\PY{n+no}{ParenExpr}
+\PY{+w}{        }\PY{p}{;}
+\PY{c}{// MAYBE: Add return statement (Currently last expression)}
+\PY{c}{// TODO: Array syntax (\PYZsq{}\PYZob{}\PYZcb{}\PYZsq{})}
+
+\PY{n+nl}{TRUE}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{l+s}{\PYZsq{}true\PYZsq{}}\PY{p}{;}
+\PY{n+nl}{FALSE}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{l+s}{\PYZsq{}false\PYZsq{}}\PY{p}{;}
+\PY{n+nl}{NIL}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{l+s}{\PYZsq{}nil\PYZsq{}}\PY{p}{;}
+
+\PY{n+nl}{EXTENDS}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{l+s}{\PYZsq{}extends\PYZsq{}}\PY{p}{;}
+
+\PY{n+nl}{ID}\PY{p}{:}\PY{+w}{ }\PY{p}{[}\PY{x}{A\PYZhy{}Za\PYZhy{}z}\PY{p}{]}\PY{p}{[}\PY{x}{a\PYZhy{}zA\PYZhy{}Z0\PYZhy{}9\PYZus{}\PYZbs{}\PYZbs{}}\PY{p}{]}\PY{o}{*}\PY{p}{;}
+\PY{n+nl}{INTEGER}\PY{+w}{   }\PY{p}{:}\PY{+w}{ }\PY{l+s}{\PYZsq{}\PYZhy{}\PYZsq{}}\PY{o}{?}\PY{+w}{ }\PY{p}{[}\PY{x}{0\PYZhy{}9}\PY{p}{]}\PY{o}{+}\PY{p}{;}
+\PY{n+nl}{STRING}\PY{+w}{    }\PY{p}{:}\PY{+w}{ }\PY{l+s}{\PYZsq{}\PYZdq{}\PYZsq{}}\PY{+w}{ }\PY{o}{(}\PY{o}{.}\PY{o}{*}\PY{o}{?}\PY{o}{)}\PY{+w}{ }\PY{l+s}{\PYZsq{}\PYZdq{}\PYZsq{}}\PY{p}{;}
+
+\PY{n+nl}{OPERATOR}\PY{+w}{  }\PY{p}{:}\PY{+w}{ }\PY{o}{(}\PY{l+s}{\PYZsq{}+\PYZsq{}}\PY{+w}{ }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}\PYZhy{}\PYZsq{}}\PY{+w}{ }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}*\PYZsq{}}\PY{+w}{ }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}/\PYZsq{}}\PY{+w}{ }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}=\PYZsq{}}\PY{+w}{ }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}!\PYZsq{}}\PY{+w}{ }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{},\PYZsq{}}\PY{+w}{ }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}\PYZlt{}\PYZsq{}}\PY{+w}{ }\PY{o}{|}\PY{+w}{ }\PY{l+s}{\PYZsq{}\PYZgt{}\PYZsq{}}\PY{+w}{ }\PY{o}{)}\PY{o}{+}\PY{p}{;}
+
+\PY{n+nl}{COMMENT}\PY{+w}{   }\PY{p}{:}\PY{+w}{ }\PY{l+s}{\PYZsq{}/*\PYZsq{}}\PY{+w}{ }\PY{o}{(}\PY{o}{.}\PY{o}{)}\PY{o}{*}\PY{o}{?}\PY{+w}{ }\PY{l+s}{\PYZsq{}*/\PYZsq{}}\PY{+w}{ }\PY{o}{\PYZhy{}\PYZgt{}}\PY{+w}{ }\PY{n+nv}{skip}\PY{p}{;}
+\PY{n+nl}{SEPARATOR}\PY{+w}{ }\PY{p}{:}\PY{+w}{ }\PY{p}{[}\PY{x}{ \PYZbs{}t\PYZbs{}r\PYZbs{}n}\PY{p}{]}\PY{+w}{ }\PY{o}{\PYZhy{}\PYZgt{}}\PY{+w}{ }\PY{n+nv}{skip}\PY{p}{;}
+\end{Verbatim}

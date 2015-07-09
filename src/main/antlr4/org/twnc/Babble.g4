@@ -2,8 +2,7 @@ grammar Babble;
 
 program : clazz* ;
 
-clazz : classname=ID (EXTENDS ':' superclass=ID)? '[' mthd* '].'
-      ;
+clazz : classname=ID (EXTENDS ':' superclass=ID)? '[' mthd* '].' ;
 
 mthd : (ID ':' ID)+ '[' sequence '].'   # KeywordMethod
      | ID '[' sequence '].'             # UnaryMethod
@@ -15,8 +14,7 @@ expr : ID ':=' expr                        # Assignment
      | rcv=expr method=ID                  # UnarySend
      | rcv=expr method=OPERATOR arg=expr   # InfixSend
      | rcv=expr (ID ':' subexpr)+          # KeywordSend
-     | (ID ':' subexpr)+                   # GlobalKeywordSend
-//MAYBE: Add types to method definition
+     | (ID ':' subexpr)+                   # GlobalKeywordSend //TODO put in IRtree
      | subexpr                             # LoneExpr
      ;
 
@@ -47,9 +45,7 @@ ID: [A-Za-z][a-zA-Z0-9_\\]*;
 INTEGER   : '-'? [0-9]+;
 STRING    : '"' (.*?) '"';
 
-//MAYBE: think of something smart for associativity
 OPERATOR  : ('+' | '-' | '*' | '/' | '=' | '!' | ',' | '<' | '>' )+;
 
 COMMENT   : '/*' (.)*? '*/' -> skip;
 SEPARATOR : [ \t\r\n] -> skip;
-
