@@ -5,8 +5,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.twnc.BabbleBaseVisitor;
+import org.twnc.BabbleParser.DeclExprContext;
 import org.twnc.BabbleParser.*;
 import org.twnc.irtree.nodes.*;
 import org.twnc.irtree.nodes.LiteralNode.Type;
@@ -15,12 +18,12 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitTrueLit(TrueLitContext ctx) {
-        return VarRefNode.TRUE;
+        return VarRefNode.newTrue();
     }
 
     @Override
     public Node visitNilLit(NilLitContext ctx) {
-        return VarRefNode.NIL;
+        return VarRefNode.newNil();
     }
 
     @Override
@@ -60,7 +63,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     @Override
     public Node visitBlock(BlockContext ctx) {
         List<VarRefNode> arguments = new ArrayList<>();
-        for (TerminalNode node : ctx.ID()) {
+        for (DeclContext node : ctx.decl()) {
             arguments.add(new VarRefNode(node.getText()));
         }
         SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
@@ -69,12 +72,12 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitFalseLit(FalseLitContext ctx) {
-        return VarRefNode.FALSE;
+        return VarRefNode.newFalse();
     }
 
     @Override
     public Node visitAssignment(AssignmentContext ctx) {
-        VarRefNode variable = new VarRefNode(ctx.getText());
+        VarRefNode variable = new VarRefNode(ctx.ID().getText());
         ExprNode expression = (ExprNode) visit(ctx.expr());
         return new AssignNode(variable, expression);
     }
@@ -160,6 +163,29 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     @Override
     public Node visitLoneExpr(LoneExprContext ctx) {
         return visit(ctx.subexpr());
+    }    
+    
+    @Override
+    public Node visitDecl(DeclContext ctx) {
+        return new VarDeclNode(ctx.getText());
+    }
+    
+    @Override
+    public Node visitDeclExpr(DeclExprContext ctx) {
+        return new DeclExprNode(visitDecls(ctx.decl()));
+        
+    }
+
+    @Override
+    public Node visit(ParseTree tree) {
+        Node n = super.visit(tree);
+        if (tree instanceof ParserRuleContext) {
+            Token tok = ((ParserRuleContext)tree).start;
+            n.setLine(tok.getLine());
+            n.setLineOffset(tok.getLine(), tok.getCharPositionInLine());
+        }
+
+        return n;
     }
 
     public List<ExprNode> visitExprArguments(ParserRuleContext argument) {
@@ -170,6 +196,14 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
         List<ExprNode> output = new ArrayList<>();
         for (int i = 0; i < arguments.size(); i += 1) {
             output.add((ExprNode) visit(arguments.get(i)));
+        }
+        return output;
+    }
+    
+    public List<VarDeclNode> visitDecls(List<? extends ParserRuleContext> decls) {
+        List<VarDeclNode> output = new ArrayList<>();
+        for (int i = 0; i < decls.size(); i += 1) {
+            output.add((VarDeclNode) visit(decls.get(i)));
         }
         return output;
     }

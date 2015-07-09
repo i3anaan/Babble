@@ -31,6 +31,10 @@ public class MethodNode extends Node {
     public SequenceNode getSequence() {
         return sequence;
     }
+    
+    public int getArity() {
+        return arguments.size();
+    }
 
     @Override
     public String toString() {

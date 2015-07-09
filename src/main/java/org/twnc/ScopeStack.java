@@ -1,29 +1,60 @@
 package org.twnc;
 
 import java.util.EmptyStackException;
-import java.util.Stack;
 
-public class ScopeStack extends Stack<Scope>{
-    
+import org.twnc.compile.exceptions.VariableNotDeclaredException;
+import org.twnc.irtree.nodes.VarDeclNode;
+
+public class ScopeStack {
+    private Scope bottomScope;
+    public static final String[] SPECIAL_VARS = {"true", "false", "nil", "this"}; 
+
     public ScopeStack() {
-        this.push(new Scope());
+        bottomScope = new Scope(null);
     }
-    
+
     public Scope enterScope() {
-        Scope scope = new Scope(this.peek());
-        this.push(scope);
+        Scope scope = new Scope(bottomScope);
+        bottomScope = scope;
         return scope;
     }
-    
+
     public Scope exitScope() {
-        if (this.size() > 1) {
-            return this.pop();
+        if (bottomScope.hasParentScope()) {
+            bottomScope = bottomScope.getParentScope();
+            return bottomScope;
         } else {
             throw new EmptyStackException();
         }
     }
-    
-    public Variable getVariable(String name) {
-        return this.peek().get(name);
+
+    public VarDeclNode getVarDeclNode(String name) throws VariableNotDeclaredException {
+        return bottomScope.getVarDeclNode(name);
+    }
+
+    public boolean contains(String name) {
+        return bottomScope.contains(name);
+    }
+
+    public boolean putVarDeclNode(VarDeclNode node) {
+        if (!bottomScope.containsKey(node.getName()) && !isSpecial(node.getName())) {
+            bottomScope.put(node.getName(), node);
+            return true;
+        }
+        return false;
+    }
+
+    public Scope peek() {
+        return bottomScope;
+    }
+
+    public static boolean isSpecial(String varName) {
+        for (String s : SPECIAL_VARS) {
+            if (varName.equals(s)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

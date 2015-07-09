@@ -5,14 +5,22 @@ import org.twnc.irtree.ASTVisitor;
 import java.awt.Color;
 
 public class VarRefNode extends ExprNode {
-    public static final VarRefNode TRUE = new VarRefNode("true");
-    public static final VarRefNode FALSE = new VarRefNode("false");
-    public static final VarRefNode NIL = new VarRefNode("nil");
-    
     private final String name;
     
     public VarRefNode(String name) {
         this.name = name;
+    }
+    
+    public static VarRefNode newTrue() {
+        return new VarRefNode("true");
+    }
+    
+    public static VarRefNode newFalse() {
+        return new VarRefNode("false");
+    }
+    
+    public static VarRefNode newNil() {
+        return new VarRefNode("nil");
     }
     
     public String getName() {

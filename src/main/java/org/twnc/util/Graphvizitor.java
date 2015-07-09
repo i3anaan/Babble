@@ -85,6 +85,19 @@ public class Graphvizitor extends BaseASTVisitor {
         makeNode(node);
     }
 
+    @Override
+    public void visit(VarDeclNode node) {
+        makeNode(node);
+        super.visit(node);
+    }
+    
+    @Override
+    public void visit(DeclExprNode node) {
+        makeNode(node);
+        makeEdges(node, node.getDeclarations());
+        super.visit(node);
+    }
+
     private void makeNode(Node node) {
         nodes.append("  ");
         nodes.append(node.hashCode());

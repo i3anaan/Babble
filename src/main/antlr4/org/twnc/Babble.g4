@@ -3,7 +3,7 @@ grammar Babble;
 program : clazz* ;
 
 clazz : classname=ID (EXTENDS ':' superclass=ID)? '[' mthd* '].'
-	  ;
+      ;
 
 mthd : (ID ':' ID)+ '[' sequence '].'   # KeywordMethod
      | ID '[' sequence '].'             # UnaryMethod
@@ -15,21 +15,25 @@ expr : ID ':=' expr                        # Assignment
      | rcv=expr method=ID                  # UnarySend
      | rcv=expr method=OPERATOR arg=expr   # InfixSend
      | rcv=expr (ID ':' subexpr)+          # KeywordSend
-     | (ID ':' subexpr)+                   # GlobalKeywordSend //TODO put in IRtree
+     | (ID ':' subexpr)+                   # GlobalKeywordSend
 //MAYBE: Add types to method definition
      | subexpr                             # LoneExpr
      ;
 
-subexpr : value=INTEGER            # IntLit
-     | string=STRING               # StrLit
-     | TRUE                        # TrueLit
-     | FALSE                       # FalseLit
-     | NIL                         # NilLit
-     | ID                          # VarRef
-     | '#' ID                      # SymbolLit
-     | '[' (ID* '|')? sequence ']' # Block
-     | '(' expr ')'                # ParenExpr
-     ;
+subexpr : value=INTEGER                 # IntLit
+        | string=STRING                 # StrLit
+        | TRUE                          # TrueLit
+        | FALSE                         # FalseLit
+        | NIL                           # NilLit
+        | ID                            # VarRef
+        | '#' ID                        # SymbolLit
+        | '[' (decl* '|')? sequence ']' # Block
+        | '(' expr ')'                  # ParenExpr
+        | '|' decl+ '|'                 # DeclExpr
+        ;
+
+decl : ID;
+
 //MAYBE: Add return statement (Currently last expression)
 //TODO: Array syntax ('{}')
 

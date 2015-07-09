@@ -1,12 +1,30 @@
 package org.twnc.irtree;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.twnc.compile.exceptions.CompileException;
+import org.twnc.compile.exceptions.ScopeException;
 import org.twnc.irtree.nodes.*;
 
 /** An implementation of ASTVisitor that just crawls through the tree. */
 public class BaseASTVisitor extends ASTVisitor {
+    private List<String> errors;
+
+    public BaseASTVisitor() {
+        errors = new ArrayList<String>();
+    }
+
     @Override
-    public void visit(ProgramNode programNode) {
+    public void visit(ProgramNode programNode) throws CompileException {
         programNode.getClasses().forEach(x -> x.accept(this));
+
+        if (!errors.isEmpty()) {
+            for (String error : errors) {
+                System.err.println(error);
+            }
+            throw new ScopeException();
+        }
     }
     
     @Override
@@ -42,10 +60,27 @@ public class BaseASTVisitor extends ASTVisitor {
     }
 
     @Override
+    public void visit(VarDeclNode varDeclNode) {
+    }
+
+    @Override
+    public void visit(DeclExprNode declExprNode) {
+        declExprNode.getDeclarations().forEach(x -> x.accept(this));
+    }
+
+    @Override
     public void visit(VarRefNode varRefNode) {
     }
 
     @Override
     public void visit(LiteralNode literalNode) {
+    }
+
+    public void visitError(Node node, String message) {
+        errors.add(String.format("%d:%d - %s", node.getLine(), node.getLineOffset(), message));
+    }
+    
+    public List<String> getErrors() {
+        return errors;
     }
 }

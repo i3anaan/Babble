@@ -12,8 +12,12 @@ import java.util.Map;
 
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Handle;
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.twnc.Scope;
+import org.twnc.ScopeStack;
+import org.twnc.compile.exceptions.VariableNotDeclaredException;
 import org.twnc.irtree.BaseASTVisitor;
 import org.twnc.irtree.nodes.*;
 
@@ -21,6 +25,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
     private ClassWriter cw;
     private ClazzNode cn;
     private MethodVisitor mv;
+    private Scope scope;
 
     private String outDir;
     private int blockCount;
@@ -74,6 +79,8 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
 
     @Override
     public void visit(MethodNode methodNode) {
+        scope = methodNode.getScope();
+
         StringBuilder type = new StringBuilder();
         type.append('(');
 
@@ -85,11 +92,23 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         mv = cw.visitMethod(ACC_PUBLIC, mangle(methodNode.getSelector()),
                 type.toString(), null, null);
         mv.visitCode();
-        
+
+        Label start = new Label();
+        Label end = new Label();
+
+        mv.visitLabel(start);
         super.visit(methodNode);
-        
+        mv.visitLabel(end);
+
+        mv.visitLocalVariable("this", "Lorg/twnc/runtime/BObject;", null, start, end, 0);
+        for (VarDeclNode decl : scope.values()) {
+            mv.visitLocalVariable(decl.getName(), "Lorg/twnc/runtime/BObject;", null, start, end, 1 + methodNode.getArity() + decl.getOffset());
+        }
+
         mv.visitInsn(ARETURN);
+
         mv.visitMaxs(0, 0);
+
         mv.visitEnd();
 
         if (methodNode.isTestMethod()) {
@@ -183,6 +202,22 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
     }
 
     @Override
+    public void visit(AssignNode assignNode) {
+        super.visit(assignNode);
+
+        String var = assignNode.getVariable().getName();
+        try {
+            VarDeclNode decl = scope.getVarDeclNode(var);
+            mv.visitInsn(DUP);
+            mv.visitVarInsn(ASTORE, 1 + decl.getOffset());
+            //TODO method.getArity() should be called here.
+        } catch (VariableNotDeclaredException e) {
+            // This should not happen (ScopeChecker should have detected this and aborted compiling).
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void visit(SequenceNode sequenceNode) {
         List<ExprNode> exprs = sequenceNode.getExpressions();
 
@@ -215,24 +250,47 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
 
     @Override
     public void visit(VarRefNode varRefNode) {
-        //TODO actually refer to a variable.
-        if (varRefNode.getName().equals("this")) {
-            mv.visitIntInsn(ALOAD, 0);
-        } else {
+        String name = varRefNode.getName();
+
+        if (name.equals("this")) {
+            mv.visitVarInsn(ALOAD, 0);
+        } else if (ScopeStack.isSpecial(name)) {
             String object;
-            switch (varRefNode.getName()) {
+            switch (name) {
                 case "true": object = "True"; break;
                 case "false": object = "False"; break;
                 default: object = "Nil"; break;
             }
+
             mv.visitTypeInsn(NEW, object);
             mv.visitInsn(DUP);
             mv.visitMethodInsn(INVOKESPECIAL, object, "<init>", "()V", false);
+        } else {
+            try {
+                VarDeclNode decl = scope.getVarDeclNode(varRefNode.getName());
+                mv.visitVarInsn(ALOAD, 1 + decl.getOffset());
+                // TODO method.getArity() should be called here.
+            } catch (VariableNotDeclaredException e) {
+                // This should not happen (ScopeChecker should have detected this and aborted compiling).
+                e.printStackTrace();
+            }
         }
-
         super.visit(varRefNode);
     }
     
+    @Override
+    public void visit(VarDeclNode varDeclNode) {
+        // Initialize a variable to Nil.
+        mv.visitTypeInsn(NEW, "Nil");
+        mv.visitInsn(DUP);
+        mv.visitMethodInsn(INVOKESPECIAL, "Nil", "<init>", "()V", false);
+        mv.visitInsn(DUP);
+        mv.visitVarInsn(ASTORE, 1 + varDeclNode.getOffset());
+        //TODO method.getArity() should be called here.
+
+        super.visit(varDeclNode);
+    }
+
     private static String mangle(String str) {
         StringBuilder sb = new StringBuilder();
         sb.append('_');

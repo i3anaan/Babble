@@ -103,7 +103,25 @@ SelfTest [
         (false ifTrue: [ #a ] ifFalse: [ #b ] == #b) assert.
     ].
 
+    testVarDecl [
+        | x |.
+        x := 2.
+        (x == 2) assert.
+        | y z |.
+        z := 5.
+        (z == 5) assert.
+    ].
+
     main [
         "Please use `mvn verify` to run integration tests." print.
+        this testAssert.
+        this testOr.
+        this testAnd.
+        this testMaths.
+        this testStrings.
+        this testSymbols.
+        this testTruthy.
+        this testFalsy.
+        this testVarDecl.
     ].
 ].

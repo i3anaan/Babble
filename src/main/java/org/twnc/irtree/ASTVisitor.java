@@ -12,4 +12,6 @@ public abstract class ASTVisitor {
     public abstract void visit(SequenceNode sequenceNode);
     public abstract void visit(VarRefNode varRefNode);
     public abstract void visit(LiteralNode literalNode);
+    public abstract void visit(VarDeclNode varDeclNode);
+    public abstract void visit(DeclExprNode declExprNode);
 }
