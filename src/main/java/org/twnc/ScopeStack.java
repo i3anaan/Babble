@@ -1,24 +1,21 @@
 package org.twnc;
 
-import java.util.ArrayList;
 import java.util.EmptyStackException;
 import java.util.LinkedList;
-import java.util.Stack;
 
 import org.twnc.compile.exceptions.VariableNotDeclaredException;
 import org.twnc.irtree.nodes.VarDeclNode;
-import org.twnc.irtree.nodes.VarRefNode;
 
 public class ScopeStack {
     private LinkedList<Scope> list;
     
     public ScopeStack() {
         list = new LinkedList<Scope>();
-        list.push(new Scope());
+        list.push(new Scope(null));
     }
     
     public Scope enterScope() {
-        Scope scope = new Scope();
+        Scope scope = new Scope(list.peek());
         list.push(scope);
         return scope;
     }

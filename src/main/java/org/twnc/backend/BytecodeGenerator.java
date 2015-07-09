@@ -14,6 +14,9 @@ import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.twnc.Scope;
+import org.twnc.ScopeStack;
+import org.twnc.compile.exceptions.VariableNotDeclaredException;
 import org.twnc.irtree.ASTBaseVisitor;
 import org.twnc.irtree.nodes.*;
 
@@ -21,8 +24,10 @@ public class BytecodeGenerator extends ASTBaseVisitor<Void> implements Opcodes {
     private ClassWriter cw;
     private ClazzNode cn;
     private MethodVisitor mv;
-
+    private Scope scope;
+    
     private String outDir;
+    
 
     public BytecodeGenerator(String targetDirectory) {
         outDir = targetDirectory;
@@ -75,6 +80,8 @@ public class BytecodeGenerator extends ASTBaseVisitor<Void> implements Opcodes {
 
     @Override
     public Void visit(MethodNode methodNode) {
+        scope = methodNode.getScope();
+        
         StringBuilder type = new StringBuilder();
         type.append('(');
 
@@ -93,20 +100,18 @@ public class BytecodeGenerator extends ASTBaseVisitor<Void> implements Opcodes {
         
         Label start = new Label();
         Label end = new Label();
-        mv.visitLabel(start);
         
-
-        mv.visitLocalVariable("this", "Lorg/twnc/runtime/BObject;", null, start, end, 0);
-        for (VarDeclNode decl : methodNode.getScope().values()) {
-            mv.visitLocalVariable(decl.getName(), "Lorg/twnc/runtime/BObject;", null, start, end, 1 + methodNode.getArity() + decl.getOffset());
-        }
-
+        mv.visitLabel(start);
         super.visit(methodNode);
-
         mv.visitLabel(end);
         
+        mv.visitLocalVariable("this", "Lorg/twnc/runtime/BObject;", null, start, end, 0);
+        for (VarDeclNode decl : scope.values()) {
+            mv.visitLocalVariable(decl.getName(), "Lorg/twnc/runtime/BObject;", null, start, end, 1 + methodNode.getArity() + decl.getOffset());
+        }
+        
         mv.visitInsn(ARETURN);
-        mv.visitMaxs(-1, -1);
+        mv.visitMaxs(0, 0);
         mv.visitEnd();
 
         if (methodNode.isTestMethod()) {
@@ -122,7 +127,7 @@ public class BytecodeGenerator extends ASTBaseVisitor<Void> implements Opcodes {
 
         return null;
     }
-
+    
     @Override
     public Void visit(SendNode sendNode) {
         super.visit(sendNode);
@@ -151,6 +156,26 @@ public class BytecodeGenerator extends ASTBaseVisitor<Void> implements Opcodes {
         
         return null;
     }
+    
+    
+
+    @Override
+    public Void visit(AssignNode assignNode) {
+        super.visit(assignNode);
+        
+        String var = assignNode.getVariable().getName();
+        try {
+            VarDeclNode decl = scope.getVarDeclNode(var);
+            mv.visitInsn(DUP);
+            mv.visitVarInsn(ASTORE, 1 + decl.getOffset());
+            //TODO method.getArity() should be called here.
+        } catch (VariableNotDeclaredException e) {
+            // TODO This should not happen (ScopeChecker should have detected this and aborted compiling).
+            e.printStackTrace();
+        }
+        
+        return null;
+    }
 
     @Override
     public Void visit(LiteralNode literalNode) {
@@ -172,20 +197,46 @@ public class BytecodeGenerator extends ASTBaseVisitor<Void> implements Opcodes {
 
     @Override
     public Void visit(VarRefNode varRefNode) {
-        //TODO actually refer to a variable.
         String object;
         switch (varRefNode.getName()) {
             case "true": object = "org/twnc/runtime/BTrue"; break;
             case "false": object = "org/twnc/runtime/BFalse"; break;
             case "this": object = cn.getName(); break; // TODO this is not correct
-            default: object = "org/twnc/runtime/BNil"; break;
+            default: 
+                //TODO this should always happen, true, false and this should be global scope.
+                object = "";
+                try {
+                    VarDeclNode decl = scope.getVarDeclNode(varRefNode.getName());
+                    mv.visitVarInsn(ALOAD, 1 + decl.getOffset());
+                    //TODO method.getArity() should be called here.
+                } catch (VariableNotDeclaredException e) {
+                    object = "org/twnc/runtime/BNil";
+                }
         }
-        mv.visitTypeInsn(NEW, object);
-        mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, object, "<init>", "()V", false);
+        
+        if (!object.isEmpty()) {
+            mv.visitTypeInsn(NEW, object);
+            mv.visitInsn(DUP);
+            mv.visitMethodInsn(INVOKESPECIAL, object, "<init>", "()V", false);
+        }
+        
         return super.visit(varRefNode);
     }
     
+    
+    
+    @Override
+    public Void visit(VarDeclNode varDeclNode) {
+        // Initialize a variable to Nil.
+        mv.visitTypeInsn(NEW, "org/twnc/runtime/BNil");
+        mv.visitInsn(DUP);
+        mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BNil", "<init>", "()V", false);
+        mv.visitVarInsn(ASTORE, 1 + varDeclNode.getOffset());
+        //TODO method.getArity() should be called here.
+        
+        return super.visit(varDeclNode);
+    }
+
     private static String mangle(String str) {
         StringBuilder sb = new StringBuilder();
         sb.append('_');

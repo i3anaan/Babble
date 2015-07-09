@@ -70,8 +70,16 @@ SelfTest [
         z := 5.
         (z == 5) assert.
     ].
-
+    
     main [
-        "Please use `mvn verify` to run integration tests." print.
+    	this testAssert.
+    	this testOr.
+    	this testAnd.
+    	this testMaths.
+    	this testStrings.
+    	this testSymbols.
+    	this testTruthy.
+    	this testFalsy.
+    	this testVarDecl.
     ].
 ].

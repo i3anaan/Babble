@@ -5,7 +5,6 @@ import org.twnc.irtree.ASTVisitor;
 import java.awt.Color;
 
 public class VarRefNode extends ExprNode {
-    
     private final String name;
     
     public VarRefNode(String name) {
