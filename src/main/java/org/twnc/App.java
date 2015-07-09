@@ -2,6 +2,7 @@ package org.twnc;
 
 import org.antlr.v4.runtime.*;
 import org.twnc.backend.BytecodeGenerator;
+import org.twnc.compile.exceptions.CompileException;
 import org.twnc.frontend.ScopeChecker;
 import org.twnc.irtree.ASTGenerator;
 import org.twnc.irtree.ASTVisitor;
@@ -24,16 +25,19 @@ public final class App {
 
         ASTGenerator generator = new ASTGenerator();
         Node irtree = generator.visitProgram(parser.program());
-
+        
         ASTVisitor<Void> graphVisitor = new Graphvizitor(outDir);
         irtree.accept(graphVisitor);
-        
-        ASTVisitor<Void> scopeVisitor = new ScopeChecker();
-        irtree.accept(scopeVisitor);
-
-        ASTVisitor<Void> bytecodeVisitor = new BytecodeGenerator(outDir);
-        irtree.accept(bytecodeVisitor);
-
-        System.out.println(String.format("[ OK ] Compiled %s", file));
+        try {
+            ScopeChecker scopeVisitor = new ScopeChecker();
+            irtree.accept(scopeVisitor);
+    
+            ASTVisitor<Void> bytecodeVisitor = new BytecodeGenerator(outDir);
+            irtree.accept(bytecodeVisitor);
+    
+            System.out.println(String.format("[ OK ] Compiled %s", file));
+        } catch (CompileException e) {
+            e.printStackTrace();
+        }
     }
 }

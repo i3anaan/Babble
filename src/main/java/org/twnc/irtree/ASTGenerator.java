@@ -178,10 +178,6 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
         }
 
         return n;
-        
-        // TODO:
-        // use more than one VarRefNode for true/false/nil
-        // visit is never called on VarRefNode, thus no linenumber is assigned.
     }
 
     public List<ExprNode> visitExprArguments(ParserRuleContext argument) {

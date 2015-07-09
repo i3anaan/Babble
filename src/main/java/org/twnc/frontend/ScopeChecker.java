@@ -50,8 +50,9 @@ public class ScopeChecker extends ASTBaseVisitor<Void> {
 
     @Override
     public Void visit(VarRefNode varRefNode) {
-        if (!scopeStack.contains(varRefNode.getName())) {
-            visitError(varRefNode, String.format("Variable %s is not declared.", varRefNode.getName()));
+        String name = varRefNode.getName();
+        if (!ScopeStack.isSpecial(name) && !scopeStack.contains(name)) {
+            visitError(varRefNode, String.format("Variable %s is not declared.", name));
         }
         return super.visit(varRefNode);
     }
