@@ -173,8 +173,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
         Node n = super.visit(tree);
         if (tree instanceof ParserRuleContext) {
             Token tok = ((ParserRuleContext)tree).start;
-            n.setLine(tok.getLine());
-            n.setLineOffset(tok.getLine(), tok.getCharPositionInLine());
+            n.setLocation("", tok.getLine(), tok.getCharPositionInLine());
         }
 
         return n;
