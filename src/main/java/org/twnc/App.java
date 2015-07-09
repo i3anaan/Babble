@@ -2,7 +2,7 @@ package org.twnc;
 
 import org.antlr.v4.runtime.*;
 import org.twnc.backend.BytecodeGenerator;
-import org.twnc.backend.ScopeChecker;
+import org.twnc.frontend.ScopeChecker;
 import org.twnc.irtree.ASTGenerator;
 import org.twnc.irtree.ASTVisitor;
 import org.twnc.irtree.nodes.Node;

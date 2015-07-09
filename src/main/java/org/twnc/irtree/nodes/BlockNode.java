@@ -1,6 +1,5 @@
 package org.twnc.irtree.nodes;
 
-import org.twnc.Scope;
 import org.twnc.irtree.ASTVisitor;
 
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.List;
 public class BlockNode extends ExprNode {
     private final SequenceNode sequence;
     private final List<VarRefNode> arguments;
-    private Scope scope;
 
     public BlockNode(SequenceNode sequence, List<VarRefNode> arguments) {
         this.sequence = sequence;
@@ -21,14 +19,6 @@ public class BlockNode extends ExprNode {
     
     public SequenceNode getSequence() {
         return sequence;
-    }
-
-    public Scope getScope() {
-        return scope;
-    }
-
-    public void setScope(Scope scope) {
-        this.scope = scope;
     }
 
     @Override

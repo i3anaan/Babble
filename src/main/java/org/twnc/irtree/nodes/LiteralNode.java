@@ -40,7 +40,7 @@ public class LiteralNode extends ExprNode {
             case STRING:
                 return new Color(204, 88, 56);
             case SYMBOL:
-                return new Color(46, 204, 50);
+                return new Color(46, 204, 113);
             default:
                 return new Color(0, 0, 0);
         }

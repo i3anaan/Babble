@@ -1,5 +1,6 @@
 package org.twnc.irtree.nodes;
 
+import org.twnc.Scope;
 import org.twnc.irtree.ASTVisitor;
 
 import java.awt.Color;
@@ -9,6 +10,7 @@ public abstract class Node {
 
     private int line = -1;
     private int lineOffset = -1;
+    private Scope scope;
 
     public void setLine(int line) {
         this.line = line;
@@ -25,6 +27,14 @@ public abstract class Node {
 
     public int getLineOffset() {
         return lineOffset;
+    }
+
+    public Scope getScope() {
+        return scope;
+    }
+
+    public void setScope(Scope scope) {
+        this.scope = scope;
     }
 
     public Color getColor() {

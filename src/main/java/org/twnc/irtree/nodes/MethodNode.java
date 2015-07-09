@@ -1,6 +1,5 @@
 package org.twnc.irtree.nodes;
 
-import org.twnc.Scope;
 import org.twnc.irtree.ASTVisitor;
 
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ public class MethodNode extends Node {
     private final String selector;
     private final List<VarRefNode> arguments;
     private final SequenceNode sequence;
-    private Scope scope;
 
     public MethodNode(String selector,  List<VarRefNode> arguments, SequenceNode sequence) {
         this.selector = selector;
@@ -32,14 +30,6 @@ public class MethodNode extends Node {
 
     public SequenceNode getSequence() {
         return sequence;
-    }
-    
-    public void setScope(Scope scope) {
-        this.scope = scope;
-    }
-    
-    public Scope getScope() {
-        return scope;
     }
     
     public int getArity() {

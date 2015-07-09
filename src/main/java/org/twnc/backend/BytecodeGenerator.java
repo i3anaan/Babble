@@ -155,9 +155,7 @@ public class BytecodeGenerator extends ASTBaseVisitor<Void> implements Opcodes {
         mv.visitInvokeDynamicInsn(mangle(sendNode.getSelector()), type.toString(), bootstrap);
         
         return null;
-    }
-    
-    
+    }    
 
     @Override
     public Void visit(AssignNode assignNode) {

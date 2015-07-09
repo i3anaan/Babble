@@ -1,18 +1,13 @@
-package org.twnc.backend;
-
-import javax.management.RuntimeErrorException;
+package org.twnc.frontend;
 
 import org.twnc.ScopeStack;
 import org.twnc.compile.exceptions.VariableNotDeclaredException;
 import org.twnc.irtree.ASTBaseVisitor;
-import org.twnc.irtree.nodes.AssignNode;
-import org.twnc.irtree.nodes.BlockNode;
-import org.twnc.irtree.nodes.ClazzNode;
-import org.twnc.irtree.nodes.MethodNode;
-import org.twnc.irtree.nodes.ProgramNode;
-import org.twnc.irtree.nodes.VarDeclNode;
-import org.twnc.irtree.nodes.VarRefNode;
+import org.twnc.irtree.nodes.*;
 
+/**
+ * Checks and sets scopes in the AST.
+ */
 public class ScopeChecker extends ASTBaseVisitor<Void> {
     private ScopeStack scopeStack;
     

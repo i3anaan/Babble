@@ -55,7 +55,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     @Override
     public Node visitBlock(BlockContext ctx) {
         List<VarRefNode> arguments = new ArrayList<>();
-        for (TerminalNode node : ctx.ID()) {
+        for (DeclContext node : ctx.decl()) {
             arguments.add(new VarRefNode(node.getText()));
         }
         SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
