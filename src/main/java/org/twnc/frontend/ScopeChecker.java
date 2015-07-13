@@ -1,5 +1,6 @@
 package org.twnc.frontend;
 
+import org.twnc.Scope;
 import org.twnc.ScopeStack;
 import org.twnc.compile.exceptions.VariableNotDeclaredException;
 import org.twnc.irtree.BaseASTVisitor;
@@ -28,8 +29,16 @@ public class ScopeChecker extends BaseASTVisitor {
 
     @Override
     public void visit(MethodNode methodNode) {
-        scopeStack.enterScope();
-        methodNode.setScope(scopeStack.peek());
+        Scope methodScope = scopeStack.enterScope();
+
+        methodNode.setScope(methodScope);
+
+        methodScope.put("this", new VarDeclNode("this"));
+
+        for (VarDeclNode arg : methodNode.getArguments()) {
+            methodScope.put(arg.getName(), arg);
+        }
+
         super.visit(methodNode);
         scopeStack.exitScope();
     }

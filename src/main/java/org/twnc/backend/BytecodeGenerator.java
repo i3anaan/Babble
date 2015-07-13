@@ -38,7 +38,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
     public void visit(ClazzNode clazzNode) {
         cn = clazzNode;
         blockCount = 0;
-        cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES + ClassWriter.COMPUTE_MAXS);
+        cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
         cw.visit(52, ACC_PUBLIC + ACC_SUPER, clazzNode.getName(), null, clazzNode.getSuperclass(), null);
 
         cw.visitInnerClass("org/twnc/runtime/BObject", "org/twnc/runtime/Core", "BObject", ACC_PUBLIC + ACC_STATIC);
@@ -100,9 +100,8 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         super.visit(methodNode);
         mv.visitLabel(end);
 
-        mv.visitLocalVariable("this", "Lorg/twnc/runtime/BObject;", null, start, end, 0);
         for (VarDeclNode decl : scope.values()) {
-            mv.visitLocalVariable(decl.getName(), "Lorg/twnc/runtime/BObject;", null, start, end, 1 + methodNode.getArity() + decl.getOffset());
+            mv.visitLocalVariable(decl.getName(), "Lorg/twnc/runtime/BObject;", null, start, end, decl.getOffset());
         }
 
         mv.visitInsn(ARETURN);
@@ -135,7 +134,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         // KEEP a reference to the parent method
         MethodVisitor parentMethod = mv;
 
-        ClassWriter bw = new ClassWriter(ClassWriter.COMPUTE_FRAMES + ClassWriter.COMPUTE_MAXS);
+        ClassWriter bw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
         bw.visit(52, ACC_PUBLIC + ACC_SUPER, blockClassName, null, "org/twnc/runtime/BBlock", null);
 
         // Plain constructor.
@@ -209,8 +208,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         try {
             VarDeclNode decl = scope.getVarDeclNode(var);
             mv.visitInsn(DUP);
-            mv.visitVarInsn(ASTORE, 1 + decl.getOffset());
-            //TODO method.getArity() should be called here.
+            mv.visitVarInsn(ASTORE, decl.getOffset());
         } catch (VariableNotDeclaredException e) {
             // This should not happen (ScopeChecker should have detected this and aborted compiling).
             e.printStackTrace();
@@ -252,9 +250,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
     public void visit(VarRefNode varRefNode) {
         String name = varRefNode.getName();
 
-        if (name.equals("this")) {
-            mv.visitVarInsn(ALOAD, 0);
-        } else if (ScopeStack.isSpecial(name)) {
+        if (ScopeStack.isSpecial(name)) {
             String object;
             switch (name) {
                 case "true": object = "True"; break;
@@ -268,8 +264,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         } else {
             try {
                 VarDeclNode decl = scope.getVarDeclNode(varRefNode.getName());
-                mv.visitVarInsn(ALOAD, 1 + decl.getOffset());
-                // TODO method.getArity() should be called here.
+                mv.visitVarInsn(ALOAD, decl.getOffset());
             } catch (VariableNotDeclaredException e) {
                 // This should not happen (ScopeChecker should have detected this and aborted compiling).
                 e.printStackTrace();
@@ -285,8 +280,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         mv.visitInsn(DUP);
         mv.visitMethodInsn(INVOKESPECIAL, "Nil", "<init>", "()V", false);
         mv.visitInsn(DUP);
-        mv.visitVarInsn(ASTORE, 1 + varDeclNode.getOffset());
-        //TODO method.getArity() should be called here.
+        mv.visitVarInsn(ASTORE, varDeclNode.getOffset());
 
         super.visit(varDeclNode);
     }

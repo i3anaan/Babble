@@ -14,7 +14,7 @@ public class Scope {
 
     public Scope(Scope parent) {
         this.parent = parent;
-        mapping = new HashMap<String,VarDeclNode>();
+        mapping = new HashMap<>();
     }
 
     /**
