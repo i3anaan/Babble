@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.twnc.irtree.ASTVisitor;
 
-public class DeclExprNode extends ExprNode {
+public class DeclsNode extends ExprNode {
     private final List<VarDeclNode> declarations;
 
-    public DeclExprNode(List<VarDeclNode> declarations) {
+    public DeclsNode(List<VarDeclNode> declarations) {
         this.declarations = declarations;
     }
 

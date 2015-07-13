@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -36,12 +37,20 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
 
     @Override
     public void visit(ClazzNode clazzNode) {
+        scope = clazzNode.getScope();
         cn = clazzNode;
         blockCount = 0;
+        
         cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES + ClassWriter.COMPUTE_MAXS);
         cw.visit(52, ACC_PUBLIC + ACC_SUPER, clazzNode.getName(), null, clazzNode.getSuperclass(), null);
 
         cw.visitInnerClass("org/twnc/runtime/BObject", "org/twnc/runtime/Core", "BObject", ACC_PUBLIC + ACC_STATIC);
+        
+        for (VarDeclNode decl : scope.values()) {
+            System.out.println("Declaring field: " + decl.getName());
+            FieldVisitor fv = cw.visitField(ACC_PUBLIC, decl.getName(), "Lorg/twnc/runtime/BObject;", null, null);
+            fv.visitEnd();
+        }
         
         mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
         mv.visitCode();
@@ -208,9 +217,19 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         String var = assignNode.getVariable().getName();
         try {
             VarDeclNode decl = scope.getVarDeclNode(var);
-            mv.visitInsn(DUP);
-            mv.visitVarInsn(ASTORE, 1 + decl.getOffset());
-            //TODO method.getArity() should be called here.
+            
+            if (decl.isMethodVariable()) {
+                mv.visitInsn(DUP);
+                mv.visitVarInsn(ASTORE, 1 + decl.getOffset());
+                //TODO method.getArity() should be called here.
+            } else if (decl.isClassField()) {
+                System.out.println("Putting field: " + decl.getName());
+                mv.visitVarInsn(ALOAD, 0);
+                mv.visitFieldInsn(PUTFIELD, ((ClazzNode) decl.getScope().getNode()).getName(), decl.getName(), "Lorg/twnc/runtime/BObject;");
+            } else {
+                System.out.println("Should not happen?");
+                //TODO nothing?
+            }
         } catch (VariableNotDeclaredException e) {
             // This should not happen (ScopeChecker should have detected this and aborted compiling).
             e.printStackTrace();
@@ -268,8 +287,18 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         } else {
             try {
                 VarDeclNode decl = scope.getVarDeclNode(varRefNode.getName());
-                mv.visitVarInsn(ALOAD, 1 + decl.getOffset());
-                // TODO method.getArity() should be called here.
+                if (decl.isMethodVariable()) {
+                    mv.visitVarInsn(ALOAD, 1 + decl.getOffset());
+                    // TODO method.getArity() should be called here.
+                } else if (decl.isClassField()) {
+                    System.out.println("Getting field: " + ((ClazzNode) decl.getScope().getNode()).getName() + ", " + decl.getName());
+                    mv.visitVarInsn(ALOAD, 0);
+                    mv.visitFieldInsn(GETFIELD, ((ClazzNode) decl.getScope().getNode()).getName(), decl.getName(), "Lorg/twnc/runtime/BObject;");
+                } else {
+                    mv.visitTypeInsn(NEW, "Nil");
+                    mv.visitInsn(DUP);
+                    mv.visitMethodInsn(INVOKESPECIAL, "Nil", "<init>", "()V", false);
+                }
             } catch (VariableNotDeclaredException e) {
                 // This should not happen (ScopeChecker should have detected this and aborted compiling).
                 e.printStackTrace();

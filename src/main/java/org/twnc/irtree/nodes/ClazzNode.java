@@ -7,11 +7,13 @@ import java.util.List;
 public class ClazzNode extends Node {
     private final String name;
     private final String superclass;
+    private final DeclsNode declarations;
     private final List<MethodNode> methods;
 
-    public ClazzNode(String name, String superclass, List<MethodNode> methods) {
+    public ClazzNode(String name, String superclass, DeclsNode declarations, List<MethodNode> methods) {
         this.name = name;
         this.superclass = superclass;
+        this.declarations = declarations;
         this.methods = methods;
     }
     
@@ -23,6 +25,10 @@ public class ClazzNode extends Node {
         return superclass;
     }
 
+    public DeclsNode getDecls() {
+        return declarations;
+    }
+    
     public List<MethodNode> getMethods() {
         return methods;
     }

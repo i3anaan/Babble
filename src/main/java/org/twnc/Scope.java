@@ -5,15 +5,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.twnc.compile.exceptions.VariableNotDeclaredException;
+import org.twnc.irtree.nodes.Node;
 import org.twnc.irtree.nodes.VarDeclNode;
 
 public class Scope {
     /** Null for top-most Scopes. */
     private Scope parent;
+    
+    private Node node;
     private Map<String, VarDeclNode> mapping;
 
-    public Scope(Scope parent) {
+    public Scope(Scope parent, Node node) {
         this.parent = parent;
+        this.node = node;
         mapping = new HashMap<String,VarDeclNode>();
     }
 
@@ -69,5 +73,9 @@ public class Scope {
 
     public boolean hasParentScope() {
         return parent != null;
+    }
+    
+    public Node getNode() {
+        return node;
     }
 }

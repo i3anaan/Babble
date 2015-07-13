@@ -9,7 +9,12 @@ Animal [
 Duck extends: Animal [
 ].
 
+Fielder [
+	| x y |
+].
+
 SelfTest [
+	| field1 field2 |
 
     testAssert [
         true assert.
@@ -111,6 +116,7 @@ SelfTest [
         z := 5.
         (z == 5) assert.
     ].
+    
 
     main [
         "Please use `mvn verify` to run integration tests." print.

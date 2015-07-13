@@ -13,14 +13,14 @@ public class ScopeChecker extends BaseASTVisitor {
     
     @Override
     public void visit(ProgramNode programNode) {
-        scopeStack = new ScopeStack();
+        scopeStack = new ScopeStack(programNode);
         programNode.setScope(scopeStack.peek());
         super.visit(programNode);
     }
 
     @Override
     public void visit(ClazzNode clazzNode) {
-        scopeStack.enterScope();
+        scopeStack.enterScope(clazzNode);
         clazzNode.setScope(scopeStack.peek());
         super.visit(clazzNode);
         scopeStack.exitScope();
@@ -28,7 +28,7 @@ public class ScopeChecker extends BaseASTVisitor {
 
     @Override
     public void visit(MethodNode methodNode) {
-        scopeStack.enterScope();
+        scopeStack.enterScope(methodNode);
         methodNode.setScope(scopeStack.peek());
         super.visit(methodNode);
         scopeStack.exitScope();
@@ -36,7 +36,7 @@ public class ScopeChecker extends BaseASTVisitor {
 
     @Override
     public void visit(BlockNode blockNode) {
-        scopeStack.enterScope();
+        scopeStack.enterScope(blockNode);
         blockNode.setScope(scopeStack.peek());
         super.visit(blockNode);
         scopeStack.exitScope();

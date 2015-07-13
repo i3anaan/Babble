@@ -92,7 +92,7 @@ public class Graphvizitor extends BaseASTVisitor {
     }
     
     @Override
-    public void visit(DeclExprNode node) {
+    public void visit(DeclsNode node) {
         makeNode(node);
         makeEdges(node, node.getDeclarations());
         super.visit(node);
