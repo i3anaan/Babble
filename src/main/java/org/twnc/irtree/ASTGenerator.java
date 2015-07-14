@@ -53,12 +53,19 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
             superclass = "java/lang/Object";
         }
 
+        DeclsNode decls;
+        if (ctx.decls() != null) {
+            decls = (DeclsNode) visit(ctx.decls());
+        } else {
+            decls = new DeclsNode();
+        }
+        
         List<MethodNode> methods = new ArrayList<>();
         for (MthdContext m : ctx.mthd()) {
             methods.add((MethodNode) visit(m));
         }
         
-        return new ClazzNode(clazzName, superclass, methods);
+        return new ClazzNode(clazzName, superclass, decls, methods);
     }
 
     @Override
@@ -171,16 +178,16 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     @Override
     public Node visitLoneExpr(LoneExprContext ctx) {
         return visit(ctx.subexpr());
-    }    
-    
+    }
+
     @Override
     public Node visitDecl(DeclContext ctx) {
         return new VarDeclNode(ctx.getText());
     }
     
     @Override
-    public Node visitDeclExpr(DeclExprContext ctx) {
-        return new DeclExprNode(visitDecls(ctx.decl()));
+    public Node visitDecls(DeclsContext ctx) {
+        return new DeclsNode(visitDecls(ctx.decl()));
         
     }
 

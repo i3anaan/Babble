@@ -11,21 +11,24 @@ import java.util.List;
 import java.util.Map;
 
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.twnc.Scope;
 import org.twnc.ScopeStack;
+import org.twnc.compile.exceptions.ScopeException;
+import org.twnc.compile.exceptions.UnknownVariableDeclarationLocation;
 import org.twnc.compile.exceptions.VariableNotDeclaredException;
 import org.twnc.irtree.BaseASTVisitor;
 import org.twnc.irtree.nodes.*;
 
 public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
-    private ClassWriter cw;
     private ClazzNode cn;
+    private ClassWriter cw;
     private MethodVisitor mv;
-    private Scope scope;
+    private Scope scope; //TODO Only some Nodes have Scopes currently.
 
     private String outDir;
     private int blockCount;
@@ -38,17 +41,27 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
 
     @Override
     public void visit(ClazzNode clazzNode) {
+        scope = clazzNode.getScope();
         cn = clazzNode;
         blockCount = 0;
+        
         cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
         cw.visit(52, ACC_PUBLIC + ACC_SUPER, clazzNode.getName(), null, clazzNode.getSuperclass(), null);
 
         cw.visitInnerClass("java/lang/Object", "org/twnc/runtime/Core", "Object", ACC_PUBLIC + ACC_STATIC);
         
+        for (VarDeclNode decl : scope.values()) {
+            FieldVisitor fv = cw.visitField(ACC_PUBLIC, decl.getName(), OBJ, null, null);
+            fv.visitEnd();
+        }
+        
         mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
         mv.visitCode();
         mv.visitVarInsn(ALOAD, 0);
         mv.visitMethodInsn(INVOKESPECIAL, clazzNode.getSuperclass(), "<init>", "()V", false);
+
+        visit(clazzNode.getDecls());
+
         mv.visitInsn(RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -65,9 +78,9 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
-        
-        super.visit(clazzNode);
-        
+
+        clazzNode.getMethods().forEach(x -> visit(x));
+
         cw.visitEnd();
         
         String path = outDir + clazzNode.getName() + ".class";
@@ -101,7 +114,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         Label end = new Label();
 
         mv.visitLabel(start);
-        super.visit(methodNode);
+        methodNode.getSequence().accept(this);
         mv.visitLabel(end);
 
         for (VarDeclNode decl : scope.values()) {
@@ -210,8 +223,17 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         String var = assignNode.getVariable().getName();
         try {
             VarDeclNode decl = scope.getVarDeclNode(var);
-            mv.visitInsn(DUP);
-            mv.visitVarInsn(ASTORE, decl.getOffset());
+            
+            if (decl.isMethodVariable()) {
+                mv.visitInsn(DUP);
+                mv.visitVarInsn(ASTORE, decl.getOffset());
+            } else if (decl.isClassField()) {
+                mv.visitVarInsn(ALOAD, 0);
+                mv.visitInsn(SWAP);
+                mv.visitFieldInsn(PUTFIELD, ((ClazzNode) decl.getScope().getNode()).getName(), decl.getName(), OBJ);
+            } else {
+                throw new UnknownVariableDeclarationLocation();
+            }
         } catch (VariableNotDeclaredException e) {
             // This should not happen (ScopeChecker should have detected this and aborted compiling).
             e.printStackTrace();
@@ -292,7 +314,14 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         } else {
             try {
                 VarDeclNode decl = scope.getVarDeclNode(varRefNode.getName());
-                mv.visitVarInsn(ALOAD, decl.getOffset());
+                if (decl.isMethodVariable()) {
+                    mv.visitVarInsn(ALOAD, decl.getOffset());
+                } else if (decl.isClassField()) {
+                    mv.visitVarInsn(ALOAD, 0);
+                    mv.visitFieldInsn(GETFIELD, ((ClazzNode) decl.getScope().getNode()).getName(), decl.getName(), OBJ);
+                } else {
+                    throw new UnknownVariableDeclarationLocation();
+                }
             } catch (VariableNotDeclaredException e) {
                 // This should not happen (ScopeChecker should have detected this and aborted compiling).
                 e.printStackTrace();

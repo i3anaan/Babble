@@ -3,6 +3,7 @@ package org.twnc.frontend;
 import org.twnc.irtree.BaseASTVisitor;
 import org.twnc.irtree.nodes.ArrayNode;
 import org.twnc.irtree.nodes.ClazzNode;
+import org.twnc.irtree.nodes.DeclsNode;
 import org.twnc.irtree.nodes.ExprNode;
 import org.twnc.irtree.nodes.LiteralNode;
 import org.twnc.irtree.nodes.MethodNode;
@@ -44,7 +45,7 @@ public class IntrospectionPass extends BaseASTVisitor {
 
         // Add the metaclass to the program
         String metaclassName = clazz.getName() + "Class";
-        clazzes.add(new ClazzNode(metaclassName, "org/twnc/runtime/BClass", methods));
+        clazzes.add(new ClazzNode(metaclassName, "org/twnc/runtime/BClass", new DeclsNode(), methods));
 
         // Add a 'class' method to the original class
         clazz.getMethods().add(new MethodNode("class", new SequenceNode(new LiteralNode(LiteralNode.Type.CLASS, metaclassName))));

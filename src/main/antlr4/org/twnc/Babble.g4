@@ -2,7 +2,7 @@ grammar Babble;
 
 program : clazz* ;
 
-clazz : classname=ID (EXTENDS ':' superclass=ID)? '[' mthd* '].' ;
+clazz : classname=ID (EXTENDS ':' superclass=ID)? '[' (decls '.')? mthd* '].' ;
 
 mthd : (ID ':' decl)+ '[' sequence '].' # KeywordMethod
      | ID '[' sequence '].'             # UnaryMethod
@@ -28,9 +28,10 @@ subexpr : value=INTEGER                 # IntLit
         | '[' (decl* '|')? sequence ']' # Block
         | '{' (expr ',')* expr? '}'     # ArrayLit
         | '(' expr ')'                  # ParenExpr
-        | '|' decl+ '|'                 # DeclExpr
+        | decls                         # DeclExpr
         ;
-
+        
+decls : '|' decl+ '|';
 decl : ID;
 
 //MAYBE: Add return statement (Currently last expression)
