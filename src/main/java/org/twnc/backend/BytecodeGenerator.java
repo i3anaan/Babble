@@ -59,7 +59,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
             mv.visitTypeInsn(NEW, clazzNode.getName());
             mv.visitInsn(DUP);
             mv.visitMethodInsn(INVOKESPECIAL, clazzNode.getName(), "<init>", "()V", false);
-            mv.visitMethodInsn(INVOKEVIRTUAL, clazzNode.getName(), "_main", "()L" + OBJ, false);
+            mv.visitMethodInsn(INVOKEVIRTUAL, clazzNode.getName(), "_main", "()" + OBJ, false);
             mv.visitInsn(POP);
             mv.visitInsn(RETURN);
             mv.visitMaxs(0, 0);
