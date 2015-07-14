@@ -3,6 +3,7 @@ package org.twnc.irtree.nodes;
 import org.twnc.irtree.ASTVisitor;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClazzNode extends Node {
     private final String name;
@@ -25,6 +26,10 @@ public class ClazzNode extends Node {
 
     public List<MethodNode> getMethods() {
         return methods;
+    }
+
+    public List<String> getMethodSelectors() {
+        return methods.stream().map(MethodNode::getSelector).collect(Collectors.toList());
     }
 
     @Override
