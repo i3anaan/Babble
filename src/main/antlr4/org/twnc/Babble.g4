@@ -10,11 +10,11 @@ mthd : (ID ':' decl)+ '[' sequence '].' # KeywordMethod
 
 sequence : (expr ('.'+ expr)*)? '.'? ;
 
-expr : ID ':=' expr                        # Assignment
-     | rcv=expr method=ID                  # UnarySend
+expr : rcv=expr method=ID                  # UnarySend
      | rcv=expr method=OPERATOR arg=expr   # InfixSend
      | rcv=expr (ID ':' subexpr)+          # KeywordSend
      | (ID ':' subexpr)+                   # GlobalKeywordSend //TODO put in IRtree
+     | ID ':=' expr                        # Assignment
      | subexpr                             # LoneExpr
      ;
 

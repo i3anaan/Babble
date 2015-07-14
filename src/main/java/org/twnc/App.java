@@ -3,6 +3,7 @@ package org.twnc;
 import org.antlr.v4.runtime.*;
 import org.apache.commons.cli.*;
 import org.twnc.backend.BytecodeGenerator;
+import org.twnc.frontend.GlobalsGenerator;
 import org.twnc.frontend.MetaclassGenerator;
 import org.twnc.frontend.ScopeChecker;
 import org.twnc.irtree.ASTGenerator;
@@ -86,6 +87,9 @@ public final class App {
 
         ASTVisitor graphVisitor = new Graphvizitor(outDir);
         combinedTree.accept(graphVisitor);
+
+        GlobalsGenerator globalsGen = new GlobalsGenerator();
+        combinedTree.accept(globalsGen);
 
         MetaclassGenerator metaclassGen = new MetaclassGenerator();
         combinedTree.accept(metaclassGen);

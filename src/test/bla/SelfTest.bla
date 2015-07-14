@@ -4,9 +4,12 @@
  */
 
 Animal [
+    canSwim [ false ].
 ].
 
 Duck extends: Animal [
+    canSwim [ true ].
+    quack   [ "Quack!" ].
 ].
 
 Fielder [
@@ -218,7 +221,22 @@ SelfTest [
     testNew [
         (true class new) assert.
     ].
-    
+
+    testDuck [
+        | bob |.
+        bob := Duck new.
+
+        (bob class name == "Duck") assert.
+        (bob quack == "Quack!") assert.
+        (bob canSwim) assert.
+    ].
+
+    testRedefineDuck [
+        | Duck |.
+        Duck := 10.
+        (Duck == 10) assert.
+    ].
+
     testVarception [
         | x y z |.
         x := y := z:= 10.
