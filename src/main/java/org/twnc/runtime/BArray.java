@@ -12,18 +12,18 @@ public class BArray extends ArrayList<Object> {
     }
 
     public Object _at_(Object index) {
-        return Core.nilOf(get(intValue(index)));
+        return Core.nilOf(get(((Number) index).intValue()));
     }
 
     public Object _at_ifAbsent_(Object index, Object defaultValue) {
-        Object value = get(intValue(index));
+        Object value = get(((Number) index).intValue());
         boolean missing = (value == null) || (value instanceof BNil);
 
         return missing ? defaultValue : value;
     }
 
     public Object _at_put_(Object index, Object value) {
-        set(intValue(index), value);
+        set(((Number) index).intValue(), value);
         return value;
     }
 
@@ -65,11 +65,6 @@ public class BArray extends ArrayList<Object> {
         BArray result = new BArray(this);
         Collections.reverse(result);
         return result;
-    }
-
-    /** Turn the passed (Babble) object into an integer. */
-    private static int intValue(Object obj) {
-        return ((Number) obj).intValue();
     }
 
     public Object _asString() {
