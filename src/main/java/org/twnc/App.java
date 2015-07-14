@@ -3,7 +3,7 @@ package org.twnc;
 import org.antlr.v4.runtime.*;
 import org.apache.commons.cli.*;
 import org.twnc.backend.BytecodeGenerator;
-import org.twnc.frontend.IntrospectionPass;
+import org.twnc.frontend.MetaclassGenerator;
 import org.twnc.frontend.ScopeChecker;
 import org.twnc.irtree.ASTGenerator;
 import org.twnc.irtree.ASTVisitor;
@@ -87,8 +87,8 @@ public final class App {
         ASTVisitor graphVisitor = new Graphvizitor(outDir);
         combinedTree.accept(graphVisitor);
 
-        IntrospectionPass introspectionPass = new IntrospectionPass();
-        combinedTree.accept(introspectionPass);
+        MetaclassGenerator metaclassGen = new MetaclassGenerator();
+        combinedTree.accept(metaclassGen);
 
         ScopeChecker scopeVisitor = new ScopeChecker();
         combinedTree.accept(scopeVisitor);
