@@ -214,6 +214,10 @@ SelfTest [
         (this class respondsTo:"main") assert.
         (this class respondsTo:"bogusMethod") not assert.
     ].
+
+    testNew [
+        (true class new) assert.
+    ].
     
     testVarception [
         | x y z |.

@@ -29,8 +29,9 @@ public class MetaclassGenerator extends BaseASTVisitor {
             selectors.add(new LiteralNode(LiteralNode.Type.STRING, method.getSelector()));
         }
 
-        // Generate name, methods and class methods on the metaclass
+        // Generate new, name, methods and class methods on the metaclass
         ArrayList<MethodNode> methods = new ArrayList<>();
+        methods.add(new MethodNode("new", new SequenceNode(new LiteralNode(LiteralNode.Type.CLASS, clazz.getName()))));
         methods.add(new MethodNode("name", new SequenceNode(new LiteralNode(LiteralNode.Type.STRING, clazz.getName()))));
         methods.add(new MethodNode("methods", new SequenceNode(new ArrayNode(selectors))));
         methods.add(new MethodNode("class", new SequenceNode(new LiteralNode(LiteralNode.Type.CLASS, "org/twnc/runtime/BClass"))));
