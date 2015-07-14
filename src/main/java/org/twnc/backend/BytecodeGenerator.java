@@ -23,10 +23,10 @@ import org.twnc.irtree.BaseASTVisitor;
 import org.twnc.irtree.nodes.*;
 
 public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
-    private ClassWriter cw;
     private ClazzNode cn;
+    private ClassWriter cw;
     private MethodVisitor mv;
-    private Scope scope;
+    private Scope scope; //TODO Only some Nodes have Scopes currently.
 
     private String outDir;
     private int blockCount;
@@ -47,7 +47,6 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         cw.visitInnerClass("org/twnc/runtime/BObject", "org/twnc/runtime/Core", "BObject", ACC_PUBLIC + ACC_STATIC);
         
         for (VarDeclNode decl : scope.values()) {
-            System.out.println("Declaring field: " + decl.getName());
             FieldVisitor fv = cw.visitField(ACC_PUBLIC, decl.getName(), "Lorg/twnc/runtime/BObject;", null, null);
             fv.visitEnd();
         }
@@ -226,8 +225,8 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
                 mv.visitVarInsn(ASTORE, 1 + decl.getOffset());
                 //TODO method.getArity() should be called here.
             } else if (decl.isClassField()) {
-                System.out.println("Putting field: " + decl.getName());
                 mv.visitVarInsn(ALOAD, 0);
+                mv.visitInsn(SWAP);
                 mv.visitFieldInsn(PUTFIELD, ((ClazzNode) decl.getScope().getNode()).getName(), decl.getName(), "Lorg/twnc/runtime/BObject;");
             } else {
                 System.out.println("Should not happen?");
@@ -294,7 +293,6 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
                     mv.visitVarInsn(ALOAD, 1 + decl.getOffset());
                     // TODO method.getArity() should be called here.
                 } else if (decl.isClassField()) {
-                    System.out.println("Getting field: " + ((ClazzNode) decl.getScope().getNode()).getName() + ", " + decl.getName());
                     mv.visitVarInsn(ALOAD, 0);
                     mv.visitFieldInsn(GETFIELD, ((ClazzNode) decl.getScope().getNode()).getName(), decl.getName(), "Lorg/twnc/runtime/BObject;");
                 } else {

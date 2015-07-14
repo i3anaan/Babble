@@ -16,6 +16,10 @@ Fielder [
 SelfTest [
 	| field1 field2 |
 
+	testUseMain [
+		this main.
+	].
+
     testAssert [
         true assert.
         false not assert.
@@ -117,6 +121,60 @@ SelfTest [
         (z == 5) assert.
     ].
     
+    testVarception [
+    	| x y z |.
+    	x := y := z:= 10.
+    	this varception1.
+    	(x == 10) assert.
+    	(y == 10) assert.
+    	(z == 10) assert.
+    ].
+    
+    varception1 [
+    	| x y |.
+    	x := y := 20.
+    	this varception2.
+    	(x == 20) assert.
+    	(y == 20) assert.
+    ].
+    
+    varception2 [
+    	| x |.
+    	x := 30.
+    	(x == 30) assert.
+    ].
+    	
+    
+    testClassFields [
+    	field1 := 10.
+    	field2 := 20.
+    	
+    	(field1 == 10) assert.
+    	(field2 == 20) assert.
+    ].
+    
+    testClassFieldsOverride [
+    	this setClassFields.
+    	this checkClassFields.
+    ].
+    
+    setClassFields [
+    	| field1 |.
+    	
+    	field1 := 30.
+    	field2 := 30.
+    ].
+    
+    checkClassFields [
+    	(field1 == 10) assert.
+    	(field2 == 30) assert.
+    ].
+    
+    testClassFieldsOther [
+    	"TestClassFieldsOther: TODO Add when new objects can be created." print.
+    ].
+
+	
 
     main [
         "Please use `mvn verify` to run integration tests." print.
@@ -129,5 +187,10 @@ SelfTest [
         this testTruthy.
         this testFalsy.
         this testVarDecl.
+        this testVarception.
+        this testClassFields.
+        this testClassFieldsOverride.
+        this testClassFieldsOther.
+        "Main tests: OK" print.
     ].
 ].
