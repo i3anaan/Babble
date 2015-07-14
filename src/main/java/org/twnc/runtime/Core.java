@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class Core {
     private static final MethodType INVOKE_TYPE =
-        MethodType.methodType(BObject.class, MutableCallSite.class, String.class, Object[].class);
+        MethodType.methodType(Object.class, MutableCallSite.class, String.class, Object[].class);
     private static final MethodType CHECK_TYPE =
         MethodType.methodType(boolean.class, Class.class, Object.class);
 
@@ -32,7 +32,7 @@ public class Core {
             MethodHandle handle = lookup.findStatic(Core.class, "invoke", Core.INVOKE_TYPE);
             handle = handle.bindTo(cs);
             handle = handle.bindTo(selector);
-            handle = handle.asCollector(BObject[].class, type.parameterCount());
+            handle = handle.asCollector(Object[].class, type.parameterCount());
             handle = handle.asType(type);
 
             cs.setTarget(handle);
@@ -61,14 +61,14 @@ public class Core {
      * @return the result of the call, whatever that is.
      * @throws Throwable as the method we're calling could throw anything.
      */
-    public static BObject invoke(MutableCallSite cs, String selector, Object[] args) throws Throwable {
+    public static Object invoke(MutableCallSite cs, String selector, Object[] args) throws Throwable {
         Class<?> receiverClass = args[0].getClass();
 
         // Look for a matching method.
         MethodHandle target = MethodHandles.lookup().findVirtual(
             receiverClass,                      // ...on the receiver class
             selector,                           // ...named after the selector
-            cs.type().dropParameterTypes(0, 1)  // ... and taking the right amount of BObjects.
+            cs.type().dropParameterTypes(0, 1)  // ... and taking the right amount of Objects.
         ).asType(cs.type());
 
         // Look for the check method.
@@ -82,7 +82,7 @@ public class Core {
         cs.setTarget(guard);
 
         // Invoke the bare method right now, as well.
-        return (BObject) target.invokeWithArguments(args);
+        return target.invokeWithArguments(args);
     }
 
     public static boolean check(Class klass, Object receiver) {
@@ -91,17 +91,17 @@ public class Core {
     }
 
     /**
-     * Construct a BObject. This is made a lot easier by the fact that all
-     * BObjects have zero-arg constructors.
+     * Construct a Object. This is made a lot easier by the fact that all
+     * Objects have zero-arg constructors.
      *
      * Trying to construct an instance of a class that doesn't exist will
      * result in a nil value.
      *
-     * @param name The name of the BObject subclass to be constructed.
+     * @param name The name of the Object subclass to be constructed.
      */
-    public static BObject construct(String name) {
+    public static Object construct(String name) {
         try {
-            return (BObject) Class.forName(name).getConstructor().newInstance();
+            return Class.forName(name).getConstructor().newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace(); // TODO
         } catch (IllegalAccessException e) {
@@ -117,18 +117,18 @@ public class Core {
         return newNil();
     }
 
-    /** Return a new instance of the True BObject. */
-    public static BObject newTrue() {
+    /** Return a new instance of the True Object. */
+    public static Object newTrue() {
         return construct("True");
     }
 
-    /** Return a new instance of the False BObject. */
-    public static BObject newFalse() {
+    /** Return a new instance of the False Object. */
+    public static Object newFalse() {
         return construct("False");
     }
 
-    /** Return a new instance of the Nil BObject. */
-    public static BObject newNil() {
+    /** Return a new instance of the Nil Object. */
+    public static Object newNil() {
         return construct("Nil");
     }
 }

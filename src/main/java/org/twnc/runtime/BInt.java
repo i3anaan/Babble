@@ -3,7 +3,7 @@ package org.twnc.runtime;
 import java.math.BigInteger;
 import java.util.function.BinaryOperator;
 
-public class BInt extends BObject {
+public class BInt {
     private final BigInteger integer;
 
     public BInt(int i) {
@@ -22,46 +22,37 @@ public class BInt extends BObject {
         integer = i.integer;
     }
 
-    private static BObject op(BObject a, BObject b, BinaryOperator<BigInteger> lambda) {
-        BigInteger ai = ((BInt) a._asInt()).integer;
-        BigInteger bi = ((BInt) b._asInt()).integer;
+    private static Object op(Object a, Object b, BinaryOperator<BigInteger> lambda) {
+        BigInteger ai = ((BInt) a)._asInt().integer;
+        BigInteger bi = ((BInt) b)._asInt().integer;
         return new BInt(lambda.apply(ai, bi));
     }
 
-    private static int cmp(BObject a, BObject b) {
-        BigInteger ai = ((BInt) a._asInt()).integer;
-        BigInteger bi = ((BInt) b._asInt()).integer;
+    private static int cmp(Object a, Object b) {
+        BigInteger ai = ((BInt) a)._asInt().integer;
+        BigInteger bi = ((BInt) b)._asInt().integer;
         return ai.compareTo(bi);
     }
 
-    public BObject _plus_(BObject that)   { return BInt.op(this, that, BigInteger::add); }
-    public BObject _minus_(BObject that)  { return BInt.op(this, that, BigInteger::subtract); }
-    public BObject _star_(BObject that)   { return BInt.op(this, that, BigInteger::multiply); }
-    public BObject _slash_(BObject that)  { return BInt.op(this, that, BigInteger::divide); }
-    public BObject _mod_(BObject that)    { return BInt.op(this, that, BigInteger::mod); }
+    public Object _plus_(Object that)   { return BInt.op(this, that, BigInteger::add); }
+    public Object _minus_(Object that)  { return BInt.op(this, that, BigInteger::subtract); }
+    public Object _star_(Object that)   { return BInt.op(this, that, BigInteger::multiply); }
+    public Object _slash_(Object that)  { return BInt.op(this, that, BigInteger::divide); }
+    public Object _mod_(Object that)    { return BInt.op(this, that, BigInteger::mod); }
 
-    public BObject _min_(BObject that)    { return BInt.op(this, that, BigInteger::min); }
-    public BObject _max_(BObject that)    { return BInt.op(this, that, BigInteger::max); }
+    public Object _min_(Object that)    { return BInt.op(this, that, BigInteger::min); }
+    public Object _max_(Object that)    { return BInt.op(this, that, BigInteger::max); }
 
-    public BObject _lt_(BObject that)     { return BBool.of(BInt.cmp(this, that) < 0); }
-    @Override
-    public BObject _eqeq_(BObject that)   { return BBool.of(BInt.cmp(this, that) == 0); }
-    public BObject _gt_(BObject that)     { return BBool.of(BInt.cmp(this, that) > 0); }
-    public BObject _gteq_(BObject that)   { return BBool.of(BInt.cmp(this, that) >= 0); }
-    @Override
-    public BObject _bangeq_(BObject that) { return BBool.of(BInt.cmp(this, that) != 0); }
-    public BObject _lteq_(BObject that)   { return BBool.of(BInt.cmp(this, that) <= 0); }
+    public Object _eqeq_(Object that)   { return BBool.of(BInt.cmp(this, that) == 0); }
+    public Object _gt_(Object that)     { return BBool.of(BInt.cmp(this, that) > 0); }
+    public Object _gteq_(Object that)   { return BBool.of(BInt.cmp(this, that) >= 0); }
+    public Object _bangeq_(Object that) { return BBool.of(BInt.cmp(this, that) != 0); }
+    public Object _lteq_(Object that)   { return BBool.of(BInt.cmp(this, that) <= 0); }
 
-    public BObject _abs()    { return new BInt(integer.abs()); }
-    public BObject _negate() { return new BInt(integer.negate()); }
-    public BObject _signum() { return new BInt(integer.signum()); }
+    public Object _abs()    { return new BInt(integer.abs()); }
+    public Object _negate() { return new BInt(integer.negate()); }
+    public Object _signum() { return new BInt(integer.signum()); }
 
-    @Override
-    public BObject _asBool() {
-        return BBool.of(!integer.equals(BigInteger.ZERO));
-    }
-
-    @Override
     public BInt _asInt() {
         return new BInt(this);
     }

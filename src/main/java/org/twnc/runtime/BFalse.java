@@ -2,17 +2,17 @@ package org.twnc.runtime;
 
 public abstract class BFalse extends BBool {
     @Override
-    public BObject _and_(BObject that) {
-        return _asBool();
+    public Object _and_(Object that) {
+        return this;
     }
 
     @Override
-    public BObject _or_(BObject that) {
-        return that._asBool();
+    public Object _or_(Object that) {
+        return that;
     }
 
     @Override
-    public BObject _ifTrue_ifFalse_(BObject t, BObject f) {
+    public Object _ifTrue_ifFalse_(Object t, Object f) {
         return ((BBlock)f)._value();
     }
     

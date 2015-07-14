@@ -30,6 +30,8 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
     private String outDir;
     private int blockCount;
 
+    private static final String OBJ = "Ljava/lang/Object;";
+
     public BytecodeGenerator(String targetDirectory) {
         outDir = targetDirectory;
     }
@@ -41,7 +43,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
         cw.visit(52, ACC_PUBLIC + ACC_SUPER, clazzNode.getName(), null, clazzNode.getSuperclass(), null);
 
-        cw.visitInnerClass("org/twnc/runtime/BObject", "org/twnc/runtime/Core", "BObject", ACC_PUBLIC + ACC_STATIC);
+        cw.visitInnerClass("java/lang/Object", "org/twnc/runtime/Core", "Object", ACC_PUBLIC + ACC_STATIC);
         
         mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
         mv.visitCode();
@@ -57,7 +59,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
             mv.visitTypeInsn(NEW, clazzNode.getName());
             mv.visitInsn(DUP);
             mv.visitMethodInsn(INVOKESPECIAL, clazzNode.getName(), "<init>", "()V", false);
-            mv.visitMethodInsn(INVOKEVIRTUAL, clazzNode.getName(), "_main", "()Lorg/twnc/runtime/BObject;", false);
+            mv.visitMethodInsn(INVOKEVIRTUAL, clazzNode.getName(), "_main", "()L" + OBJ, false);
             mv.visitInsn(POP);
             mv.visitInsn(RETURN);
             mv.visitMaxs(0, 0);
@@ -85,10 +87,12 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         type.append('(');
 
         for (int i = 0; i < methodNode.getArguments().size(); i++) {
-            type.append("Lorg/twnc/runtime/BObject;");
+            type.append(OBJ);
         }
 
-        type.append(")Lorg/twnc/runtime/BObject;");
+        type.append(")");
+        type.append(OBJ);
+
         mv = cw.visitMethod(ACC_PUBLIC, mangle(methodNode.getSelector()),
                 type.toString(), null, null);
         mv.visitCode();
@@ -101,7 +105,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         mv.visitLabel(end);
 
         for (VarDeclNode decl : scope.values()) {
-            mv.visitLocalVariable(decl.getName(), "Lorg/twnc/runtime/BObject;", null, start, end, decl.getOffset());
+            mv.visitLocalVariable(decl.getName(), OBJ, null, start, end, decl.getOffset());
         }
 
         mv.visitInsn(ARETURN);
@@ -114,7 +118,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
             mv = cw.visitMethod(ACC_PUBLIC, methodNode.getSelector(), "()V", null, null);
             mv.visitCode();
             mv.visitVarInsn(ALOAD, 0);
-            mv.visitMethodInsn(INVOKEVIRTUAL, cn.getName(), mangle(methodNode.getSelector()), "()Lorg/twnc/runtime/BObject;", false);
+            mv.visitMethodInsn(INVOKEVIRTUAL, cn.getName(), mangle(methodNode.getSelector()), "()" + OBJ, false);
             mv.visitInsn(POP);
             mv.visitInsn(RETURN);
             mv.visitMaxs(0, 0);
@@ -147,7 +151,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         mv.visitEnd();
 
         // #value method override.
-        mv = bw.visitMethod(ACC_PUBLIC, mangle("value"), "()Lorg/twnc/runtime/BObject;", null, null);
+        mv = bw.visitMethod(ACC_PUBLIC, mangle("value"), "()" + OBJ, null, null);
         mv.visitCode();
 
         super.visit(blockNode);
@@ -192,10 +196,11 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         type.append('(');
 
         for (int i = 0; i < sendNode.getArguments().size() + 1; i++) {
-            type.append("Lorg/twnc/runtime/BObject;");
+            type.append(OBJ);
         }
 
-        type.append(")Lorg/twnc/runtime/BObject;");
+        type.append(")");
+        type.append(OBJ);
 
         mv.visitInvokeDynamicInsn(mangle(sendNode.getSelector()), type.toString(), bootstrap);
     }

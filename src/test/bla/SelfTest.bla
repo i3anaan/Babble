@@ -60,20 +60,6 @@ SelfTest [
         (#Monday asInt == #Monday asInt) assert.
     ].
 
-    testTruthy [
-        (true asBool) assert.
-        (10 asBool) assert.
-        ("hello" asBool) assert.
-        (#symbol asBool) assert.
-    ].
-
-    testFalsy [
-        (false asBool not) assert.
-        (nil asBool not) assert.
-        (0 asBool not) assert.
-        ("" asBool not) assert.
-    ].
-
     testThis [
         this someMethod assert.
     ].
