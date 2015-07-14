@@ -73,7 +73,12 @@ public class BArray extends ArrayList<Object> {
     }
 
     public Object _asString() {
-        return new BStr(Arrays.toString(toArray()));
+        return new BStr(toString());
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(toArray());
     }
 
     public static BArray make(Object[] objects) {
