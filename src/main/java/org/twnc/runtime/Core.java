@@ -131,4 +131,15 @@ public class Core {
     public static Object newNil() {
         return construct("Nil");
     }
+
+    /**
+     * Return a Babble Nil if the passed reference is a Java null, or the passed reference unchanged otherwise.
+     */
+    public static Object nilOf(Object obj) {
+        if (obj == null) {
+            return newNil();
+        } else {
+            return obj;
+        }
+    }
 }

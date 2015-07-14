@@ -26,6 +26,7 @@ subexpr : value=INTEGER                 # IntLit
         | ID                            # VarRef
         | '#' ID                        # SymbolLit
         | '[' (decl* '|')? sequence ']' # Block
+        | '{' (expr ',')* expr? '}'     # ArrayLit
         | '(' expr ')'                  # ParenExpr
         | '|' decl+ '|'                 # DeclExpr
         ;
@@ -45,7 +46,7 @@ ID: [A-Za-z][a-zA-Z0-9_\\]*;
 INTEGER   : '-'? [0-9]+;
 STRING    : '"' (.*?) '"';
 
-OPERATOR  : ('+' | '-' | '*' | '/' | '=' | '!' | ',' | '<' | '>' )+;
+OPERATOR  : ('+' | '-' | '*' | '/' | '=' | '!' | '<' | '>' )+;
 
 COMMENT   : '/*' (.)*? '*/' -> skip;
 SEPARATOR : [ \t\r\n] -> skip;

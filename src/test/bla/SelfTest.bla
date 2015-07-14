@@ -48,7 +48,7 @@ SelfTest [
     testStrings [
         ("hello" == "hello") assert.
         ("WORLD" lower == "world") assert.
-        ("con", "cat", "e", "nation" == "concatenation") assert.
+        ("con" + "cat" + "e" + "nation" == "concatenation") assert.
         ("string replacement" replace: "re" with: "dis" == "string displacement") assert.
     ].
 
@@ -103,6 +103,67 @@ SelfTest [
         | y z |.
         z := 5.
         (z == 5) assert.
+    ].
+
+    arr [
+        { #foo, #bar, #baz }
+    ].
+
+    testArrays [
+        | x |.
+        x := {}.
+    ].
+
+    testArrayAt [
+        nil
+    ].
+
+    testArrayAtIfAbsent [
+        nil
+    ].
+
+    testArrayAtPut [
+        nil
+    ].
+
+    testArraySize [
+        nil
+    ].
+
+    testArrayIsEmpty [
+        nil
+    ].
+
+    testArrayNotEmpty [
+        nil
+    ].
+
+    testArrayAdd [
+        nil
+    ].
+
+    testArrayAddAll [
+        nil
+    ].
+
+    testArrayFirst [
+        nil
+    ].
+
+    testArrayLast [
+        nil
+    ].
+
+    testArrayIncludes [
+        nil
+    ].
+
+    testArrayReverse [
+        nil
+    ].
+
+    testArrayAsString [
+        nil
     ].
 
     main [
