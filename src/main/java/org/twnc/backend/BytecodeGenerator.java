@@ -56,6 +56,9 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         mv.visitCode();
         mv.visitVarInsn(ALOAD, 0);
         mv.visitMethodInsn(INVOKESPECIAL, clazzNode.getSuperclass(), "<init>", "()V", false);
+
+        visit(clazzNode.getDecls());
+
         mv.visitInsn(RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
@@ -72,9 +75,9 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
             mv.visitMaxs(0, 0);
             mv.visitEnd();
         }
-        
-        super.visit(clazzNode);
-        
+
+        clazzNode.getMethods().forEach(x -> visit(x));
+
         cw.visitEnd();
         
         String path = outDir + clazzNode.getName() + ".class";
