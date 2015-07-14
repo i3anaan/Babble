@@ -154,6 +154,9 @@ SelfTest [
     ].
     
     testClassFieldsOverride [
+    	field1 := 10.
+    	field2 := 20.
+    	
     	this setClassFields.
     	this checkClassFields.
     ].
