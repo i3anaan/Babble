@@ -84,7 +84,7 @@ public class BaseASTVisitor extends ASTVisitor {
     }
 
     public void visitError(Node node, String message) {
-        errors.add(String.format("%d:%d - %s", node.getLine(), node.getLineOffset(), message));
+        errors.add(String.format("[%s] - %s", node.getLocation().toString(), message));
     }
     
     public List<String> getErrors() {

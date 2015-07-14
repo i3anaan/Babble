@@ -3,17 +3,19 @@ package org.twnc;
 import org.antlr.v4.runtime.*;
 import org.apache.commons.cli.*;
 import org.twnc.backend.BytecodeGenerator;
-import org.twnc.compile.exceptions.CompileException;
 import org.twnc.frontend.IntrospectionPass;
 import org.twnc.frontend.ScopeChecker;
 import org.twnc.irtree.ASTGenerator;
 import org.twnc.irtree.ASTVisitor;
 import org.twnc.irtree.nodes.Node;
+import org.twnc.irtree.nodes.ProgramNode;
 import org.twnc.util.Graphvizitor;
 
 import java.io.*;
 
 public final class App {
+    private static boolean verbose = false;
+
     public static void main(String[] args) throws IOException {
         Options options = new Options();
 
@@ -57,7 +59,7 @@ public final class App {
             outDir += File.separator;
         }
 
-        boolean verbose = line.hasOption('v');
+        verbose = line.hasOption('v');
 
         for (String inPath : line.getArgs()) {
             File file = new File(inPath);
@@ -75,33 +77,41 @@ public final class App {
     }
 
     private static Node compileFile(File file, String outDir) throws IOException {
-        InputStream input = new SequenceInputStream(
-            App.class.getResourceAsStream("Prelude.bla"),
-            new FileInputStream(file)
-        );
-
-        CharStream chars = new ANTLRInputStream(input);
-        Lexer lexer = new BabbleLexer(chars);
-        TokenStream tokens = new CommonTokenStream(lexer);
-        BabbleParser parser = new BabbleParser(tokens);
+        // TODO Better Prelude.bla loading.
+        Node preludeTree = generateIRTree(App.class.getResourceAsStream("Prelude.bla"), "Babble\\Prelude.bla");
+        Node programTree = generateIRTree(new FileInputStream(file), file.getPath());
+        Node combinedTree = ((ProgramNode) preludeTree).addTree((ProgramNode) programTree);
 
         new File(outDir).mkdirs();
 
-        ASTGenerator generator = new ASTGenerator();
-        Node irtree = generator.visitProgram(parser.program());
-
         ASTVisitor graphVisitor = new Graphvizitor(outDir);
-        irtree.accept(graphVisitor);
+        combinedTree.accept(graphVisitor);
 
         IntrospectionPass introspectionPass = new IntrospectionPass();
-        irtree.accept(introspectionPass);
+        combinedTree.accept(introspectionPass);
 
         ScopeChecker scopeVisitor = new ScopeChecker();
-        irtree.accept(scopeVisitor);
+        combinedTree.accept(scopeVisitor);
 
         ASTVisitor bytecodeVisitor = new BytecodeGenerator(outDir);
-        irtree.accept(bytecodeVisitor);
+        combinedTree.accept(bytecodeVisitor);
 
-        return irtree;
+        return combinedTree;
+    }
+
+    private static Node generateIRTree(InputStream stream, String filename) throws IOException {
+            CharStream chars = new ANTLRInputStream(stream);
+            Lexer lexer = new BabbleLexer(chars);
+            TokenStream tokens = new CommonTokenStream(lexer);
+            BabbleParser parser = new BabbleParser(tokens);
+
+            ASTGenerator generator = new ASTGenerator(filename);
+            Node irtree = generator.visitProgram(parser.program());
+
+            if (verbose) {
+                System.out.println("Parsed: " + filename);
+            }
+
+            return irtree;
     }
 }

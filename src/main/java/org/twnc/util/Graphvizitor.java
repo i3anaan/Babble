@@ -90,7 +90,7 @@ public class Graphvizitor extends BaseASTVisitor {
         makeNode(node);
         super.visit(node);
     }
-    
+
     @Override
     public void visit(DeclsNode node) {
         makeNode(node);
@@ -98,11 +98,25 @@ public class Graphvizitor extends BaseASTVisitor {
         super.visit(node);
     }
 
+    @Override
+    public void visit(LiteralNode node) {
+        makeNode(node);
+        super.visit(node);
+    }
+
+    @Override
+    public void visit(ArrayNode node) {
+        makeNode(node);
+        makeEdges(node, node.getExpressions());
+        super.visit(node);
+    }
+
     private void makeNode(Node node) {
         nodes.append("  ");
         nodes.append(node.hashCode());
         nodes.append(" [");
-        nodes.append("label=\"" + node.toString().replace("\"", "\\\"") + "\" ");
+        String label = node.toString() + "\n" + String.valueOf(node.getLocation());
+        nodes.append("label=\"" + label.replace("\"", "\\\"").replace("\\", "\\\\") + "\" ");
         nodes.append("color=\"" + describeColor(node.getColor()) + "\" ");;
         nodes.append("fillcolor=\"" + describeColor(node.getColor().brighter().brighter()) + "\"");
         nodes.append("];\n");
