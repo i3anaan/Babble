@@ -87,7 +87,7 @@ public final class App {
 
         new File(outDir).mkdirs();
 
-        ASTGenerator generator = new ASTGenerator();
+        ASTGenerator generator = new ASTGenerator("Prelude + SelfTest");
         Node irtree = generator.visitProgram(parser.program());
 
         ASTVisitor graphVisitor = new Graphvizitor(outDir);

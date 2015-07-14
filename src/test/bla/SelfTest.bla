@@ -99,6 +99,7 @@ SelfTest [
     testVarDecl [
         | x |.
         x := 2.
+        a := 3.
         (x == 2) assert.
         | y z |.
         z := 5.

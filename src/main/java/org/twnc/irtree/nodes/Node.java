@@ -2,31 +2,31 @@ package org.twnc.irtree.nodes;
 
 import org.twnc.Scope;
 import org.twnc.irtree.ASTVisitor;
+import org.twnc.irtree.Location;
 
 import java.awt.Color;
+import java.util.Optional;
 
 public abstract class Node {
     public abstract void accept(ASTVisitor visitor);
 
-    private int line = -1;
-    private int lineOffset = -1;
     private Scope scope;
+    private Location location;
 
-    public void setLine(int line) {
-        this.line = line;
+    public Node() {
+        location = new Location("unkown", -1, -1);
     }
-
-    public void setLineOffset(int line, int lineOffset) {
-        this.line = line;
-        this.lineOffset = lineOffset;
+    
+    public void setLocation(Location location) {
+        this.location = location;
     }
-
-    public int getLine() {
-        return line;
+    
+    public void setLocation(String filename, int line, int lineOffset) {
+        setLocation(new Location(filename, line, lineOffset));
     }
-
-    public int getLineOffset() {
-        return lineOffset;
+    
+    public Location getLocation() {
+        return location;
     }
 
     public Scope getScope() {

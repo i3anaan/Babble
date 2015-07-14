@@ -69,7 +69,7 @@ public class ScopeChecker extends BaseASTVisitor {
             } catch (VariableNotDeclaredException e) {
                 throw new RuntimeException(e);
             }
-            visitError(node, String.format("Variable %s is already declared at %s:%s.", node.getName(), previousDecl.getLine(), previousDecl.getLineOffset()));
+            visitError(node, String.format("Variable %s is already declared at [%s].", node.getName(), previousDecl.getLocation().toString()));
         }
         super.visit(node);
     } 

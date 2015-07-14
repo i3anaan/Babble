@@ -16,7 +16,12 @@ import org.twnc.irtree.nodes.*;
 import org.twnc.irtree.nodes.LiteralNode.Type;
 
 public class ASTGenerator extends BabbleBaseVisitor<Node> {
-
+    private String filename;
+    
+    public ASTGenerator(String filename) {
+        this.filename = filename;
+    }
+    
     @Override
     public Node visitTrueLit(TrueLitContext ctx) {
         return VarRefNode.newTrue();
@@ -65,7 +70,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     public Node visitBlock(BlockContext ctx) {
         List<VarRefNode> arguments = new ArrayList<>();
         for (DeclContext node : ctx.decl()) {
-            arguments.add(new VarRefNode(node.getText()));
+            arguments.add((VarRefNode) visit(node));
         }
         SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
         return new BlockNode(sequence, arguments);
@@ -79,6 +84,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     @Override
     public Node visitAssignment(AssignmentContext ctx) {
         VarRefNode variable = new VarRefNode(ctx.ID().getText());
+        setLocation(variable, ctx.ID().getSymbol());
         ExprNode expression = (ExprNode) visit(ctx.expr());
         return new AssignNode(variable, expression);
     }
@@ -115,7 +121,9 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
         for (int i = 0; i < ctx.ID().size(); i++) {
             selector.append(ctx.ID(i)).append(":");
-            arguments.add(new VarDeclNode(ctx.decl(i).getText()));
+            VarDeclNode var = new VarDeclNode(ctx.decl(i).getText());
+            setLocation(var, ctx.decl(i).ID().getSymbol());
+            arguments.add(var);
         }
 
         SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
@@ -188,12 +196,14 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     public Node visit(ParseTree tree) {
         Node n = super.visit(tree);
         if (tree instanceof ParserRuleContext) {
-            Token tok = ((ParserRuleContext)tree).start;
-            n.setLine(tok.getLine());
-            n.setLineOffset(tok.getLine(), tok.getCharPositionInLine());
+            setLocation(n, ((ParserRuleContext)tree).getStart());
         }
-
         return n;
+    }
+    
+    private void setLocation(Node node, Token tok) {
+        Location loc = new Location(filename, tok.getLine(), tok.getCharPositionInLine());
+        node.setLocation(loc);
     }
 
     public List<ExprNode> visitExprArguments(ParserRuleContext argument) {
