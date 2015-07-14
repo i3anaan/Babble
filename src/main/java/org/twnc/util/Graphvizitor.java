@@ -97,12 +97,27 @@ public class Graphvizitor extends BaseASTVisitor {
         makeEdges(node, node.getDeclarations());
         super.visit(node);
     }
+    
+    @Override
+    public void visit(LiteralNode node) {
+        makeNode(node);
+        super.visit(node);
+    }
+    
+    
+
+    @Override
+    public void visit(ArrayNode node) {
+        makeNode(node);
+        makeEdges(node, node.getExpressions());
+        super.visit(node);
+    }
 
     private void makeNode(Node node) {
         nodes.append("  ");
         nodes.append(node.hashCode());
         nodes.append(" [");
-        nodes.append("label=\"" + node.toString().replace("\"", "\\\"") + "\" ");
+        nodes.append("label=\"" + node.toString().replace("\"", "\\\"") + "\n" + node.getLocation().toString().replace("\"", "\\\"") + "\" ");
         nodes.append("color=\"" + describeColor(node.getColor()) + "\" ");;
         nodes.append("fillcolor=\"" + describeColor(node.getColor().brighter().brighter()) + "\"");
         nodes.append("];\n");
