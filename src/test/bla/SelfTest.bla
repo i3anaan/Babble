@@ -48,7 +48,7 @@ SelfTest [
     testStrings [
         ("hello" == "hello") assert.
         ("WORLD" lower == "world") assert.
-        ("con", "cat", "e", "nation" == "concatenation") assert.
+        ("con" + "cat" + "e" + "nation" == "concatenation") assert.
         ("string replacement" replace: "re" with: "dis" == "string displacement") assert.
     ].
 
@@ -103,6 +103,93 @@ SelfTest [
         | y z |.
         z := 5.
         (z == 5) assert.
+    ].
+
+    arr [
+        { #foo, #bar, nil, #baz }.
+    ].
+
+    emptyArr [
+        { }.
+    ].
+
+    testArrays [
+        | x |.
+        x := {}.
+    ].
+
+    testArrayAt [
+        (this arr at: 1 == #bar) assert.
+        (this arr at: 0 == #bar) not assert.
+    ].
+
+    testArrayAtIfAbsent [
+        (this arr at: 2 ifAbsent: #eggs == #eggs) assert.
+    ].
+
+    testArrayAtPut [
+        | z |.
+        z := { 1, 2, 3 }.
+        z at: 1 put: 4.
+
+        (z at: 0 == 1) assert.
+        (z at: 1 == 4) assert.
+        (z at: 2 == 3) assert.
+    ].
+
+    testArraySize [
+        (this arr size == 4) assert.
+        (this emptyArr size == 0) assert.
+    ].
+
+    testArrayIsEmpty [
+        this arr isEmpty not assert.
+        this emptyArr isEmpty assert.
+    ].
+
+    testArrayNotEmpty [
+        this arr notEmpty assert.
+        this emptyArr notEmpty not assert.
+    ].
+
+    testArrayAdd [
+        | array |.
+        array := { 1, 2, 3 }.
+        array add: 4.
+
+        (array size == 4) assert.
+        (array at: 3 == 4) assert.
+    ].
+
+    testArrayAddAll [
+        | a b |.
+        a := { 1, 2 }.
+        b := { 3, 4 }.
+
+        a addAll: b.
+
+        (a size == 4) assert.
+    ].
+
+    testArrayFirst [
+        (this arr first == #foo) assert.
+    ].
+
+    testArrayLast [
+        (this arr last == #baz) assert.
+    ].
+
+    testArrayIncludes [
+        (this arr includes: #foo) assert.
+        (this arr includes: #spam) not assert.
+    ].
+
+    testArrayReverse [
+        (this arr reverse first == #baz) assert.
+    ].
+
+    testArrayAsString [
+        ({1, 2, 3} asString == "[1, 2, 3]") assert.
     ].
 
     main [

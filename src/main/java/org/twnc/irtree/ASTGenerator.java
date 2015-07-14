@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.twnc.BabbleBaseVisitor;
+import org.twnc.BabbleParser;
 import org.twnc.BabbleParser.DeclExprContext;
 import org.twnc.BabbleParser.*;
 import org.twnc.irtree.nodes.*;
@@ -85,6 +86,11 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     @Override
     public Node visitSequence(SequenceContext ctx) {
         return new SequenceNode(visitExprArguments(ctx.expr()));
+    }
+
+    @Override
+    public Node visitArrayLit(ArrayLitContext ctx) {
+        return new ArrayNode(visitExprArguments(ctx.expr()));
     }
 
     @Override

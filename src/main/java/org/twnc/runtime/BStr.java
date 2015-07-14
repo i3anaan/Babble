@@ -35,12 +35,17 @@ public class BStr {
         return new BStr(str.replace(search.toString(), replace.toString()));
     }
 
-    public Object _comma_(Object that) {
+    public Object _plus_(Object that) {
         return new BStr(str.concat(that.toString()));
     }
 
     public Object _eqeq_(Object that) {
         return BBool.of(equals(that));
+    }
+
+    public Object _print() {
+        System.out.println(str);
+        return this;
     }
 
     @Override

@@ -234,6 +234,43 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
     }
 
     @Override
+    public void visit(ArrayNode arrayNode) {
+        List<ExprNode> expressions = arrayNode.getExpressions();
+
+        // Put an empty array on the stack, of the correct size...
+        mv.visitIntInsn(BIPUSH, expressions.size());
+        mv.visitTypeInsn(ANEWARRAY, "java/lang/Object");
+        // ...twice, to have a copy for aastore.
+        mv.visitInsn(DUP);
+
+        for (int i = 0; i < expressions.size(); i++) {
+            // AASTORE expects stack to be [... array, index, value.
+            // Push the index first.
+            mv.visitIntInsn(BIPUSH, i);
+
+            // Calculate expression, which pushes value.
+            expressions.get(i).accept(this);
+
+            // Chuck it into the array.
+            mv.visitInsn(AASTORE);
+
+            // That consumed array, so dup our original array reference.
+            mv.visitInsn(DUP);
+        }
+
+        // Pop the duplicate reference.
+        mv.visitInsn(POP);
+
+        // The filled array is now ready, turn it into a BArray
+        mv.visitMethodInsn(
+            INVOKESTATIC,
+            "org/twnc/runtime/BArray",
+            "make",
+            "([Ljava/lang/Object;)Lorg/twnc/runtime/BArray;",
+            false);
+    }
+
+    @Override
     public void visit(LiteralNode literalNode) {
         String t = "";
 

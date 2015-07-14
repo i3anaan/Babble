@@ -43,6 +43,11 @@ public class BaseASTVisitor extends ASTVisitor {
     }
 
     @Override
+    public void visit(ArrayNode arrayNode) {
+        arrayNode.getExpressions().forEach(x -> x.accept(this));
+    }
+
+    @Override
     public void visit(BlockNode blockNode) {
         blockNode.getSequence().accept(this);
     }
