@@ -14,7 +14,7 @@ expr : ID ':=' expr                        # Assignment
      | rcv=expr method=ID                  # UnarySend
      | rcv=expr method=OPERATOR arg=expr   # InfixSend
      | rcv=expr (ID ':' subexpr)+          # KeywordSend
-     | (ID ':' subexpr)+                   # GlobalKeywordSend //TODO put in IRtree
+     | (ID ':' subexpr)+                   # GlobalKeywordSend
      | subexpr                             # LoneExpr
      ;
 
@@ -34,7 +34,6 @@ subexpr : value=INTEGER                 # IntLit
 decl : ID;
 
 //MAYBE: Add return statement (Currently last expression)
-//TODO: Array syntax ('{}')
 
 TRUE : 'true';
 FALSE : 'false';
