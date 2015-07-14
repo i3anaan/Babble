@@ -21,6 +21,12 @@ SelfTest [
         false not assert.
     ].
 
+    testEmptyMethod [
+        (this emptyMethod == nil) assert.
+    ].
+
+    emptyMethod [].
+
     testOr [
         true or:true assert.
         true or:false assert.
@@ -266,19 +272,40 @@ SelfTest [
     
     main [
         "Please use `mvn verify` to run integration tests." print.
-        this testAssert.
-        this testOr.
+        this testAdd.
         this testAnd.
+        this testArrayAdd.
+        this testArrayAddAll.
+        this testArrayAsString.
+        this testArrayAt.
+        this testArrayAtIfAbsent.
+        this testArrayAtPut.
+        this testArrayFirst.
+        this testArrayIncludes.
+        this testArrayIsEmpty.
+        this testArrayLast.
+        this testArrayNotEmpty.
+        this testArrayReverse.
+        this testArraySize.
+        this testArrays.
+        this testAsString.
+        this testAssert.
+        this testBlocks.
+        this testClassFields.
+        this testClassFieldsOther.
+        this testClassFieldsOverride.
+        this testEmptyMethod.
+        this testIf.
         this testMaths.
+        this testMetaclassName.
+        this testNestedBlocks.
+        this testOr.
+        this testRespondsTo.
         this testStrings.
         this testSymbols.
-        this testTruthy.
-        this testFalsy.
+        this testThis.
         this testVarDecl.
         this testVarception.
-        this testClassFields.
-        this testClassFieldsOverride.
-        this testClassFieldsOther.
         "Main tests: OK" print.
     ].
 ].

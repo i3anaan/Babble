@@ -115,6 +115,14 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
 
         mv.visitLabel(start);
         methodNode.getSequence().accept(this);
+
+        if (methodNode.getSequence().getExpressions().isEmpty()) {
+            // Return Nil if the method is empty.
+            mv.visitTypeInsn(NEW, "Nil");
+            mv.visitInsn(DUP);
+            mv.visitMethodInsn(INVOKESPECIAL, "Nil", "<init>", "()V", false);
+        }
+
         mv.visitLabel(end);
 
         for (VarDeclNode decl : scope.values()) {
