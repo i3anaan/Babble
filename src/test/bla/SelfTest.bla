@@ -192,6 +192,17 @@ SelfTest [
         ({1, 2, 3} asString == "[1, 2, 3]") assert.
     ].
 
+    testMetaclassName [
+        (true class name == "True") assert.
+        (true class class name == "Class") assert.
+        (true class class class name == "Class") assert.
+    ].
+
+    testRespondsTo [
+        (this class respondsTo:"main") assert.
+        (this class respondsTo:"bogusMethod") not assert.
+    ].
+
     main [
         "Please use `mvn verify` to run integration tests." print.
         this testAssert.

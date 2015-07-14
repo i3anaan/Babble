@@ -172,9 +172,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         mv = parentMethod;
 
         // Create a new instance of our closure class
-        mv.visitTypeInsn(NEW, blockClassName);
-        mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, blockClassName, "<init>", "()V", false);
+        newObject(blockClassName);
     }
 
     @Override
@@ -272,37 +270,25 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
 
     @Override
     public void visit(LiteralNode literalNode) {
-        String t = "";
-
         switch (literalNode.getType()) {
-            case INTEGER: t = "org/twnc/runtime/BInt"; break;
-            case STRING:  t = "org/twnc/runtime/BStr"; break;
-            case SYMBOL:  t = "org/twnc/runtime/BSymbol"; break;
+            case INTEGER: newFromString("org/twnc/runtime/BInt", literalNode.getValue()); break;
+            case STRING:  newFromString("org/twnc/runtime/BStr", literalNode.getValue()); break;
+            case SYMBOL:  newFromString("org/twnc/runtime/BSymbol", literalNode.getValue()); break;
+            case CLASS:   newObject(literalNode.getValue()); break;
         }
-
-        mv.visitTypeInsn(NEW, t);
-        mv.visitInsn(DUP);
-        mv.visitLdcInsn(literalNode.getValue());
-        mv.visitMethodInsn(INVOKESPECIAL, t, "<init>", "(Ljava/lang/String;)V", false);
 
         super.visit(literalNode);
     }
-
     @Override
     public void visit(VarRefNode varRefNode) {
         String name = varRefNode.getName();
 
         if (ScopeStack.isSpecial(name)) {
-            String object;
             switch (name) {
-                case "true": object = "True"; break;
-                case "false": object = "False"; break;
-                default: object = "Nil"; break;
+                case "true":  newObject("True");  break;
+                case "false": newObject("False"); break;
+                default:      newObject("Nil");   break;
             }
-
-            mv.visitTypeInsn(NEW, object);
-            mv.visitInsn(DUP);
-            mv.visitMethodInsn(INVOKESPECIAL, object, "<init>", "()V", false);
         } else {
             try {
                 VarDeclNode decl = scope.getVarDeclNode(varRefNode.getName());
@@ -318,13 +304,24 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
     @Override
     public void visit(VarDeclNode varDeclNode) {
         // Initialize a variable to Nil.
-        mv.visitTypeInsn(NEW, "Nil");
-        mv.visitInsn(DUP);
-        mv.visitMethodInsn(INVOKESPECIAL, "Nil", "<init>", "()V", false);
+        newObject("Nil");
         mv.visitInsn(DUP);
         mv.visitVarInsn(ASTORE, varDeclNode.getOffset());
 
         super.visit(varDeclNode);
+    }
+
+    private void newObject(String t) {
+        mv.visitTypeInsn(NEW, t);
+        mv.visitInsn(DUP);
+        mv.visitMethodInsn(INVOKESPECIAL, t, "<init>", "()V", false);
+    }
+
+    private void newFromString(String t, String value) {
+        mv.visitTypeInsn(NEW, t);
+        mv.visitInsn(DUP);
+        mv.visitLdcInsn(value);
+        mv.visitMethodInsn(INVOKESPECIAL, t, "<init>", "(Ljava/lang/String;)V", false);
     }
 
     private static String mangle(String str) {

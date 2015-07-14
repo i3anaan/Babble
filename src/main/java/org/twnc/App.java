@@ -4,6 +4,7 @@ import org.antlr.v4.runtime.*;
 import org.apache.commons.cli.*;
 import org.twnc.backend.BytecodeGenerator;
 import org.twnc.compile.exceptions.CompileException;
+import org.twnc.frontend.IntrospectionPass;
 import org.twnc.frontend.ScopeChecker;
 import org.twnc.irtree.ASTGenerator;
 import org.twnc.irtree.ASTVisitor;
@@ -91,6 +92,9 @@ public final class App {
 
         ASTVisitor graphVisitor = new Graphvizitor(outDir);
         irtree.accept(graphVisitor);
+
+        IntrospectionPass introspectionPass = new IntrospectionPass();
+        irtree.accept(introspectionPass);
 
         ScopeChecker scopeVisitor = new ScopeChecker();
         irtree.accept(scopeVisitor);

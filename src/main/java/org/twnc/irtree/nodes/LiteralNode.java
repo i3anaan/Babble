@@ -8,7 +8,8 @@ public class LiteralNode extends ExprNode {
     public enum Type {
         INTEGER,
         STRING,
-        SYMBOL
+        SYMBOL,
+        CLASS
     }
 
     private final Type type;
