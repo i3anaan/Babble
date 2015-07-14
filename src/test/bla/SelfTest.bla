@@ -202,6 +202,15 @@ SelfTest [
         (this class respondsTo:"main") assert.
         (this class respondsTo:"bogusMethod") not assert.
     ].
+    
+    testClassMerging [
+        this isTrue assert.
+        this isFalse not assert.
+        /* TODO add field merging
+        this separatedMethod2.
+        (field1 == true) assert.
+        */
+    ].
 
     main [
         "Please use `mvn verify` to run integration tests." print.
@@ -215,4 +224,20 @@ SelfTest [
         this testFalsy.
         this testVarDecl.
     ].
+].
+
+SelfTest [
+    isTrue [
+        true.
+    ].
+    
+    isFalse [
+        false.
+    ].
+    
+    /* TODO add field merging
+    separatedMethod2 [
+        field1 := true.
+    ].
+    */
 ].
