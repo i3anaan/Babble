@@ -33,13 +33,23 @@ public class ClazzNode extends Node {
         return methods.stream().map(MethodNode::getSelector).collect(Collectors.toList());
     }
 
-    @Override
-    public String toString() {
-        return "Class: " + name;
-    }
-
     public boolean hasMain() {
         return methods.stream().anyMatch(MethodNode::isMainMethod);
+    }
+    
+    public void mergeTree(ClazzNode other) {
+        for (MethodNode newMethod : other.getMethods()) {
+            for (MethodNode existingMethod : methods) {
+                if (existingMethod.getSelector().equals(newMethod.getSelector())) {
+                    String message = String.format(
+                            "Duplicate Method '%s' at [%s] and [%s]",
+                            newMethod.getSelector(), newMethod.getLocation(),
+                            existingMethod.getLocation());
+                    throw new DuplicateMethodSignatureException(message);
+                }
+            }
+            methods.add(newMethod);
+        }
     }
 
     @Override
@@ -47,13 +57,8 @@ public class ClazzNode extends Node {
         visitor.visit(this);
     }
     
-    public void mergeTree(ClazzNode other) {
-        for (MethodNode method : other.getMethods()) {
-            if (!methods.contains(method)) {
-                methods.add(method);
-            } else {
-                throw new DuplicateMethodSignatureException();
-            }
-        }
+    @Override
+    public String toString() {
+        return "Class: " + name;
     }
 }

@@ -1,6 +1,5 @@
 package org.twnc.irtree.nodes;
 
-import org.twnc.compile.exceptions.DuplicateMethodSignatureException;
 import org.twnc.irtree.ASTVisitor;
 
 import java.util.List;
@@ -32,10 +31,12 @@ public class ProgramNode extends Node {
     }
     
     public void compress() {
-        for (ClazzNode clazz1 : classes) {
-            for (int i = 1; i < classes.size(); i++) {
-                if (clazz1.getName().equals(classes.get(i))) {
-                    clazz1.mergeTree(classes.remove(i));
+        for (int a = 0; a < classes.size(); a++) {
+            ClazzNode clazz1 = classes.get(a);
+            for (int b = a+1; b < classes.size(); b++) {
+                if (clazz1.getName().equals(classes.get(b).getName())) {
+                    clazz1.mergeTree(classes.remove(b));
+                    b--;
                 }
             }
         }
