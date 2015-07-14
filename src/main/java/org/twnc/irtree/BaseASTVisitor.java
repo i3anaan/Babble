@@ -23,7 +23,7 @@ public class BaseASTVisitor extends ASTVisitor {
             for (String error : errors) {
                 System.err.println(error);
             }
-            throw new ScopeException();
+            throw new CompileException();
         }
     }
     

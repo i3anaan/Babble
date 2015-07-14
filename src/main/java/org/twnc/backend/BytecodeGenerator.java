@@ -18,6 +18,8 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.twnc.Scope;
 import org.twnc.ScopeStack;
+import org.twnc.compile.exceptions.ScopeException;
+import org.twnc.compile.exceptions.UnknownVariableDeclarationLocation;
 import org.twnc.compile.exceptions.VariableNotDeclaredException;
 import org.twnc.irtree.BaseASTVisitor;
 import org.twnc.irtree.nodes.*;
@@ -229,8 +231,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
                 mv.visitInsn(SWAP);
                 mv.visitFieldInsn(PUTFIELD, ((ClazzNode) decl.getScope().getNode()).getName(), decl.getName(), "Lorg/twnc/runtime/BObject;");
             } else {
-                System.out.println("Should not happen?");
-                //TODO nothing?
+                throw new UnknownVariableDeclarationLocation();
             }
         } catch (VariableNotDeclaredException e) {
             // This should not happen (ScopeChecker should have detected this and aborted compiling).
@@ -296,9 +297,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
                     mv.visitVarInsn(ALOAD, 0);
                     mv.visitFieldInsn(GETFIELD, ((ClazzNode) decl.getScope().getNode()).getName(), decl.getName(), "Lorg/twnc/runtime/BObject;");
                 } else {
-                    mv.visitTypeInsn(NEW, "Nil");
-                    mv.visitInsn(DUP);
-                    mv.visitMethodInsn(INVOKESPECIAL, "Nil", "<init>", "()V", false);
+                    throw new UnknownVariableDeclarationLocation();
                 }
             } catch (VariableNotDeclaredException e) {
                 // This should not happen (ScopeChecker should have detected this and aborted compiling).
