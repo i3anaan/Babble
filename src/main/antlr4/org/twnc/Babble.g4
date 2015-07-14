@@ -27,7 +27,7 @@ subexpr : value=INTEGER                 # IntLit
         | '#' ID                        # SymbolLit
         | '[' (decl* '|')? sequence ']' # Block
         | '(' expr ')'                  # ParenExpr
-        | decls                			# declExpr
+        | decls                         # declExpr
         ;
         
 decls : '|' decl+ '|';

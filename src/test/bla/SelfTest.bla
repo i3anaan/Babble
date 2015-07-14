@@ -143,7 +143,6 @@ SelfTest [
     	x := 30.
     	(x == 30) assert.
     ].
-    	
     
     testClassFields [
     	field1 := 10.
@@ -176,9 +175,7 @@ SelfTest [
     testClassFieldsOther [
     	"TestClassFieldsOther: TODO Add when new objects can be created." print.
     ].
-
-	
-
+    
     main [
         "Please use `mvn verify` to run integration tests." print.
         this testAssert.

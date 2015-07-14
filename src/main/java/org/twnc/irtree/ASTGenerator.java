@@ -56,7 +56,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
         if (ctx.decls() != null) {
             decls = (DeclsNode) visit(ctx.decls());
         } else {
-            decls = new DeclsNode(new ArrayList<VarDeclNode>());
+            decls = new DeclsNode();
         }
         
         List<MethodNode> methods = new ArrayList<>();
