@@ -10,6 +10,11 @@ public abstract class Node {
 
     private int line = -1;
     private int lineOffset = -1;
+    
+    /**
+     * Each Node has a reference to one Scope, multiple Nodes can refer to the
+     * same Scope. Each Scope refers to the topmost Node in its Scope.
+     */
     private Scope scope;
 
     public void setLine(int line) {

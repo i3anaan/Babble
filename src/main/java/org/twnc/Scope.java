@@ -12,6 +12,10 @@ public class Scope {
     /** Null for top-most Scopes. */
     private Scope parent;
     
+    /**
+     * Each Node has a reference to one Scope, multiple Nodes can refer to the
+     * same Scope. Each Scope refers to the topmost Node in its Scope.
+     */
     private Node node;
     private Map<String, VarDeclNode> mapping;
 
