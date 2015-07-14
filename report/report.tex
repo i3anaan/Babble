@@ -25,13 +25,22 @@
 \end{titlepage}
 
 \section{Language summary}
-Babble is a compiled, duck-typed, object-oriented programming language for the Java Virtual machine. It has syntax and semantics inspired by the Smalltalk programming language, but the compile-once-run-anywhere development cycle from Java. It has no primitives, no statements like \texttt{if} or \texttt{while}, and no type annotations. Instead, most everything in Smalltalk is done using message sends.
 
-In Babble, as in Smalltalk, everything is an object, and objects can be interacted with by sending them messages. If the receiving object understands the message, it acts upon it, sending messages to other objects if required, and finally sending a reply back to the source of the message. (The process of sending messages would be described as `calling methods' in other languages, while sending a reply would be called `returning a value'. We use the terms interchangeably.)
+Babble is a compiled, duck-typed, object-oriented programming language for the Java Virtual machine.
+It has syntax and semantics inspired by the Smalltalk programming language, but the compile-once-run-anywhere development cycle from Java.
+It has no primitives, no statements like \texttt{if} or \texttt{while}, and no type annotations.
+Instead, most everything in Smalltalk is done using message sends.
 
-Babble is duck typed. It is a (run-time) error if a receiving object does not understand a message.
+In Babble, as in Smalltalk, everything is an object, and objects can be interacted with by sending them messages.
+If the receiving object understands the message, it acts upon it, sending messages to other objects if required, and finally sending a reply back to the source of the message.
+(The process of sending messages would be described as `calling methods' in other languages, while sending a reply would be called `returning a value'.
+We use the terms interchangeably.)
 
-Like Smalltalk, Babble has the concept of blocks: pieces of code that can be passed as values. Blocks can take arguments, and will also do lambda closure. 
+Babble is duck typed.
+It is a (run-time) error if a receiving object does not understand a message.
+
+Like Smalltalk, Babble has the concept of blocks: pieces of code that can be passed as values.
+Blocks can take arguments, and will also do lambda closure.
 
 \section{Detailed language description}
 
@@ -39,7 +48,8 @@ Like Smalltalk, Babble has the concept of blocks: pieces of code that can be pas
 
 \section{Test plan and results}
 
-The Babble compiler itself is tested using unit tests, written in Java, while the runtime system is tested using integration tests, written in Babble. Both can be executed using Maven by running \texttt{mvn verify}.
+The Babble compiler itself is tested using unit tests, written in Java, while the runtime system is tested using integration tests, written in Babble.
+Both can be executed using Maven by running \texttt{mvn verify}.
 
 \section{Conclusions}
 
