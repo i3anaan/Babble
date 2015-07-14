@@ -12,10 +12,6 @@ public abstract class Node {
 
     private Scope scope;
     private Location location;
-
-    public Node() {
-        location = new Location("unkown", -1, -1);
-    }
     
     public void setLocation(Location location) {
         this.location = location;
