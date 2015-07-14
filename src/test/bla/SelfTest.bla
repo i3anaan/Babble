@@ -10,11 +10,11 @@ Duck extends: Animal [
 ].
 
 Fielder [
-	| x y |
+	| x y |.
 ].
 
 SelfTest [
-	| field1 field2 |
+	| field1 field2 |.
 
 	testUseMain [
 		this main.

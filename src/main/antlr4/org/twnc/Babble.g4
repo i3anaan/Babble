@@ -2,7 +2,7 @@ grammar Babble;
 
 program : clazz* ;
 
-clazz : classname=ID (EXTENDS ':' superclass=ID)? '[' decls? mthd* '].' ;
+clazz : classname=ID (EXTENDS ':' superclass=ID)? '[' (decls '.')? mthd* '].' ;
 
 mthd : (ID ':' ID)+ '[' sequence '].'   # KeywordMethod
      | ID '[' sequence '].'             # UnaryMethod
