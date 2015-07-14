@@ -3,7 +3,6 @@ package org.twnc;
 import org.antlr.v4.runtime.*;
 import org.apache.commons.cli.*;
 import org.twnc.backend.BytecodeGenerator;
-import org.twnc.compile.exceptions.CompileException;
 import org.twnc.frontend.IntrospectionPass;
 import org.twnc.frontend.ScopeChecker;
 import org.twnc.irtree.ASTGenerator;
@@ -76,11 +75,12 @@ public final class App {
         formatter.printHelp("app", options);
     }
 
-    private static Node compileFile(File file, String outDir) throws IOException, URISyntaxException {
+    private static Node compileFile(File file, String outDir) throws IOException, URISyntaxException{
         //TODO Better Prelude.bla loading.
-        Node preludeTree = generateIRTree(new File(App.class.getResource("Prelude.bla").toURI()));
-        Node programTree = generateIRTree(file);
-        Node combinedTree = ((ProgramNode) preludeTree).addTree((ProgramNode) programTree);
+        ProgramNode preludeTree = generateIRTree(new File(App.class.getResource("Prelude.bla").toURI()));
+        ProgramNode programTree = generateIRTree(file);
+        ProgramNode combinedTree = preludeTree.mergeTree(programTree);
+        combinedTree.compress();
         
         new File(outDir).mkdirs();
 
@@ -99,7 +99,7 @@ public final class App {
         return combinedTree;
     }
     
-    private static Node generateIRTree(File file) throws IOException {
+    private static ProgramNode generateIRTree(File file) throws IOException {
             InputStream stream = new FileInputStream(file);
             CharStream chars = new ANTLRInputStream(stream);
             Lexer lexer = new BabbleLexer(chars);
@@ -107,7 +107,7 @@ public final class App {
             BabbleParser parser = new BabbleParser(tokens);
 
             ASTGenerator generator = new ASTGenerator(file.getPath());
-            Node irtree = generator.visitProgram(parser.program());
+            ProgramNode irtree = (ProgramNode) generator.visitProgram(parser.program());
             
             System.out.println("Parsed: " + file.getPath());
             return irtree;

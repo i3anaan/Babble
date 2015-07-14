@@ -1,5 +1,6 @@
 package org.twnc.irtree.nodes;
 
+import org.twnc.compile.exceptions.DuplicateMethodSignatureException;
 import org.twnc.irtree.ASTVisitor;
 
 import java.util.List;
@@ -44,5 +45,15 @@ public class ClazzNode extends Node {
     @Override
     public void accept(ASTVisitor visitor) {
         visitor.visit(this);
+    }
+    
+    public void mergeTree(ClazzNode other) {
+        for (MethodNode method : other.getMethods()) {
+            if (!methods.contains(method)) {
+                methods.add(method);
+            } else {
+                throw new DuplicateMethodSignatureException();
+            }
+        }
     }
 }
