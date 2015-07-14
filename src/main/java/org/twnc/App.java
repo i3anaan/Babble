@@ -76,10 +76,10 @@ public final class App {
     }
 
     private static Node compileFile(File file, String outDir) throws IOException {
-        //TODO Better Prelude.bla loading.
-        Node preludeTree = generateIRTree(App.class.getResourceAsStream("Prelude.bla"), "Babble\\Prelude.bla");
-        Node programTree = generateIRTree(new FileInputStream(file), file.getPath());
-        Node combinedTree = ((ProgramNode) preludeTree).addTree((ProgramNode) programTree);
+        ProgramNode preludeTree = generateIRTree(App.class.getResourceAsStream("Prelude.bla"), "Babble\\Prelude.bla");
+        ProgramNode programTree = generateIRTree(new FileInputStream(file), file.getPath());
+        ProgramNode combinedTree = preludeTree.mergeTree(programTree);
+        combinedTree.compress();
         
         new File(outDir).mkdirs();
 
@@ -98,14 +98,13 @@ public final class App {
         return combinedTree;
     }
     
-    private static Node generateIRTree(InputStream stream, String filename) throws IOException {
+    private static ProgramNode generateIRTree(InputStream stream, String filename) throws IOException {
             CharStream chars = new ANTLRInputStream(stream);
             Lexer lexer = new BabbleLexer(chars);
             TokenStream tokens = new CommonTokenStream(lexer);
             BabbleParser parser = new BabbleParser(tokens);
-
             ASTGenerator generator = new ASTGenerator(filename);
-            Node irtree = generator.visitProgram(parser.program());
+            ProgramNode irtree = (ProgramNode) generator.visitProgram(parser.program());
             
             if (verbose) {
                 System.out.println("Parsed: " + filename);
