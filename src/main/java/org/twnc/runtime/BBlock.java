@@ -1,7 +1,7 @@
 package org.twnc.runtime;
 
-public class BBlock extends BObject {
-    public BObject _value() {
+public class BBlock {
+    public Object _value() {
         return Core.newNil();
     }
 }

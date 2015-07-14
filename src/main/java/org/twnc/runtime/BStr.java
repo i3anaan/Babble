@@ -1,6 +1,6 @@
 package org.twnc.runtime;
 
-public class BStr extends BObject {
+public class BStr {
     private final String str;
 
     public BStr(String str) {
@@ -11,37 +11,36 @@ public class BStr extends BObject {
         str = bstr.toString();
     }
 
-    @Override
-    public BObject _asBool() {
-        return BBool.of(!str.isEmpty());
-    }
-
-    public BObject _upper() {
+    public Object _upper() {
         return new BStr(str.toUpperCase());
     }
 
-    public BObject _lower() {
+    public Object _lower() {
         return new BStr(str.toLowerCase());
     }
 
-    public BObject _startsWith_(BObject that) {
+    public Object _startsWith_(Object that) {
         return BBool.of(str.startsWith(that.toString()));
     }
 
-    public BObject _endsWith_(BObject that) {
+    public Object _endsWith_(Object that) {
         return BBool.of(str.endsWith(that.toString()));
     }
 
-    public BObject _contains_(BObject that) {
+    public Object _contains_(Object that) {
         return BBool.of(str.contains(that.toString()));
     }
 
-    public BObject _replace_with_(BObject search, BObject replace) {
+    public Object _replace_with_(Object search, Object replace) {
         return new BStr(str.replace(search.toString(), replace.toString()));
     }
 
-    public BObject _comma_(BObject that) {
+    public Object _comma_(Object that) {
         return new BStr(str.concat(that.toString()));
+    }
+
+    public Object _eqeq_(Object that) {
+        return BBool.of(equals(that));
     }
 
     @Override

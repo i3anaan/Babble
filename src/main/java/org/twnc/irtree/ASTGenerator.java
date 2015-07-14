@@ -49,7 +49,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
         if (ctx.superclass != null) {
             superclass = ctx.superclass.getText().replace('\\', '/');
         } else {
-            superclass = "org/twnc/runtime/BObject";
+            superclass = "java/lang/Object";
         }
 
         List<MethodNode> methods = new ArrayList<>();
