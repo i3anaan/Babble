@@ -131,11 +131,15 @@ SelfTest [
         | z |.
         z := { 1, 2, 3 }.
         z at: 1 put: 4.
+
+        (z at: 0 == 1) assert.
         (z at: 1 == 4) assert.
+        (z at: 2 == 3) assert.
     ].
 
     testArraySize [
         (this arr size == 4) assert.
+        (this emptyArr size == 0) assert.
     ].
 
     testArrayIsEmpty [
@@ -185,7 +189,6 @@ SelfTest [
     ].
 
     testArrayAsString [
-        {1, 2, 3} asString print.
         ({1, 2, 3} asString == "[1, 2, 3]") assert.
     ].
 
