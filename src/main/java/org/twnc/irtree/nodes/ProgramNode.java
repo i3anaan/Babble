@@ -24,4 +24,9 @@ public class ProgramNode extends Node {
     public void accept(ASTVisitor visitor) {
         visitor.visit(this);
     }
+    
+    public ProgramNode addTree(ProgramNode other) {
+        this.classes.addAll(other.getClasses());
+        return this;
+    }
 }

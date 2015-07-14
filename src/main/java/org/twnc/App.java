@@ -9,6 +9,7 @@ import org.twnc.frontend.ScopeChecker;
 import org.twnc.irtree.ASTGenerator;
 import org.twnc.irtree.ASTVisitor;
 import org.twnc.irtree.nodes.Node;
+import org.twnc.irtree.nodes.ProgramNode;
 import org.twnc.util.Graphvizitor;
 
 import java.io.*;
@@ -76,12 +77,10 @@ public final class App {
     }
 
     private static Node compileFile(File file, String outDir) throws IOException, URISyntaxException {
-        
         //TODO Better Prelude.bla loading.
         Node preludeTree = generateIRTree(new File(App.class.getResource("Prelude.bla").toURI()));
         Node programTree = generateIRTree(file);
-        //TODO combine trees.
-        Node combinedTree = programTree;
+        Node combinedTree = ((ProgramNode) preludeTree).addTree((ProgramNode) programTree);
         
         new File(outDir).mkdirs();
 
@@ -110,6 +109,7 @@ public final class App {
             ASTGenerator generator = new ASTGenerator(file.getPath());
             Node irtree = generator.visitProgram(parser.program());
             
+            System.out.println("Parsed: " + file.getPath());
             return irtree;
     }
 }
