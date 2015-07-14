@@ -14,6 +14,12 @@ SelfTest [
         true assert.
         false not assert.
     ].
+    
+    testEmptyMethod [
+        (this emptyMethod == nil) assert.
+    ].
+    
+    emptyMethod [].
 
     testOr [
         true or:true assert.
@@ -194,14 +200,5 @@ SelfTest [
 
     main [
         "Please use `mvn verify` to run integration tests." print.
-        this testAssert.
-        this testOr.
-        this testAnd.
-        this testMaths.
-        this testStrings.
-        this testSymbols.
-        this testTruthy.
-        this testFalsy.
-        this testVarDecl.
     ].
 ].
