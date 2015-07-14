@@ -172,6 +172,19 @@ SelfTest [
         "TestClassFieldsOther: TODO Add when new objects can be created." print.
     ].
     
+    testFieldRecursion [
+        field1 := 10.
+        this recursion.
+        (field1 == 0) assert.
+    ].
+    
+    recursion [
+        (field1 > 0)  ifTrue: [
+            field1 := field1 - 1.
+            this recursion.
+        ]
+    ].
+    
     main [
         "Please use `mvn verify` to run integration tests." print.
         this testAssert.
