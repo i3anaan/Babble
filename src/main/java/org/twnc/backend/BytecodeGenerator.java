@@ -240,7 +240,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         // Put an empty array on the stack, of the correct size...
         mv.visitIntInsn(BIPUSH, expressions.size());
         mv.visitTypeInsn(ANEWARRAY, "java/lang/Object");
-        // ...twice, so the original becomes a backup copy.
+        // ...twice, to have a copy for aastore.
         mv.visitInsn(DUP);
 
         for (int i = 0; i < expressions.size(); i++) {
@@ -254,11 +254,11 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
             // Chuck it into the array.
             mv.visitInsn(AASTORE);
 
-            // That consumed array, so dup our backup copy.
+            // That consumed array, so dup our original array reference.
             mv.visitInsn(DUP);
         }
 
-        // Pop one of the copies.
+        // Pop the duplicate reference.
         mv.visitInsn(POP);
 
         // The filled array is now ready, turn it into a BArray
