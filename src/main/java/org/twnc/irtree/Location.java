@@ -1,9 +1,9 @@
 package org.twnc.irtree;
 
 public class Location {
-    private int line;
-    private int offset;
-    private String filename;
+    private final int line;
+    private final int offset;
+    private final String filename;
 
     public Location(String filename, int line, int offset) {
         this.filename = filename;

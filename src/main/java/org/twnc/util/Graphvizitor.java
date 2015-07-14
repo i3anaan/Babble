@@ -104,8 +104,6 @@ public class Graphvizitor extends BaseASTVisitor {
         super.visit(node);
     }
     
-    
-
     @Override
     public void visit(ArrayNode node) {
         makeNode(node);
@@ -117,7 +115,8 @@ public class Graphvizitor extends BaseASTVisitor {
         nodes.append("  ");
         nodes.append(node.hashCode());
         nodes.append(" [");
-        nodes.append("label=\"" + node.toString().replace("\"", "\\\"") + "\n" + node.getLocation().toString().replace("\"", "\\\"") + "\" ");
+        String label = node.toString() + "\n" + node.getLocation().toString();
+        nodes.append("label=\"" + label.replace("\"", "\\\"").replace("\\", "\\\\") + "\" ");
         nodes.append("color=\"" + describeColor(node.getColor()) + "\" ");;
         nodes.append("fillcolor=\"" + describeColor(node.getColor().brighter().brighter()) + "\"");
         nodes.append("];\n");

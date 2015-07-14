@@ -3,7 +3,6 @@ package org.twnc;
 import org.antlr.v4.runtime.*;
 import org.apache.commons.cli.*;
 import org.twnc.backend.BytecodeGenerator;
-import org.twnc.compile.exceptions.CompileException;
 import org.twnc.frontend.IntrospectionPass;
 import org.twnc.frontend.ScopeChecker;
 import org.twnc.irtree.ASTGenerator;
@@ -13,10 +12,10 @@ import org.twnc.irtree.nodes.ProgramNode;
 import org.twnc.util.Graphvizitor;
 
 import java.io.*;
-import java.net.URISyntaxException;
 
 public final class App {
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    private static boolean verbose = false;
+    public static void main(String[] args) throws IOException {
         Options options = new Options();
 
         options.addOption(Option.builder("d")
@@ -59,7 +58,7 @@ public final class App {
             outDir += File.separator;
         }
 
-        boolean verbose = line.hasOption('v');
+        verbose = line.hasOption('v');
 
         for (String inPath : line.getArgs()) {
             File file = new File(inPath);
@@ -76,10 +75,10 @@ public final class App {
         formatter.printHelp("app", options);
     }
 
-    private static Node compileFile(File file, String outDir) throws IOException, URISyntaxException {
+    private static Node compileFile(File file, String outDir) throws IOException {
         //TODO Better Prelude.bla loading.
-        Node preludeTree = generateIRTree(new File(App.class.getResource("Prelude.bla").toURI()));
-        Node programTree = generateIRTree(file);
+        Node preludeTree = generateIRTree(App.class.getResourceAsStream("Prelude.bla"), "Babble\\Prelude.bla");
+        Node programTree = generateIRTree(new FileInputStream(file), file.getPath());
         Node combinedTree = ((ProgramNode) preludeTree).addTree((ProgramNode) programTree);
         
         new File(outDir).mkdirs();
@@ -99,17 +98,18 @@ public final class App {
         return combinedTree;
     }
     
-    private static Node generateIRTree(File file) throws IOException {
-            InputStream stream = new FileInputStream(file);
+    private static Node generateIRTree(InputStream stream, String filename) throws IOException {
             CharStream chars = new ANTLRInputStream(stream);
             Lexer lexer = new BabbleLexer(chars);
             TokenStream tokens = new CommonTokenStream(lexer);
             BabbleParser parser = new BabbleParser(tokens);
 
-            ASTGenerator generator = new ASTGenerator(file.getPath());
+            ASTGenerator generator = new ASTGenerator(filename);
             Node irtree = generator.visitProgram(parser.program());
             
-            System.out.println("Parsed: " + file.getPath());
+            if (verbose) {
+                System.out.println("Parsed: " + filename);
+            }
             return irtree;
     }
 }
