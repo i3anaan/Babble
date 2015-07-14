@@ -324,7 +324,6 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         mv.visitMethodInsn(INVOKESPECIAL, t, "<init>", "(Ljava/lang/String;)V", false);
     }
 
-
     private static String mangle(String str) {
         StringBuilder sb = new StringBuilder();
         sb.append('_');
