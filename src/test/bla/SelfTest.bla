@@ -185,28 +185,30 @@ SelfTest [
     ].
     
     testRecursion [
-        field1 := 10.
-        this recursion.
-        (field1 == 0) assert.
+        ((this recursion: 10) == 0) assert.
     ].
     
     recursion: value [
+        | return |.
+        
         (value > 0) ifTrue: [
-            this recursion: (value - 1).
+            return := (this recursion: (value - 1)).
+        ] ifFalse: [
+            0.
         ]
     ].
     
-    testCallByValue [
+    testCallByReference [
         field2 := 40.
         this setToFive: field2.
         (field2 == 40) assert.
         
         field2 := Number new.
         "Setting Number to 40" print.
-        field2 set 40.
+        field2 set: 40.
         "Set Number to 40" print.
         this setNumberToFive: field2.
-        (field2 == 40) assert.
+        ((field2 get) == 5) assert.
     ].
     
     setToFive: variable [
