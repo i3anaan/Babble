@@ -12,10 +12,12 @@ import org.twnc.irtree.nodes.*;
  * Checks and sets scopes in the AST.
  */
 public class ScopeChecker extends BaseASTVisitor {
+    private ProgramNode program;
     private ScopeStack scopeStack;
     
     @Override
     public void visit(ProgramNode programNode) {
+        program = programNode;
         scopeStack = new ScopeStack(programNode);
         programNode.setScope(scopeStack.peek());
         
@@ -57,7 +59,8 @@ public class ScopeChecker extends BaseASTVisitor {
     @Override
     public void visit(VarRefNode varRefNode) {
         String name = varRefNode.getName();
-        if (!ScopeStack.isSpecial(name) && !scopeStack.contains(name)) {
+        if (!program.getGlobals().containsKey(name) && !scopeStack.contains(name)) {
+
             visitError(varRefNode, String.format("Variable %s is not declared.", name));
         }
         super.visit(varRefNode);

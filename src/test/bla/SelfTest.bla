@@ -4,9 +4,12 @@
  */
 
 Animal [
+    canSwim [ false ].
 ].
 
 Duck extends: Animal [
+    canSwim [ true ].
+    quack   [ "Quack!" ].
 ].
 
 Fielder [
@@ -214,7 +217,6 @@ SelfTest [
         (this class respondsTo:"main") assert.
         (this class respondsTo:"bogusMethod") not assert.
     ].
-    
     testClassMerging [
         this isTrue assert.
         this isFalse not assert.
@@ -224,6 +226,24 @@ SelfTest [
         */
     ].
 
+    testNew [
+        (true class new) assert.
+    ].
+
+    testDuck [
+        | bob |.
+        bob := Duck new.
+
+        (bob class name == "Duck") assert.
+        (bob quack == "Quack!") assert.
+        (bob canSwim) assert.
+    ].
+
+    testRedefineDuck [
+        | Duck |.
+        Duck := 10.
+        (Duck == 10) assert.
+    ].
     
     testVarception [
         | x y z |.
