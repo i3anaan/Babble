@@ -3,7 +3,8 @@ package org.twnc;
 import org.antlr.v4.runtime.*;
 import org.apache.commons.cli.*;
 import org.twnc.backend.BytecodeGenerator;
-import org.twnc.frontend.IntrospectionPass;
+import org.twnc.frontend.GlobalsGenerator;
+import org.twnc.frontend.MetaclassGenerator;
 import org.twnc.frontend.ScopeChecker;
 import org.twnc.irtree.ASTGenerator;
 import org.twnc.irtree.ASTVisitor;
@@ -16,6 +17,7 @@ import java.io.*;
 
 public final class App {
     private static boolean verbose = false;
+
     public static void main(String[] args) throws IOException {
         Options options = new Options();
 
@@ -87,9 +89,12 @@ public final class App {
         
         ASTVisitor graphVisitor = new Graphvizitor(outDir);
         program.accept(graphVisitor);
+        
+        GlobalsGenerator globalsGen = new GlobalsGenerator();
+        program.accept(globalsGen);
 
-        ASTVisitor introspectionPass = new IntrospectionPass();
-        program.accept(introspectionPass);
+        MetaclassGenerator metaclassGen = new MetaclassGenerator();
+        program.accept(metaclassGen);
 
         ASTVisitor scopeVisitor = new ScopeChecker();
         program.accept(scopeVisitor);
@@ -111,6 +116,7 @@ public final class App {
             if (verbose) {
                 System.out.println("Parsed: " + filename);
             }
+
             return irtree;
     }
 }

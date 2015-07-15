@@ -5,11 +5,14 @@ import org.twnc.irtree.ASTVisitor;
 import org.twnc.irtree.Location;
 
 import java.awt.Color;
-import java.util.Optional;
 
 public abstract class Node {
     public abstract void accept(ASTVisitor visitor);
 
+    /**
+     * Each Node has a reference to one Scope, multiple Nodes can refer to the
+     * same Scope. Each Scope refers to the topmost Node in its Scope.
+     */
     private Scope scope;
     private Location location;
     

@@ -4,16 +4,31 @@
  */
 
 Animal [
+    canSwim [ false ].
 ].
 
 Duck extends: Animal [
+    canSwim [ true ].
+    quack   [ "Quack!" ].
+].
+
+Fielder [
+    | x y |.
 ].
 
 SelfTest [
+    | field1 field2 |.
+
     testAssert [
         true assert.
         false not assert.
     ].
+
+    testEmptyMethod [
+        (this emptyMethod == nil) assert.
+    ].
+
+    emptyMethod [].
 
     testOr [
         true or:true assert.
@@ -202,7 +217,6 @@ SelfTest [
         (this class respondsTo:"main") assert.
         (this class respondsTo:"bogusMethod") not assert.
     ].
-    
     testClassMerging [
         this isTrue assert.
         this isFalse not assert.
@@ -212,17 +226,117 @@ SelfTest [
         */
     ].
 
+    testNew [
+        (true class new) assert.
+    ].
+
+    testDuck [
+        | bob |.
+        bob := Duck new.
+
+        (bob class name == "Duck") assert.
+        (bob quack == "Quack!") assert.
+        (bob canSwim) assert.
+    ].
+
+    testRedefineDuck [
+        | Duck |.
+        Duck := 10.
+        (Duck == 10) assert.
+    ].
+    
+    testVarception [
+        | x y z |.
+        x := y := z:= 10.
+        this varception1.
+        (x == 10) assert.
+        (y == 10) assert.
+        (z == 10) assert.
+    ].
+    
+    varception1 [
+        | x y |.
+        x := y := 20.
+        this varception2.
+        (x == 20) assert.
+        (y == 20) assert.
+    ].
+    
+    varception2 [
+        | x |.
+        x := 30.
+        (x == 30) assert.
+    ].
+    
+    testClassFields [
+        field1 := 10.
+        field2 := 20.
+        
+        (field1 == 10) assert.
+        (field2 == 20) assert.
+    ].
+    
+    testClassFieldsOverride [
+        field1 := 10.
+        field2 := 20.
+        
+        this setClassFields.
+        this checkClassFields.
+    ].
+    
+    setClassFields [
+        | field1 |.
+        
+        field1 := 30.
+        field2 := 30.
+    ].
+    
+    checkClassFields [
+        (field1 == 10) assert.
+        (field2 == 30) assert.
+    ].
+    
+    testClassFieldsOther [
+        "TestClassFieldsOther: TODO Add when new objects can be created." print.
+    ].
+    
     main [
         "Please use `mvn verify` to run integration tests." print.
-        this testAssert.
-        this testOr.
+        this testAdd.
         this testAnd.
+        this testArrayAdd.
+        this testArrayAddAll.
+        this testArrayAsString.
+        this testArrayAt.
+        this testArrayAtIfAbsent.
+        this testArrayAtPut.
+        this testArrayFirst.
+        this testArrayIncludes.
+        this testArrayIsEmpty.
+        this testArrayLast.
+        this testArrayNotEmpty.
+        this testArrayReverse.
+        this testArraySize.
+        this testArrays.
+        this testAsString.
+        this testAssert.
+        this testBlocks.
+        this testClassFields.
+        this testClassFieldsOther.
+        this testClassFieldsOverride.
+        this testEmptyMethod.
+        this testIf.
         this testMaths.
+        this testMetaclassName.
+        this testNestedBlocks.
+        this testOr.
+        this testRespondsTo.
         this testStrings.
         this testSymbols.
-        this testTruthy.
-        this testFalsy.
+        this testThis.
         this testVarDecl.
+        this testVarception.
+        "Main tests: OK" print.
     ].
 ].
 

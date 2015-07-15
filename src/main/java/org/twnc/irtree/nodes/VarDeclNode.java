@@ -19,6 +19,13 @@ public class VarDeclNode extends VarRefNode {
         this.offset = offset;
     }
     
+    public boolean isMethodVariable() {
+        return getScope().getNode() instanceof MethodNode;
+    }
+    
+    public boolean isClassField() {
+        return getScope().getNode() instanceof ClazzNode;
+    }
     
     @Override
     public String toString() {

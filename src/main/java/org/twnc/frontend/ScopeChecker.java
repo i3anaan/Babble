@@ -12,11 +12,13 @@ import org.twnc.irtree.nodes.*;
  * Checks and sets scopes in the AST.
  */
 public class ScopeChecker extends BaseASTVisitor {
+    private ProgramNode program;
     private ScopeStack scopeStack;
     
     @Override
     public void visit(ProgramNode programNode) {
-        scopeStack = new ScopeStack();
+        program = programNode;
+        scopeStack = new ScopeStack(programNode);
         programNode.setScope(scopeStack.peek());
         
         super.visit(programNode);
@@ -31,7 +33,7 @@ public class ScopeChecker extends BaseASTVisitor {
 
     @Override
     public void visit(ClazzNode clazzNode) {
-        scopeStack.enterScope();
+        scopeStack.enterScope(clazzNode);
         clazzNode.setScope(scopeStack.peek());
         super.visit(clazzNode);
         scopeStack.exitScope();
@@ -39,23 +41,16 @@ public class ScopeChecker extends BaseASTVisitor {
 
     @Override
     public void visit(MethodNode methodNode) {
-        Scope methodScope = scopeStack.enterScope();
-
+        Scope methodScope = scopeStack.enterScope(methodNode);
         methodNode.setScope(methodScope);
-
-        methodScope.put("this", new VarDeclNode("this"));
-
-        for (VarDeclNode arg : methodNode.getArguments()) {
-            methodScope.put(arg.getName(), arg);
-        }
-
+        scopeStack.putVarDeclNode(new VarDeclNode("this"));
         super.visit(methodNode);
         scopeStack.exitScope();
     }
 
     @Override
     public void visit(BlockNode blockNode) {
-        scopeStack.enterScope();
+        scopeStack.enterScope(blockNode);
         blockNode.setScope(scopeStack.peek());
         super.visit(blockNode);
         scopeStack.exitScope();
@@ -64,7 +59,8 @@ public class ScopeChecker extends BaseASTVisitor {
     @Override
     public void visit(VarRefNode varRefNode) {
         String name = varRefNode.getName();
-        if (!ScopeStack.isSpecial(name) && !scopeStack.contains(name)) {
+        if (!program.getGlobals().containsKey(name) && !scopeStack.contains(name)) {
+
             visitError(varRefNode, String.format("Variable %s is not declared.", name));
         }
         super.visit(varRefNode);

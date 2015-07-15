@@ -29,11 +29,13 @@ public class BaseASTVisitor extends ASTVisitor {
     
     @Override
     public void visit(ClazzNode clazzNode) {
+        clazzNode.getDecls().accept(this);
         clazzNode.getMethods().forEach(x -> x.accept(this));
     }
 
     @Override
     public void visit(MethodNode methodNode) {
+        methodNode.getArguments().forEach(x -> x.accept(this));
         methodNode.getSequence().accept(this);
     }
 
@@ -69,8 +71,8 @@ public class BaseASTVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(DeclExprNode declExprNode) {
-        declExprNode.getDeclarations().forEach(x -> x.accept(this));
+    public void visit(DeclsNode declsNode) {
+        declsNode.getDeclarations().forEach(x -> x.accept(this));
     }
 
     @Override

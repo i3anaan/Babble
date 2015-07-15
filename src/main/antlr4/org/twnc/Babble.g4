@@ -2,7 +2,7 @@ grammar Babble;
 
 program : clazz* ;
 
-clazz : classname=ID (EXTENDS ':' superclass=ID)? '[' mthd* '].' ;
+clazz : classname=ID (EXTENDS ':' superclass=ID)? '[' (decls '.')? mthd* '].' ;
 
 mthd : (ID ':' decl)+ '[' sequence '].' # KeywordMethod
      | ID '[' sequence '].'             # UnaryMethod
@@ -10,11 +10,11 @@ mthd : (ID ':' decl)+ '[' sequence '].' # KeywordMethod
 
 sequence : (expr ('.'+ expr)*)? '.'? ;
 
-expr : ID ':=' expr                        # Assignment
-     | rcv=expr method=ID                  # UnarySend
+expr : rcv=expr method=ID                  # UnarySend
      | rcv=expr method=OPERATOR arg=expr   # InfixSend
      | rcv=expr (ID ':' subexpr)+          # KeywordSend
      | (ID ':' subexpr)+                   # GlobalKeywordSend //TODO put in IRtree
+     | ID ':=' expr                        # Assignment
      | subexpr                             # LoneExpr
      ;
 
@@ -28,13 +28,13 @@ subexpr : value=INTEGER                 # IntLit
         | '[' (decl* '|')? sequence ']' # Block
         | '{' (expr ',')* expr? '}'     # ArrayLit
         | '(' expr ')'                  # ParenExpr
-        | '|' decl+ '|'                 # DeclExpr
+        | decls                         # DeclExpr
         ;
-
+        
+decls : '|' decl+ '|';
 decl : ID;
 
 //MAYBE: Add return statement (Currently last expression)
-//TODO: Array syntax ('{}')
 
 TRUE : 'true';
 FALSE : 'false';
