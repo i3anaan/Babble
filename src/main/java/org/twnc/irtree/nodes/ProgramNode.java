@@ -25,20 +25,17 @@ public class ProgramNode extends Node {
         visitor.visit(this);
     }
     
-    public ProgramNode mergeTree(ProgramNode other) {
-        this.classes.addAll(other.getClasses());
-        return this;
+    public boolean addClazz(ClazzNode clazz) {
+        return classes.add(clazz);
     }
     
-    public void compress() {
-        for (int a = 0; a < classes.size(); a++) {
-            ClazzNode clazz1 = classes.get(a);
-            for (int b = a+1; b < classes.size(); b++) {
-                if (clazz1.getName().equals(classes.get(b).getName())) {
-                    clazz1.mergeTree(classes.remove(b));
-                    b--;
-                }
+    public ClazzNode getClazz(String name) {
+        for (ClazzNode clazz : getClasses()) {
+            if (clazz.getName().equals(name)) {
+                return clazz;
             }
         }
+        
+        return null;
     }
 }

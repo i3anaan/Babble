@@ -53,4 +53,14 @@ public class MethodNode extends Node {
     public void accept(ASTVisitor visitor) {
         visitor.visit(this);
     }
+    
+    @Override
+    public boolean equals(Object other) {
+        return other != null && (other instanceof MethodNode) && ((MethodNode) other).getSelector().equals(this.getSelector());
+    }
+    
+    @Override
+    public int hashCode() {
+        return selector.hashCode();
+    }
 }

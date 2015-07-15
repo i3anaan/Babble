@@ -10,7 +10,9 @@ import org.twnc.irtree.nodes.ProgramNode;
 import org.twnc.irtree.nodes.SequenceNode;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class IntrospectionPass extends BaseASTVisitor {
     ProgramNode program;
@@ -37,7 +39,7 @@ public class IntrospectionPass extends BaseASTVisitor {
         }
 
         // Generate name, methods and class methods on the metaclass
-        ArrayList<MethodNode> methods = new ArrayList<>();
+        Set<MethodNode> methods = new HashSet<>();
         methods.add(new MethodNode("name", new SequenceNode(new LiteralNode(LiteralNode.Type.STRING, clazz.getName()))));
         methods.add(new MethodNode("methods", new SequenceNode(new ArrayNode(selectors))));
         methods.add(new MethodNode("class", new SequenceNode(new LiteralNode(LiteralNode.Type.CLASS, "org/twnc/runtime/BClass"))));

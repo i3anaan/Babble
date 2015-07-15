@@ -1,17 +1,16 @@
 package org.twnc.irtree.nodes;
 
-import org.twnc.compile.exceptions.DuplicateMethodSignatureException;
 import org.twnc.irtree.ASTVisitor;
 
-import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ClazzNode extends Node {
     private final String name;
     private final String superclass;
-    private final List<MethodNode> methods;
+    private final Set<MethodNode> methods;
 
-    public ClazzNode(String name, String superclass, List<MethodNode> methods) {
+    public ClazzNode(String name, String superclass, Set<MethodNode> methods) {
         this.name = name;
         this.superclass = superclass;
         this.methods = methods;
@@ -25,31 +24,30 @@ public class ClazzNode extends Node {
         return superclass;
     }
 
-    public List<MethodNode> getMethods() {
+    public Set<MethodNode> getMethods() {
         return methods;
     }
 
-    public List<String> getMethodSelectors() {
-        return methods.stream().map(MethodNode::getSelector).collect(Collectors.toList());
+    public Set<String> getMethodSelectors() {
+        return methods.stream().map(MethodNode::getSelector).collect(Collectors.toSet());
     }
 
     public boolean hasMain() {
         return methods.stream().anyMatch(MethodNode::isMainMethod);
     }
     
-    public void mergeTree(ClazzNode other) {
-        for (MethodNode newMethod : other.getMethods()) {
-            for (MethodNode existingMethod : methods) {
-                if (existingMethod.getSelector().equals(newMethod.getSelector())) {
-                    String message = String.format(
-                            "Duplicate Method '%s' at [%s] and [%s]",
-                            newMethod.getSelector(), newMethod.getLocation(),
-                            existingMethod.getLocation());
-                    throw new DuplicateMethodSignatureException(message);
-                }
+    public boolean addMethod(MethodNode extraMethod) {
+        return methods.add(extraMethod);
+    }
+    
+    public MethodNode getMethod(String selector) {
+        for (MethodNode method : getMethods()) {
+            if (method.getSelector().equals(selector)) {
+                return method;
             }
-            methods.add(newMethod);
         }
+        
+        return null;
     }
 
     @Override
@@ -60,5 +58,15 @@ public class ClazzNode extends Node {
     @Override
     public String toString() {
         return "Class: " + name;
+    }
+    
+    @Override
+    public boolean equals(Object other) {
+        return other != null && (other instanceof ClazzNode) && ((ClazzNode) other).getName().equals(this.getName());
+    }
+    
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 }

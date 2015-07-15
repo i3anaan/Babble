@@ -23,7 +23,7 @@ public class BaseASTVisitor extends ASTVisitor {
             for (String error : errors) {
                 System.err.println(error);
             }
-            throw new ScopeException();
+            throw new CompileException();
         }
     }
     
@@ -82,7 +82,7 @@ public class BaseASTVisitor extends ASTVisitor {
     }
 
     public void visitError(Node node, String message) {
-        errors.add(String.format("[%s] - %s", node.getLocation().toString(), message));
+        errors.add(String.format("[%s] - %s", String.valueOf(node.getLocation()), message));
     }
     
     public List<String> getErrors() {

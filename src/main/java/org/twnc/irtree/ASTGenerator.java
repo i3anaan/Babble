@@ -2,7 +2,9 @@ package org.twnc.irtree;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
@@ -58,7 +60,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
             superclass = "java/lang/Object";
         }
 
-        List<MethodNode> methods = new ArrayList<>();
+        Set<MethodNode> methods = new HashSet<>();
         for (MthdContext m : ctx.mthd()) {
             methods.add((MethodNode) visit(m));
         }
@@ -70,7 +72,7 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     public Node visitBlock(BlockContext ctx) {
         List<VarRefNode> arguments = new ArrayList<>();
         for (DeclContext node : ctx.decl()) {
-            arguments.add((VarRefNode) visit(node));
+            arguments.add((VarDeclNode) visit(node));
         }
         SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
         return new BlockNode(sequence, arguments);
