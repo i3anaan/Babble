@@ -8,8 +8,17 @@ Animal [
 ].
 
 Duck extends: Animal [
+    | age |.
     canSwim [ true ].
     quack   [ "Quack!" ].
+    
+    setAge: value [
+        age := value.
+    ].
+    
+    getAge [
+        age.
+    ].
 ].
 
 Fielder [
@@ -297,7 +306,26 @@ SelfTest [
     ].
     
     testClassFieldsOther [
-        "TestClassFieldsOther: TODO Add when new objects can be created." print.
+        | bird |.
+        bird := Duck new.
+        bird setAge: 10.
+        (bird getAge == 10) assert.
+    ].
+    
+    testPassByReference [
+        field1 := Duck new.
+        field1 setAge: "10".
+        field1 getAge print.
+        
+        (field1 == "10") assert.
+        setAgeFor: field1 to: "25".
+        (field1 == "25") assert.
+        
+        field1 getAge print.
+    ].
+    
+    setAgeFor: object to: value[
+        object setAge: value.
     ].
     
     main [
