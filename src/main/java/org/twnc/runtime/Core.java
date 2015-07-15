@@ -132,6 +132,11 @@ public class Core {
         return construct("Nil");
     }
 
+    /** Return a new instance of the Nil Object. */
+    public static Object newOpaqueClass() {
+        return construct("OpaqueClass");
+    }
+
     /**
      * Return a Babble Nil if the passed reference is a Java null, or the passed reference unchanged otherwise.
      */

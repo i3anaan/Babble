@@ -83,7 +83,7 @@ public final class App {
         
         ProgramNode baseTree = generateIRTree(App.class.getResourceAsStream("Prelude.bla"), "Babble\\Prelude.bla");
         ProgramNode inputTree = generateIRTree(new FileInputStream(file), file.getPath());
-        
+
         ASTVisitor treeMerger = new TreeMerger(baseTree);
         inputTree.accept(treeMerger);
         

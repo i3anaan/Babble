@@ -50,6 +50,13 @@ Nil [
 
 Block [
     value    [ nil ].
+
+    whileTrue: aBlock [
+        this value ifTrue: [
+            aBlock value.
+            [ this value ] whileTrue: [ aBlock value ]
+        ]
+    ].
 ].
 
 Class [
@@ -60,4 +67,12 @@ Class [
     respondsTo: selector [
         this methods includes: selector.
     ].
+].
+
+OpaqueClass extends:Class [
+    name    [ "?" ].
+    methods [ {} ].
+    class   [ Class ].
+
+    respondsTo: selector [ false ].
 ].

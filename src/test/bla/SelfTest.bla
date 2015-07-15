@@ -26,6 +26,24 @@ Light [
     ].
 ].
 
+Counter [
+    | v |.
+
+    inc [
+        (nil == v) ifTrue: [
+            v := 0
+        ] ifFalse: [
+            v := v + 1
+        ].
+
+        v.
+    ].
+
+    get [ v. ].
+    set: newValue [ v := newValue. this ].
+    asString [ v asString ].
+].
+
 Fielder [
     | x y |.
 ].
@@ -181,6 +199,16 @@ SelfTest [
 
         (true  ifTrue: [ #a ] ifFalse: [ #b ] == #a) assert.
         (false ifTrue: [ #a ] ifFalse: [ #b ] == #b) assert.
+    ].
+
+    testWhile [
+        | i |.
+
+        i := Counter new set: 1.
+
+        [ i inc < 10 ] whileTrue: [
+            i asString print.
+        ]
     ].
 
     testVarDecl [
