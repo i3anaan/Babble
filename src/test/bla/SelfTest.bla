@@ -193,10 +193,8 @@ SelfTest [
     ].
     
     recursion: value [
-        | return |.
-        
         (value > 0) ifTrue: [
-            return := (this recursion: (value - 1)).
+            this recursion: (value - 1).
         ] ifFalse: [
             0.
         ]
