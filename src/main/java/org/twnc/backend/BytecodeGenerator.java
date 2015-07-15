@@ -6,9 +6,7 @@ import java.io.OutputStream;
 import java.lang.invoke.CallSite;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.FieldVisitor;
@@ -22,6 +20,7 @@ import org.twnc.compile.exceptions.UnknownVariableDeclarationLocation;
 import org.twnc.compile.exceptions.VariableNotDeclaredException;
 import org.twnc.irtree.ASTBaseVisitor;
 import org.twnc.irtree.nodes.*;
+import org.twnc.runtime.Core;
 
 public class BytecodeGenerator extends ASTBaseVisitor implements Opcodes {
     private ProgramNode pn;
@@ -112,7 +111,7 @@ public class BytecodeGenerator extends ASTBaseVisitor implements Opcodes {
         type.append(")");
         type.append(OBJ);
 
-        mv = cw.visitMethod(ACC_PUBLIC, mangle(methodNode.getSelector()),
+        mv = cw.visitMethod(ACC_PUBLIC, Core.mangle(methodNode.getSelector()),
                 type.toString(), null, null);
         mv.visitCode();
 
@@ -145,7 +144,7 @@ public class BytecodeGenerator extends ASTBaseVisitor implements Opcodes {
             mv = cw.visitMethod(ACC_PUBLIC, methodNode.getSelector(), "()V", null, null);
             mv.visitCode();
             mv.visitVarInsn(ALOAD, 0);
-            mv.visitMethodInsn(INVOKEVIRTUAL, cn.getName(), mangle(methodNode.getSelector()), "()" + OBJ, false);
+            mv.visitMethodInsn(INVOKEVIRTUAL, cn.getName(), Core.mangle(methodNode.getSelector()), "()" + OBJ, false);
             mv.visitInsn(POP);
             mv.visitInsn(RETURN);
             mv.visitMaxs(0, 0);
@@ -187,7 +186,7 @@ public class BytecodeGenerator extends ASTBaseVisitor implements Opcodes {
         mv.visitEnd();
 
         // #value method override.
-        mv = bw.visitMethod(ACC_PUBLIC, mangle("value"), "()" + OBJ, null, null);
+        mv = bw.visitMethod(ACC_PUBLIC, Core.mangle("value"), "()" + OBJ, null, null);
         mv.visitCode();
 
         super.visit(blockNode);
@@ -249,7 +248,7 @@ public class BytecodeGenerator extends ASTBaseVisitor implements Opcodes {
         type.append(")");
         type.append(OBJ);
 
-        mv.visitInvokeDynamicInsn(mangle(sendNode.getSelector()), type.toString(), bootstrap);
+        mv.visitInvokeDynamicInsn(Core.mangle(sendNode.getSelector()), type.toString(), bootstrap);
     }
 
     @Override
@@ -404,26 +403,4 @@ public class BytecodeGenerator extends ASTBaseVisitor implements Opcodes {
         }
     }
 
-    private static String mangle(String str) {
-        StringBuilder sb = new StringBuilder();
-        sb.append('_');
-
-        Map<Character, String> rep = new HashMap<>();
-        rep.put('+', "plus");
-        rep.put('-', "minus");
-        rep.put('/', "slash");
-        rep.put('*', "star");
-        rep.put('!', "bang");
-        rep.put(',', "comma");
-        rep.put('=', "eq");
-        rep.put('<', "lt");
-        rep.put('>', "gt");
-        rep.put(':', "_");
-
-        for (char c : str.toCharArray()) {
-            sb.append(rep.getOrDefault(c, String.valueOf(c)));
-        }
-
-        return sb.toString();
-    }
 }

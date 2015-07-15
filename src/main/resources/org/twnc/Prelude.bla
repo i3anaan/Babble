@@ -34,7 +34,7 @@ False extends:Bool [
 
     ifTrue: block        [ nil ].
     ifFalse: block       [ block value ].
-    ifTrue: t ifFalse: f [ f value. ].
+    ifTrue: t ifFalse: f [ f value ].
 
     and: that [ this ].
     or:  that [ that ].

@@ -1,10 +1,12 @@
 Room [
 	| occupant number |.
 
-	getNumber      [ number ].
-	setNumber: num [ number := num ].
-	isOccupied     [ nil != occupant ].
-	isFree         [ nil == occupant ].
+	isOccupied      [ nil != occupant ].
+	isFree          [ nil == occupant ].
+	setOccupant: g  [ occupant := g ].
+
+	getNumber       [ number ].
+	withNumber: num [ number := num. this ].
 
 	asString [
 		"Room " + number asString.
@@ -14,10 +16,12 @@ Room [
 Guest [
 	| name |.
 
-
+	withName: nm [ name := nm. this ].
 ].
 
 Hotel [
+	| rooms |.
+
 	main [
 		"Welcome to Hotel software!" print.
 		"" print.
@@ -27,6 +31,12 @@ Hotel [
 		"For leave Hotel software, use 'quit'." print.
 		"" print.
 
+		rooms := {
+			Room new withNumber: 10,
+			Room new withNumber: 20,
+			Room new withNumber: 30
+		}.
+
 		this prompt.
 	].
 
@@ -35,6 +45,22 @@ Hotel [
 
 		input := System read.
 
-		input print.
+		(this class respondsTo: input) ifTrue: [
+			System on: this invoke: input.
+		] ifFalse: [
+			(input + " is not a command") print.
+			"Commands are: list, checkin, checkout, quit." print.
+		].
+
+		this prompt.
+	].
+
+	list [
+		rooms asString print.
+	].
+
+	quit [
+		"Thank you for using Hotel!" print.
+		System exit.
 	].
 ].

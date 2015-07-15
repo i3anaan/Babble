@@ -6,6 +6,9 @@ import java.io.InputStreamReader;
 import java.lang.invoke.*;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 public class Core {
     private static final MethodType INVOKE_TYPE =
@@ -88,7 +91,11 @@ public class Core {
         return target.invokeWithArguments(args);
     }
 
-    public static Object call(String selector, Object[] args) throws Throwable {
+    public Object _on_invoke_(Object receiver, Object selector) throws Throwable {
+        return call(mangle(selector.toString()), receiver);
+    }
+
+    public static Object call(String selector, Object... args) throws Throwable {
         MutableCallSite cs = new MutableCallSite(MethodType.genericMethodType(args.length));
         return invoke(cs, selector, args);
     }
@@ -148,17 +155,18 @@ public class Core {
         throw new AssertionError();
     }
 
+    public Object _exit() {
+        System.exit(0);
+        return newNil();
+    }
+
     public Object _print_(Object object) {
         System.out.println(object.toString());
         return object;
     }
 
     public Object _read() {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
-            return new BStr(reader.readLine());
-        } catch (IOException e) {
-            return Core.newNil();
-        }
+        return new BStr(new Scanner(System.in).nextLine());
     }
 
     public Object _class() {
@@ -175,4 +183,28 @@ public class Core {
             return obj;
         }
     }
+
+    public static String mangle(String str) {
+        StringBuilder sb = new StringBuilder();
+        sb.append('_');
+
+        Map<Character, String> rep = new HashMap<>();
+        rep.put('+', "plus");
+        rep.put('-', "minus");
+        rep.put('/', "slash");
+        rep.put('*', "star");
+        rep.put('!', "bang");
+        rep.put(',', "comma");
+        rep.put('=', "eq");
+        rep.put('<', "lt");
+        rep.put('>', "gt");
+        rep.put(':', "_");
+
+        for (char c : str.toCharArray()) {
+            sb.append(rep.getOrDefault(c, String.valueOf(c)));
+        }
+
+        return sb.toString();
+    }
+
 }
