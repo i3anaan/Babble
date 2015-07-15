@@ -79,28 +79,28 @@ public final class App {
     private static Node compileFile(File file, String outDir) throws IOException {
         new File(outDir).mkdirs();
         
-        ProgramNode baseTree = generateIRTree(App.class.getResourceAsStream("Prelude.bla"), "Babble\\Prelude.bla");
+        ProgramNode program = generateIRTree(App.class.getResourceAsStream("Prelude.bla"), "Babble\\Prelude.bla");
         ProgramNode inputTree = generateIRTree(new FileInputStream(file), file.getPath());
         
-        ASTVisitor treeMerger = new TreeMerger(baseTree);
+        ASTVisitor treeMerger = new TreeMerger(program);
         inputTree.accept(treeMerger);
         
         ASTVisitor graphVisitor = new Graphvizitor(outDir);
-        baseTree.accept(graphVisitor);
+        program.accept(graphVisitor);
 
         ASTVisitor introspectionPass = new IntrospectionPass();
-        baseTree.accept(introspectionPass);
+        program.accept(introspectionPass);
 
         ASTVisitor scopeVisitor = new ScopeChecker();
-        baseTree.accept(scopeVisitor);
+        program.accept(scopeVisitor);
 
         ASTVisitor bytecodeVisitor = new BytecodeGenerator(outDir);
-        baseTree.accept(bytecodeVisitor);
+        program.accept(bytecodeVisitor);
 
-        return baseTree;
+        return program;
     }
     
-    private static ProgramNode generateIRTree(InputStream stream, String filename) throws IOException {
+    public static ProgramNode generateIRTree(InputStream stream, String filename) throws IOException {
             CharStream chars = new ANTLRInputStream(stream);
             Lexer lexer = new BabbleLexer(chars);
             TokenStream tokens = new CommonTokenStream(lexer);
