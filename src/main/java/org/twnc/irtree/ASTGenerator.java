@@ -227,8 +227,8 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
         return output;
     }
     
-    public List<VarDeclNode> visitDecls(List<? extends ParserRuleContext> decls) {
-        List<VarDeclNode> output = new ArrayList<>();
+    public Set<VarDeclNode> visitDecls(List<? extends ParserRuleContext> decls) {
+        Set<VarDeclNode> output = new HashSet<>();
         for (int i = 0; i < decls.size(); i += 1) {
             output.add((VarDeclNode) visit(decls.get(i)));
         }
