@@ -2,6 +2,8 @@ package org.twnc.frontend;
 
 import org.twnc.Scope;
 import org.twnc.ScopeStack;
+import org.twnc.compile.exceptions.CompileException;
+import org.twnc.compile.exceptions.ScopeException;
 import org.twnc.compile.exceptions.VariableNotDeclaredException;
 import org.twnc.irtree.BaseASTVisitor;
 import org.twnc.irtree.nodes.*;
@@ -16,7 +18,15 @@ public class ScopeChecker extends BaseASTVisitor {
     public void visit(ProgramNode programNode) {
         scopeStack = new ScopeStack(programNode);
         programNode.setScope(scopeStack.peek());
+        
         super.visit(programNode);
+        
+        if (!getErrors().isEmpty()) {
+            for (String error : getErrors()) {
+                System.err.println(error);
+            }
+            throw new ScopeException();
+        }
     }
 
     @Override
@@ -62,7 +72,7 @@ public class ScopeChecker extends BaseASTVisitor {
             } catch (VariableNotDeclaredException e) {
                 throw new RuntimeException(e);
             }
-            visitError(node, String.format("Variable %s is already declared at [%s].", node.getName(), previousDecl.getLocation().toString()));
+            visitError(node, String.format("Variable %s is already declared at [%s].", node.getName(), String.valueOf(previousDecl.getLocation())));
         }
         super.visit(node);
     } 

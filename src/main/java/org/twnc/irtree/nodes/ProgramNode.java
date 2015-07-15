@@ -24,9 +24,18 @@ public class ProgramNode extends Node {
     public void accept(ASTVisitor visitor) {
         visitor.visit(this);
     }
+    
+    public boolean addClazz(ClazzNode clazz) {
+        return classes.add(clazz);
+    }
+    
+    public ClazzNode getClazz(String name) {
+        for (ClazzNode clazz : getClasses()) {
+            if (clazz.getName().equals(name)) {
+                return clazz;
+            }
+        }
 
-    public ProgramNode addTree(ProgramNode other) {
-        this.classes.addAll(other.getClasses());
-        return this;
+        return null;
     }
 }

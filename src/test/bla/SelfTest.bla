@@ -215,6 +215,16 @@ SelfTest [
         (this class respondsTo:"bogusMethod") not assert.
     ].
     
+    testClassMerging [
+        this isTrue assert.
+        this isFalse not assert.
+        /* TODO add field merging
+        this separatedMethod2.
+        (field1 == true) assert.
+        */
+    ].
+
+    
     testVarception [
         | x y z |.
         x := y := z:= 10.
@@ -308,4 +318,20 @@ SelfTest [
         this testVarception.
         "Main tests: OK" print.
     ].
+].
+
+SelfTest [
+    isTrue [
+        true.
+    ].
+    
+    isFalse [
+        false.
+    ].
+    
+    /* TODO add field merging
+    separatedMethod2 [
+        field1 := true.
+    ].
+    */
 ].
