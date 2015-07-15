@@ -45,4 +45,14 @@ public class VarDeclNode extends VarRefNode {
     public Color getColor() {
         return new Color(100, 100, 100);
     }
+    
+    @Override
+    public boolean equals(Object other) {
+        return other != null && other instanceof VarDeclNode && this.getName().equals(((VarDeclNode) other).getName());
+    }
+    
+    @Override
+    public int hashCode() {
+        return this.getName().hashCode();
+    }
 }

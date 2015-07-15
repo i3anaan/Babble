@@ -72,7 +72,7 @@ public class BaseASTVisitor extends ASTVisitor {
 
     @Override
     public void visit(DeclsNode declsNode) {
-        declsNode.getDeclarations().forEach(x -> x.accept(this));
+        declsNode.getDeclarations().forEach(x -> x .accept(this));
     }
 
     @Override

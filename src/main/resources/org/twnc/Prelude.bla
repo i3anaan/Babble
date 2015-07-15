@@ -1,21 +1,63 @@
 True extends:org\twnc\runtime\BTrue [
     asString [ "true" ].
-    not      [ false ].
-    asBool   [ true ].
     asInt    [ 1 ].
+    asBool   [ true ].
+
+    not      [ false ].
     hashCode [ 1 ].
+
+    ifTrue: block        [ block value. ].
+    ifFalse: block       [ nil ].
+    ifTrue: t ifFalse: f [ t value. ].
+
+    ==: that [ that class name == "True". ].
+    !=: that [ that class name != "True". ].
+
+    and: that [ that ].
+    or:  that [ this ].
 ].
 
 False extends:org\twnc\runtime\BFalse [
     asString [ "false" ].
-    not      [ true ].
     asInt    [ 0 ].
+    asBool   [ false ].
+
+    not      [ true ].
     hashCode [ 0 ].
+
+    ifTrue: block        [ nil ].
+    ifFalse: block       [ block value ].
+    ifTrue: t ifFalse: f [ f value. ].
+
+    ==: that [ that class name == "False". ].
+    !=: that [ that class name != "False". ].
+
+    and: that [ this ].
+    or:  that [ that ].
 ].
 
-Nil extends:org\twnc\runtime\BNil [
+Nil [
     asString [ "nil" ].
-    isNil    [ true ].
     asInt    [ -1 ].
+    asBool   [ false ].
+
+    isNil    [ true ].
     hashCode [ -1 ].
+
+    ==: that [ that class name == "Nil". ].
+    !=: that [ that class name != "Nil". ].
+].
+
+Block [
+    value    [ nil ].
+].
+
+Class [
+    name [ "Class" ].
+    methods [ {"name", "methods", "class", "respondsTo" } ].
+    class [ Class ].
+
+    respondsTo: selector [
+        this methods includes: selector.
+    ].
 ].

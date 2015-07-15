@@ -210,10 +210,6 @@ SelfTest [
         (this arr at: 0 == #bar) not assert.
     ].
 
-    testArrayAtIfAbsent [
-        (this arr at: 2 ifAbsent: #eggs == #eggs) assert.
-    ].
-
     testArrayAtPut [
         | z |.
         z := { 1, 2, 3 }.
@@ -292,10 +288,6 @@ SelfTest [
     testClassMerging [
         this isTrue assert.
         this isFalse not assert.
-        /* TODO add field merging
-        this separatedMethod2.
-        (field1 == true) assert.
-        */
     ].
 
     testNew [
@@ -315,6 +307,16 @@ SelfTest [
         | Duck |.
         Duck := 10.
         (Duck == 10) assert.
+    ].
+    
+    testClassMergingAssign [
+        this separatedAssign.
+        field1 assert.
+        field2 not assert.
+    ].
+    
+    testClassMergingFields [
+        field3 := 10.
     ].
     
     testVarception [
@@ -413,6 +415,8 @@ SelfTest [
 ].
 
 SelfTest [
+	| field3 |.
+	
     isTrue [
         true.
     ].
@@ -421,9 +425,8 @@ SelfTest [
         false.
     ].
     
-    /* TODO add field merging
-    separatedMethod2 [
+    separatedAssign [
         field1 := true.
+        field2 := false.
     ].
-    */
 ].
