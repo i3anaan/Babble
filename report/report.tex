@@ -11,12 +11,25 @@
 \usepackage{inconsolata}
 \usepackage{appendix}
 \usepackage{color}
+\usepackage[usenames,svgnames]{xcolor}
+\usepackage{listings}
 \usepackage{fancyvrb}
 \usepackage{titlesec}
 \usepackage{nag}
+\usepackage[margin=1.3in]{geometry}
 
 \newcommand{\sectionbreak}{\clearpage}
 \input{pygments}
+
+\lstset{
+	basicstyle=\ttfamily,
+	keepspaces=true,
+	numbers=none,
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	tabsize=4
+}
 
 \begin{document}
 
@@ -24,12 +37,14 @@
 \maketitle
 \end{titlepage}
 
+\tableofcontents
+
 \section{Language summary}
 
 Babble is a compiled, duck-typed, object-oriented programming language for the Java Virtual machine.
 It has syntax and semantics inspired by the Smalltalk programming language, but the compile-once-run-anywhere development cycle from Java.
-It has no primitives, no statements like \texttt{if} or \texttt{while}, and no type annotations.
-Instead, most everything in Smalltalk is done using message sends.
+It has no primitives, no operators, no statements like \texttt{if} or \texttt{while}, and no type annotations.
+Instead, most everything in Babble is done using message sends.
 
 In Babble, as in Smalltalk, everything is an object, and objects can be interacted with by sending them messages.
 If the receiving object understands the message, it acts upon it, sending messages to other objects if required, and finally sending a reply back to the source of the message.
@@ -44,12 +59,153 @@ Blocks can take arguments, and will also do lambda closure.
 
 \section{Detailed language description}
 
+\subsection{Defining classes}
+
+A Babble program is a collection of Babble classes.
+
+Unlike in Java, multiple classes can be defined in a single file, and a single class can be defined in multiple files (see section \ref{merge}).
+
+\subsection{Sending messages}
+
+The only way to have a Babble program do anything useful is by sending messages to objects.
+There are three different kind of messages, each with their own syntax.
+
+\subsubsection{Unary messages}
+
+Unary messages are similar to unary operators from other languages, or zero-argument methods in Java.
+The following is an example of a unary message:
+
+\begin{quote}
+\begin{lstlisting}
+true not.
+\end{lstlisting}
+\end{quote}
+
+This sends the 'not' message to the receiver, a True object.
+The receiver will reply with a False object. In other words, this is a unary negation.
+
+\subsubsection{Infix messages}
+
+Infix messages have selectors that consist entirely of symbols (like `+', `=', or `!'). For example:
+
+\begin{quote}
+\begin{lstlisting}
+10 > 20.
+\end{lstlisting}
+\end{quote}
+
+Like other messages, infix messages have exactly one receiver, in this case 10.
+Infix messages also have exactly one argument, 20 here.
+Because 10 is not larger than 20, the result will be false.
+
+\subsubsection{Keyword messages}
+
+Keyword messages are relatively uncommon: they mostly appear in Smalltalk-inspired languages, like Objective-C.
+Keyword messages have one or more keywords, one per argument.
+These keywords are used to determine which method to call.
+For example, the following is a single keyword message:
+
+\begin{quote}
+\begin{lstlisting}
+array at: 2 put: 10.
+\end{lstlisting}
+\end{quote}
+
+This sends the message \texttt{at:put:} to the variable \texttt{array}, passing the 2 and 10 as arguments. This would place the number 10 at the third position inside the array.
+
+\subsubsection{Precedence}
+
+Unary messages have the highest precedence, followed by infix messages, followed by keyword messages. Expressions are evaluated `from left to right'.
+
+There are no special exceptions for `arithmetic' operators: all infix messages share the same precedence.
+For example, \texttt{5 + 10 * 2} evaluates to 30.
+To calculate $5 + 10 \times 2$ one would write \texttt{5 + (10 * 2)}.
+
+The precedence rules from arithmetic make sense when doing arithmetic, but since Babble allows classes to provide their own infix methods, the symbols from arithmetic can be used in any context.
+For example, `+' is used for string concatenation.
+The asterisk could  be used as a string repeat method.
+In that context, Babble will evaluate an expression like \texttt{"Hello" + "World" * 2} as "HelloWorldHelloWorld": in other words, left to right.
+
+\subsection{Standard classes}
+
+Babble comes with a few built-in classes. Most of these are based on their counterparts in Java.
+
+\subsubsection{Integers}
+
+Integer values in Babble can be arbitrarily large.
+
+\subsubsection{Strings}
+
+Babble has string literals. String literals are enclosed in double quotes, i.e. \verb|"Hello, world!"|.
+
+\subsubsection{Symbols}
+
+Symbols are written as \verb|#foo|.
+
+\subsubsection{Arrays}
+
+The syntax for array literals is \verb|{1, 2, 3}|.
+
+\subsubsection{Blocks}
+
+\subsection{Tips and tricks}
+
+\subsubsection{Using symbols as enumerations}
+
+
+
+\subsubsection{Using blocks as values}
+
+\subsubsection{Using values as blocks}
+
+\subsubsection{Introspection and metaclasses}
+
+Babble offers some amount of introspection into objects: objects can be queried for their class by sending them the \texttt{class} message.
+The resulting metaclass instance can then be asked for information about the original class using the \texttt{name} and \texttt{methods} messages.
+It can also tell you whether or not the original object will \texttt{respondTo} a certain message.
+
+\label{merge}
+\subsubsection{Adding methods to existing classes}
+
+The Babble compiler will merge class definitions with the same name together.
+This means that you can extend a class from multiple places in your program.
+
+\subsubsection{Adding methods to metaclasses}
+
 \section{Description of the software}
+
+The program itself is a compiler that translates Babble source code into JVM bytecode.
+While the compiler does check whether variable names are defined, it can't (and won't try to) do any compile-time type checking.
+
+\subsection{Compiler}
+
+The Babble compiler is split into a front end, a few (relatively small) intermediate passes, and a (relatively large) bytecode generation back end.
+
+\subsubsection{Front end: parser}
+
+Babble's parser is based on ANTLR.
+The ANTLR grammar has been included on page \pageref{grammar}.
+The resulting parse tree is converted into a tree-based intermediate representation using the visitor on page \pageref{visitor}.
+
+\subsubsection{Intermediate passes}
+
+When the program is parsed, it goes through a few intermediate passes, most of which either annotate the tree representation of the program in some way, or check its semantics.
+
+\subsubsection{Back end: bytecode generator}
+
+The Babble compiler generates Java Virtual Machine bytecode using the ASM bytecode manipulation library from Objectweb.
+% ...
+
+\subsection{Runtime environment}
+
+\subsubsection{invokeDynamic}
 
 \section{Test plan and results}
 
 The Babble compiler itself is tested using unit tests, written in Java, while the runtime system is tested using integration tests, written in Babble.
 Both can be executed using Maven by running \texttt{mvn verify}.
+Maven can also generate a graphical (HTML) report of the test results using \texttt{mvn site}.
+% ...
 
 \section{Conclusions}
 
@@ -57,10 +213,12 @@ Both can be executed using Maven by running \texttt{mvn verify}.
 
 \begin{appendices}
 
+\label{grammar}
 \section{ANTLR grammar}
 
 \input{grammar}
 
+\label{visitor}
 \section{ANTLR tree visitor}
 
 This tree visitor converts an ANTLR parse tree into our intermediate representation, the IR tree.
