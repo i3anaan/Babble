@@ -19,23 +19,20 @@ public class TreeMergerTest extends CompileTest {
     @Test
     public void testDuplicateFieldSignature() {
         ProgramNode tree = buildTree("Duck1.bla");
-        assertTrue(getErrors(tree).isEmpty());
+        assertTrue(App.compileTree(outDir, tree).isEmpty());
 
         ASTBaseVisitor treeMerger = new TreeMerger(tree);
         try {
             buildTree("Duck5.bla").accept(treeMerger);
-            fail();
         } catch (TreeMergeException e) {
-            assertFalse(treeMerger.getErrors().isEmpty());  
-            String error = treeMerger.getErrors().get(0);
-            assertEquals("[Duck1.bla - 3:1] - Duplicate Method declaration 'quack' at [Duck2.bla - 4:1]", error);  
+            fail();
         }
     }
     
     @Test
     public void testDuplicateMethodSignature() {
         ProgramNode tree = buildTree("Duck1.bla");
-        assertTrue(getErrors(tree).isEmpty());
+        assertTrue(App.compileTree(outDir, tree).isEmpty());
 
         ASTBaseVisitor treeMerger = new TreeMerger(tree);
         try {
@@ -44,14 +41,14 @@ public class TreeMergerTest extends CompileTest {
         } catch (TreeMergeException e) {
             assertFalse(treeMerger.getErrors().isEmpty());  
             String error = treeMerger.getErrors().get(0);
-            assertEquals("[Duck1.bla - 3:1] - Duplicate Method declaration 'quack' at [Duck2.bla - 4:1]", error);  
+            assertEquals("[Duck1.bla - 3:1] - Duplicate method declaration 'quack' for class 'Duck' at [Duck2.bla - 4:1]", error);  
         }
     }
     
     @Test
     public void testDuplicateMethodSignatureMultiple() {
         ProgramNode tree = buildTree("Duck1.bla");
-        assertTrue(getErrors(tree).isEmpty());
+        assertTrue(App.compileTree(outDir, tree).isEmpty());
 
         ASTBaseVisitor treeMerger = new TreeMerger(tree);
         try {
@@ -65,7 +62,7 @@ public class TreeMergerTest extends CompileTest {
     @Test
     public void testSuperClassDiscrepancy() {
         ProgramNode tree = buildTree("Duck1.bla");
-        assertTrue(getErrors(tree).isEmpty());
+        assertTrue(App.compileTree(outDir, tree).isEmpty());
 
         ASTBaseVisitor treeMerger = new TreeMerger(tree);
         try {
@@ -74,14 +71,14 @@ public class TreeMergerTest extends CompileTest {
         } catch (TreeMergeException e) {
             assertFalse(treeMerger.getErrors().isEmpty());
             String error = treeMerger.getErrors().get(0);
-            assertEquals("[Duck1.bla - 1:0] - Superclass discrepancy for Duck: java/lang/Object with Rock at [Duck3.bla - 1:0]", error);
+            assertEquals("[Duck1.bla - 1:0] - Superclass discrepancy for class 'Duck': 'java/lang/Object' with 'Rock' at [Duck3.bla - 1:0]", error);
         }
     }
 
     @Test
     public void testMerge() {
         ProgramNode tree = buildBaseTree(); 
-        assertTrue(getErrors(tree).isEmpty());
+        assertTrue(App.compileTree(outDir, tree).isEmpty());
 
         ASTBaseVisitor treeMerger = new TreeMerger(tree);
         try {
@@ -103,10 +100,11 @@ public class TreeMergerTest extends CompileTest {
         ClazzNode duck = tree.getClazz("Duck");
         assertNotNull(duck);
         
-        List<VarDeclNode> decls = duck.getDecls().getDeclarations();
+        Set<VarDeclNode> decls = duck.getDecls().getDeclarations();
         assertEquals(decls.size(), 2);
-        assertTrue(decls.contains("leftLeg"));
-        assertTrue(decls.contains("rightLeg"));
+        for (VarDeclNode decl : decls) {
+            assertTrue(decl.getName().equals("leftLeg") || decl.getName().equals("rightLeg"));
+        }
         
         Set<MethodNode> methods = duck.getMethods();
         Set<String> methodSelectors = duck.getMethodSelectors();
