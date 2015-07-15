@@ -62,14 +62,14 @@ Summary of problems you encountered and how you solved them (max. two
 pages).
 
 \section{Detailed language description}
-A systematic description of the features of your language, for each
-feature specifying
-– Syntax, including one or more examples;
-– Usage: how should the feature be used? Are there any typing or other restrictions?
-– Semantics: what does the feature do? How will it be executed?
-– Code generation: what kind of target code is generated for the feature?
-You may make use of your ANTLR grammar ar as a basis for this description, but note that not every
-rule necessarily corresponds to a language feature
+%A systematic description of the features of your language, for each
+%feature specifying
+%– Syntax, including one or more examples;
+%– Usage: how should the feature be used? Are there any typing or other restrictions?
+%– Semantics: what does the feature do? How will it be executed?
+%– Code generation: what kind of target code is generated for the feature?
+%You may make use of your ANTLR grammar ar as a basis for this description, but note that %not every
+%rule necessarily corresponds to a language feature
 
 \subsection{Defining classes}
 
@@ -127,22 +127,6 @@ A method name is followed by brackets containing a list of expressions that will
 
 Babble methods are translated into Java methods belonging to their corresponding class, Sent messages are converted into method calls.
 
-\subsubsection{Infix messages}
-
-Infix messages have selectors that consist entirely of symbols (like `+', `=', or `!'). For example:
-
-\begin{quote}
-\begin{lstlisting}
-10 > 20.
-\end{lstlisting}
-\end{quote}
-
-Like other messages, infix messages have exactly one receiver, in this case the integer 10.
-Infix messages also have exactly one argument, the integer 20 here.
-Because 10 is not larger than 20, the result will be false.
-
-%TODO infix method declaration.
-
 \subsubsection{Keyword messages}
 
 Keyword messages are relatively uncommon: they mostly appear in Smalltalk-inspired languages, like Objective-C.
@@ -180,6 +164,30 @@ eat: soup and: potatoes finishWith: dessert [].
 Keyword methods can be used when a method needs to provide functionality based on input.
 Keyword methods are also translated into Java methods belonging to their corresponding class, yet just as keyword messages require arguments in Babble, they also take arguments of the stack in the Java bytecode.
 
+\subsubsection{Infix messages}
+
+Infix messages have selectors that consist entirely of symbols (like `+', `=', or `!'). For example:
+
+\begin{quote}
+\begin{lstlisting}
+10 > 20.
+\end{lstlisting}
+\end{quote}
+
+Like other messages, infix messages have exactly one receiver, in this case the integer 10.
+Infix messages also have exactly one argument, the integer 20 here.
+Because 10 is not larger than 20, the result will be false.
+
+Just as keyword methods, custom infix methods can be defined by the user using a slightly different syntax:
+\begin{quote}
+\begin{lstlisting}
+==: that [ that class name == "True". ].
+\end{lstlisting}
+\end{quote}
+
+This syntax is almost identical to a single-argument keyword method, the difference being that instead of starting with a (alphabetical) name, an operator is given.
+
+%TODO infix method declaration.
 
 
 \subsubsection{Precedence}
