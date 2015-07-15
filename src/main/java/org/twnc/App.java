@@ -84,7 +84,6 @@ public final class App {
     }
 
     private static List<String> compileFile(File file, String outDir) throws IOException {
-        new File(outDir).mkdirs();
         ProgramNode prelude = generateIRTree(App.class.getResourceAsStream("Prelude.bla"), "Babble\\Prelude.bla");
         ProgramNode code = generateIRTree(new FileInputStream(file), file.getPath());
         
@@ -106,6 +105,7 @@ public final class App {
     }
     
     static List<String> compileTree(String outDir, ProgramNode program) {
+        new File(outDir).mkdirs();
         ASTBaseVisitor visitor = null;
         try {
             visitor = new Graphvizitor(outDir);
