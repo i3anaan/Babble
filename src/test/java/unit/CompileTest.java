@@ -34,65 +34,16 @@ import org.twnc.irtree.nodes.Node;
 import org.twnc.irtree.nodes.ProgramNode;
 import org.twnc.util.Graphvizitor;
 
-public class TestCompileExceptions {
+public class CompileTest {
     public static final String outDir = "target/test/temp";
     public static final String testFilesDir = "src/test/bla/";
-    
-    
-    @Test
-    public void testDuplicateMethodSignature() {
-        ProgramNode tree = getTree("Duck1.bla");
-        assertTrue(getErrors(tree).isEmpty());
-
-        BaseASTVisitor treeMerger = new TreeMerger(tree);
-        try {
-            getTree("Duck2.bla").accept(treeMerger);
-            fail();
-        } catch (TreeMergeException e) {
-            assertFalse(treeMerger.getErrors().isEmpty());  
-            String error = treeMerger.getErrors().get(0);
-            assertEquals("[Duck1.bla - 2:1] - Duplicate Method declaration 'Quack' at [Duck2.bla - 4:1]", error);  
-        }
-    }
-    
-    @Test
-    public void testDuplicateMethodSignatureMultiple() {
-        ProgramNode tree = getTree("Duck1.bla");
-        assertTrue(getErrors(tree).isEmpty());
-
-        BaseASTVisitor treeMerger = new TreeMerger(tree);
-        try {
-            getTree("Duck1.bla").accept(treeMerger);
-            fail();
-        } catch (TreeMergeException e) {
-            assertTrue(treeMerger.getErrors().size() > 1);
-        }
-    }
-    
-    @Test
-    public void testSuperClassDiscrepancy() {
-        ProgramNode tree = getTree("Duck1.bla");
-        assertTrue(getErrors(tree).isEmpty());
-
-        BaseASTVisitor treeMerger = new TreeMerger(tree);
-        try {
-            getTree("Duck3.bla").accept(treeMerger);
-            fail();
-        } catch (TreeMergeException e) {
-            assertFalse(treeMerger.getErrors().isEmpty());
-            String error = treeMerger.getErrors().get(0);
-            assertEquals("[Duck1.bla - 1:0] - Superclass discrepancy for Duck: java/lang/Object with Rock at [Duck3.bla - 1:0]", error);
-        }
-    }
 
     @Test
     public void testJUnitVersion() {
         assertEquals("4.12", Version.id());
     }
     
-    
-    
-    private List<String> getErrors(ProgramNode baseTree) {
+    public List<String> getErrors(ProgramNode baseTree) {
         BaseASTVisitor visitor = null;
         new File(outDir).mkdirs();
         try {
@@ -113,13 +64,13 @@ public class TestCompileExceptions {
         return Collections.emptyList();
     }
     
-    private ProgramNode combine(ProgramNode tree1, ProgramNode tree2) {
+    public ProgramNode combine(ProgramNode tree1, ProgramNode tree2) {
         ASTVisitor treeMerger = new TreeMerger(tree1);
         tree2.accept(treeMerger);
         return tree1;
     }
     
-    private ProgramNode getTree(String filename) {
+    public ProgramNode getTree(String filename) {
         try {
             return App.generateIRTree(new FileInputStream(testFilesDir + filename), filename);
         } catch (IOException e) {
@@ -127,7 +78,7 @@ public class TestCompileExceptions {
         }
     }
     
-    private ProgramNode getBaseTree() {
+    public ProgramNode getBaseTree() {
         try {
             return App.generateIRTree(App.class.getResourceAsStream("Prelude.bla"), "Babble\\Prelude.bla");
         } catch (IOException e) {
