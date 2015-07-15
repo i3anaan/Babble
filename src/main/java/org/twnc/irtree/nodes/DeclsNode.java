@@ -33,6 +33,10 @@ public class DeclsNode extends ExprNode {
         return declarations.add(decl);
     }
 
+    public boolean addDeclarations(Set<VarDeclNode> decls) {
+        return declarations.addAll(decls);
+    }
+
     @Override
     public String toString() {
         return "Sequence";

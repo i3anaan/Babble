@@ -1,6 +1,6 @@
 package org.twnc.frontend;
 
-import org.twnc.irtree.BaseASTVisitor;
+import org.twnc.irtree.ASTBaseVisitor;
 import org.twnc.irtree.nodes.*;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class MetaclassGenerator extends BaseASTVisitor {
+public class MetaclassGenerator extends ASTBaseVisitor {
     private List<ClazzNode> metaclasses;
     private Map<String, String> globals;
 

@@ -1,6 +1,6 @@
 package org.twnc.util;
 
-import org.twnc.irtree.BaseASTVisitor;
+import org.twnc.irtree.ASTBaseVisitor;
 import org.twnc.irtree.nodes.*;
 
 import java.awt.Color;
@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Optional;
 
-public class Graphvizitor extends BaseASTVisitor {
+public class Graphvizitor extends ASTBaseVisitor {
     private final String outDir;
     private StringBuilder nodes;
     private StringBuilder edges;

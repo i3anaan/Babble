@@ -1,0 +1,6 @@
+Duck [
+	| leftLeg |.
+	quack [].
+	
+	quick [].
+].

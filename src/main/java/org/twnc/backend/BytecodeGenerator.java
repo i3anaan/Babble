@@ -20,10 +20,10 @@ import org.twnc.Scope;
 import org.twnc.compile.exceptions.CompileException;
 import org.twnc.compile.exceptions.UnknownVariableDeclarationLocation;
 import org.twnc.compile.exceptions.VariableNotDeclaredException;
-import org.twnc.irtree.BaseASTVisitor;
+import org.twnc.irtree.ASTBaseVisitor;
 import org.twnc.irtree.nodes.*;
 
-public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
+public class BytecodeGenerator extends ASTBaseVisitor implements Opcodes {
     private ProgramNode pn;
     private ClazzNode cn;
     private ClassWriter cw;
@@ -50,17 +50,17 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         scope = clazzNode.getScope();
         cn = clazzNode;
         blockCount = 0;
-        
+
         cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
         cw.visit(52, ACC_PUBLIC + ACC_SUPER, clazzNode.getName(), null, clazzNode.getSuperclass(), null);
 
         cw.visitInnerClass("java/lang/Object", "org/twnc/runtime/Core", "Object", ACC_PUBLIC + ACC_STATIC);
-        
+
         for (VarDeclNode decl : scope.values()) {
             FieldVisitor fv = cw.visitField(ACC_PUBLIC, decl.getName(), OBJ, null, null);
             fv.visitEnd();
         }
-        
+
         mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
         mv.visitCode();
         mv.visitVarInsn(ALOAD, 0);
@@ -71,7 +71,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         mv.visitInsn(RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();
-        
+
         if (clazzNode.hasMain()) {
             mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
             mv.visitCode();
@@ -88,9 +88,9 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         clazzNode.getMethods().forEach(x -> visit(x));
 
         cw.visitEnd();
-        
+
         String path = outDir + clazzNode.getName() + ".class";
-        
+
         try (OutputStream out = new FileOutputStream(path)) {
             out.write(cw.toByteArray());
         } catch (IOException e) {
@@ -131,7 +131,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
 
         mv.visitLabel(end);
 
-        for (VarDeclNode decl : scope.values()) {
+        for (VarDeclNode decl : methodNode.getScope().values()) {
             mv.visitLocalVariable(decl.getName(), OBJ, null, start, end, decl.getOffset());
         }
 
@@ -156,17 +156,26 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
     @Override
     public void visit(BlockNode blockNode) {
         // Come up with a name for the closure class, i.e. Foo$0
-        String blockClassName = cn.getName() + "$" + blockCount;
+        blockNode.setName(cn.getName() + "$" + blockCount);
         // Make sure the next block is not called Foo$0
         blockCount++;
         // Put it in the same directory as Foo
-        String path = outDir + blockClassName + ".class";
+        String path = outDir + blockNode.getName() + ".class";
 
-        // KEEP a reference to the parent method
+        // KEEP a reference to the parent method and scope
         MethodVisitor parentMethod = mv;
+        Scope parentScope = scope;
 
         ClassWriter bw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-        bw.visit(52, ACC_PUBLIC + ACC_SUPER, blockClassName, null, "Block", null);
+        bw.visit(52, ACC_PUBLIC + ACC_SUPER, blockNode.getName(), null, "Block", null);
+
+        scope = blockNode.getScope();
+
+        // Add fields for storing closure variables
+        for (VarDeclNode decl : blockNode.getScope().values()) {
+            FieldVisitor fv = bw.visitField(ACC_PUBLIC, decl.getName(), OBJ, null, null);
+            fv.visitEnd();
+        }
 
         // Plain constructor.
         mv = bw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
@@ -197,15 +206,28 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
 
         // RESTORE the reference to the parent method as the current method
         mv = parentMethod;
+        scope = parentScope;
 
         // Create a new instance of our closure class
-        newObject(blockClassName);
+        newObject(blockNode.getName());
+
+        // Fill the closure instance fields with values from our scope
+        for (VarDeclNode copy : blockNode.getScope().values()) {
+            try {
+                VarDeclNode original = scope.getVarDeclNode(copy.getName());
+                mv.visitInsn(DUP);
+                loadFromDecl(original);
+                mv.visitFieldInsn(PUTFIELD, ((BlockNode) copy.getScope().getNode()).getName(), copy.getName(), OBJ);
+            } catch (VariableNotDeclaredException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     @Override
     public void visit(SendNode sendNode) {
         super.visit(sendNode);
-        
+
         MethodType bmt = MethodType.methodType(
                 CallSite.class,
                 MethodHandles.Lookup.class,
@@ -237,17 +259,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         String var = assignNode.getVariable().getName();
         try {
             VarDeclNode decl = scope.getVarDeclNode(var);
-            
-            if (decl.isMethodVariable()) {
-                mv.visitInsn(DUP);
-                mv.visitVarInsn(ASTORE, decl.getOffset());
-            } else if (decl.isClassField()) {
-                mv.visitVarInsn(ALOAD, 0);
-                mv.visitInsn(SWAP);
-                mv.visitFieldInsn(PUTFIELD, ((ClazzNode) decl.getScope().getNode()).getName(), decl.getName(), OBJ);
-            } else {
-                throw new UnknownVariableDeclarationLocation();
-            }
+            storeToDecl(decl);
         } catch (VariableNotDeclaredException e) {
             // This should not happen (ScopeChecker should have detected this and aborted compiling).
             e.printStackTrace();
@@ -321,14 +333,7 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
 
         try {
             VarDeclNode decl = scope.getVarDeclNode(name);
-            if (decl.isMethodVariable()) {
-                mv.visitVarInsn(ALOAD, decl.getOffset());
-            } else if (decl.isClassField()) {
-                mv.visitVarInsn(ALOAD, 0);
-                mv.visitFieldInsn(GETFIELD, ((ClazzNode) decl.getScope().getNode()).getName(), decl.getName(), OBJ);
-            } else {
-                throw new UnknownVariableDeclarationLocation();
-            }
+            loadFromDecl(decl);
         } catch (VariableNotDeclaredException e) {
             // Maybe it's a global?
 
@@ -345,15 +350,12 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
 
         super.visit(varRefNode);
     }
-    
+
     @Override
     public void visit(VarDeclNode varDeclNode) {
         // Initialize a variable to Nil.
         newObject("Nil");
-        mv.visitInsn(DUP);
-        mv.visitVarInsn(ASTORE, varDeclNode.getOffset());
-
-        super.visit(varDeclNode);
+        storeToDecl(varDeclNode);
     }
 
     private void newObject(String t) {
@@ -367,6 +369,39 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         mv.visitInsn(DUP);
         mv.visitLdcInsn(value);
         mv.visitMethodInsn(INVOKESPECIAL, t, "<init>", "(Ljava/lang/String;)V", false);
+    }
+
+    private void loadFromDecl(VarDeclNode decl) {
+        if (decl.isMethodVariable()) {
+            mv.visitVarInsn(ALOAD, decl.getOffset());
+        } else if (decl.isClassField()) {
+            mv.visitVarInsn(ALOAD, 0);
+            mv.visitFieldInsn(GETFIELD, ((ClazzNode) decl.getScope().getNode()).getName(), decl.getName(), OBJ);
+        } else if (decl.isClosureCopy()) {
+            mv.visitVarInsn(ALOAD, 0);
+            mv.visitFieldInsn(GETFIELD, ((BlockNode) decl.getScope().getNode()).getName(), decl.getName(), OBJ);
+        } else {
+            throw new UnknownVariableDeclarationLocation();
+        }
+    }
+
+    private void storeToDecl(VarDeclNode decl) {
+        if (decl.isMethodVariable()) {
+            mv.visitInsn(DUP);
+            mv.visitVarInsn(ASTORE, decl.getOffset());
+        } else if (decl.isClassField()) {
+            mv.visitInsn(DUP);
+            mv.visitVarInsn(ALOAD, 0);
+            mv.visitInsn(SWAP);
+            mv.visitFieldInsn(PUTFIELD, ((ClazzNode) decl.getScope().getNode()).getName(), decl.getName(), OBJ);
+        } else if (decl.isClosureCopy()) {
+            mv.visitInsn(DUP);
+            mv.visitVarInsn(ALOAD, 0);
+            mv.visitInsn(SWAP);
+            mv.visitFieldInsn(PUTFIELD, ((BlockNode) decl.getScope().getNode()).getName(), decl.getName(), OBJ);
+        } else {
+            throw new UnknownVariableDeclarationLocation();
+        }
     }
 
     private static String mangle(String str) {

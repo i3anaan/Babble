@@ -42,6 +42,10 @@ public class BStr {
     public Object _eqeq_(Object that) {
         return BBool.of(equals(that));
     }
+    
+    public Object _bangeq_(Object that) {
+        return BBool.of(!equals(that));
+    }
 
     public Object _print() {
         System.out.println(str);
