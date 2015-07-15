@@ -14,7 +14,6 @@ sequence : (expr ('.'+ expr)*)? '.'? ;
 expr : rcv=expr method=ID                  # UnarySend
      | rcv=expr method=OPERATOR arg=expr   # InfixSend
      | rcv=expr (ID ':' subexpr)+          # KeywordSend
-     | (ID ':' subexpr)+                   # GlobalKeywordSend //TODO put in IRtree
      | ID ':=' expr                        # Assignment
      | subexpr                             # LoneExpr
      ;
@@ -26,7 +25,7 @@ subexpr : value=INTEGER                 # IntLit
         | NIL                           # NilLit
         | ID                            # VarRef
         | '#' ID                        # SymbolLit
-        | '[' (decl* '|')? sequence ']' # Block
+        | '[' sequence ']'              # Block
         | '{' (expr ',')* expr? '}'     # ArrayLit
         | '(' expr ')'                  # ParenExpr
         | decls                         # DeclExpr
@@ -34,8 +33,6 @@ subexpr : value=INTEGER                 # IntLit
         
 decls : '|' decl+ '|';
 decl : ID;
-
-//MAYBE: Add return statement (Currently last expression)
 
 TRUE : 'true';
 FALSE : 'false';

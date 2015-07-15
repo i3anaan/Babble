@@ -77,12 +77,8 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
 
     @Override
     public Node visitBlock(BlockContext ctx) {
-        List<VarRefNode> arguments = new ArrayList<>();
-        for (DeclContext node : ctx.decl()) {
-            arguments.add((VarDeclNode) visit(node));
-        }
         SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
-        return new BlockNode(sequence, arguments);
+        return new BlockNode(sequence);
     }
 
     @Override
@@ -106,13 +102,6 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     @Override
     public Node visitArrayLit(ArrayLitContext ctx) {
         return new ArrayNode(visitExprArguments(ctx.expr()));
-    }
-
-    @Override
-    public Node visitGlobalKeywordSend(GlobalKeywordSendContext ctx) {
-        String selector = buildSelector(ctx.ID());
-        List<ExprNode> arguments = visitExprArguments(ctx.subexpr());
-        return new SendNode(selector, arguments);
     }
 
     @Override
