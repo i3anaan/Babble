@@ -1,47 +1,29 @@
-package unit;
+package org.twnc;
 
 import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
 import junit.runner.Version;
-
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Lexer;
-import org.antlr.v4.runtime.TokenStream;
 import org.junit.Test;
 import org.twnc.App;
-import org.twnc.BabbleLexer;
-import org.twnc.BabbleParser;
 import org.twnc.backend.BytecodeGenerator;
 import org.twnc.compile.exceptions.CompileException;
-import org.twnc.compile.exceptions.TreeMergeException;
 import org.twnc.frontend.IntrospectionPass;
 import org.twnc.frontend.ScopeChecker;
-import org.twnc.irtree.ASTGenerator;
 import org.twnc.irtree.ASTVisitor;
 import org.twnc.irtree.BaseASTVisitor;
 import org.twnc.irtree.TreeMerger;
-import org.twnc.irtree.nodes.Node;
 import org.twnc.irtree.nodes.ProgramNode;
 import org.twnc.util.Graphvizitor;
 
 public class CompileTest {
     public static final String outDir = "target/test/temp";
-    public static final String testFilesDir = "src/test/bla/";
-
-    @Test
-    public void testJUnitVersion() {
-        assertEquals("4.12", Version.id());
-    }
+    public static final String testFilesDir = "src/test/bla/unitTests/";
     
     public List<String> getErrors(ProgramNode baseTree) {
         BaseASTVisitor visitor = null;
@@ -70,7 +52,7 @@ public class CompileTest {
         return tree1;
     }
     
-    public ProgramNode getTree(String filename) {
+    public ProgramNode buildTree(String filename) {
         try {
             return App.generateIRTree(new FileInputStream(testFilesDir + filename), filename);
         } catch (IOException e) {
@@ -78,7 +60,7 @@ public class CompileTest {
         }
     }
     
-    public ProgramNode getBaseTree() {
+    public ProgramNode buildBaseTree() {
         try {
             return App.generateIRTree(App.class.getResourceAsStream("Prelude.bla"), "Babble\\Prelude.bla");
         } catch (IOException e) {

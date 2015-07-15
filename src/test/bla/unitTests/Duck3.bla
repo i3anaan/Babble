@@ -1,0 +1,7 @@
+Duck extends:Rock [
+	queck [].
+].
+
+Rock [
+	harden [].
+].

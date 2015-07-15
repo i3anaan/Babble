@@ -100,7 +100,7 @@ public final class App {
         return program;
     }
     
-    public static ProgramNode generateIRTree(InputStream stream, String filename) throws IOException {
+    static ProgramNode generateIRTree(InputStream stream, String filename) throws IOException {
             CharStream chars = new ANTLRInputStream(stream);
             Lexer lexer = new BabbleLexer(chars);
             TokenStream tokens = new CommonTokenStream(lexer);

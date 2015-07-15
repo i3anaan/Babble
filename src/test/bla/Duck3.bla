@@ -1,3 +1,0 @@
-Duck extends:Rock [
-	Queck [].
-].
