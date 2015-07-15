@@ -50,8 +50,17 @@ public class ScopeChecker extends BaseASTVisitor {
 
     @Override
     public void visit(BlockNode blockNode) {
-        scopeStack.enterScope(blockNode);
-        blockNode.setScope(scopeStack.peek());
+        Scope blockScope = scopeStack.enterScope(blockNode);
+        blockNode.setScope(blockScope);
+
+        for (VarDeclNode decl : blockScope.flatten()) {
+            String name = decl.getName();
+            VarDeclNode newNode = new VarDeclNode(name);
+
+            newNode.setScope(blockScope);
+            blockScope.put(name, newNode);
+        }
+
         super.visit(blockNode);
         scopeStack.exitScope();
     }
