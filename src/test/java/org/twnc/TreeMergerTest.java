@@ -15,6 +15,22 @@ import org.twnc.irtree.nodes.ProgramNode;
 public class TreeMergerTest extends CompileTest {
     
     @Test
+    public void testDuplicateFieldSignature() {
+        ProgramNode tree = buildTree("Duck1.bla");
+        assertTrue(getErrors(tree).isEmpty());
+
+        BaseASTVisitor treeMerger = new TreeMerger(tree);
+        try {
+            buildTree("Duck2.bla").accept(treeMerger);
+            fail();
+        } catch (TreeMergeException e) {
+            assertFalse(treeMerger.getErrors().isEmpty());  
+            String error = treeMerger.getErrors().get(0);
+            assertEquals("[Duck1.bla - 2:1] - Duplicate Method declaration 'quack' at [Duck2.bla - 4:1]", error);  
+        }
+    }
+    
+    @Test
     public void testDuplicateMethodSignature() {
         ProgramNode tree = buildTree("Duck1.bla");
         assertTrue(getErrors(tree).isEmpty());
@@ -62,7 +78,6 @@ public class TreeMergerTest extends CompileTest {
 
     @Test
     public void testMerge() {
-        
         ProgramNode tree = buildBaseTree(); 
         assertTrue(getErrors(tree).isEmpty());
 
