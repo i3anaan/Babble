@@ -8,6 +8,8 @@ public class BlockNode extends ExprNode {
     private final SequenceNode sequence;
     private final List<VarRefNode> arguments;
 
+    private String name;
+
     public BlockNode(SequenceNode sequence, List<VarRefNode> arguments) {
         this.sequence = sequence;
         this.arguments = arguments;
@@ -19,6 +21,14 @@ public class BlockNode extends ExprNode {
     
     public SequenceNode getSequence() {
         return sequence;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

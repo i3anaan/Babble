@@ -6,7 +6,7 @@ import org.twnc.irtree.ASTVisitor;
 
 public class VarDeclNode extends VarRefNode {
     private int offset;
-    
+
     public VarDeclNode(String name) {
         super(name);
     }
@@ -25,6 +25,10 @@ public class VarDeclNode extends VarRefNode {
     
     public boolean isClassField() {
         return getScope().getNode() instanceof ClazzNode;
+    }
+
+    public boolean isClosureCopy() {
+        return getScope().getNode() instanceof BlockNode;
     }
     
     @Override

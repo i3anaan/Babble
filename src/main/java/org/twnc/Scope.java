@@ -2,6 +2,7 @@ package org.twnc;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.twnc.compile.exceptions.VariableNotDeclaredException;
@@ -81,5 +82,16 @@ public class Scope {
     
     public Node getNode() {
         return node;
+    }
+
+    /** Return a flattened view of all VarDecls in and above this Scope. */
+    public Collection<VarDeclNode> flatten() {
+        if (hasParentScope()) {
+            Collection<VarDeclNode> set = new HashSet<>(parent.flatten());
+            set.addAll(mapping.values());
+            return set;
+        } else {
+            return mapping.values();
+        }
     }
 }

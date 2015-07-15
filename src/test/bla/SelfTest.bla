@@ -12,6 +12,20 @@ Duck extends: Animal [
     quack   [ "Quack!" ].
 ].
 
+Light [
+    | on |.
+
+    isOn    [ nil != on ].
+    isOff   [ nil == on ].
+
+    turnOn  [ on := true ].
+    turnOff [ on := nil ].
+
+    asString [
+        this isOn ifTrue: [ "On!" ] ifFalse: [ "Off." ]
+    ].
+].
+
 Fielder [
     | x y |.
 ].
@@ -98,6 +112,64 @@ SelfTest [
 
     testNestedBlocks [
         ([ [ [ [ 10 ] value. ] value. ] value. ] value == 10) assert.
+    ].
+
+    testClosureRead [
+        | x |.
+
+        x := 10.
+
+        [ x == 10 ] value assert.
+    ].
+
+    testClosureWrite [
+        | a b |.
+
+        a := Light new.
+        b := Light new.
+
+        [ a turnOn ] value.
+
+        a isOn assert.
+        b isOff assert.
+    ].
+
+    testClosurePass [
+        | closure value |.
+
+        closure := this alpha.
+        value := this beta: closure.
+
+        (value == 10) assert.
+    ].
+
+    alpha [
+        | x |.
+        x := 10.
+        [ x ]
+    ].
+
+    beta: cls [
+        cls value.
+    ].
+
+    testClosureIncrementer [
+        | a b |.
+        a := this gamma.
+        b := this gamma.
+
+        (a value == 1) assert.
+        (a value == 2) assert.
+        (a value == 3) assert.
+
+        (b value == 1) assert.
+    ].
+
+    gamma [
+        | x |.
+        x := 0.
+
+        [ x := x + 1 ]
     ].
 
     testIf [
