@@ -1,0 +1,40 @@
+Room [
+	| occupant number |.
+
+	getNumber      [ number ].
+	setNumber: num [ number := num ].
+	isOccupied     [ nil != occupant ].
+	isFree         [ nil == occupant ].
+
+	asString [
+		"Room " + number asString.
+	].
+].
+
+Guest [
+	| name |.
+
+
+].
+
+Hotel [
+	main [
+		"Welcome to Hotel software!" print.
+		"" print.
+		"For listing of rooms, use command 'list'." print.
+		"For to check in, use command 'checkin'." print.
+		"For to check out, use command 'checkout'." print.
+		"For leave Hotel software, use 'quit'." print.
+		"" print.
+
+		this prompt.
+	].
+
+	prompt [
+		| input |.
+
+		input := System read.
+
+		input print.
+	].
+].
