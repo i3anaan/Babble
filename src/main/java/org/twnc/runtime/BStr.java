@@ -52,6 +52,10 @@ public class BStr {
         return this;
     }
 
+    public Object _class() {
+        return Core.newOpaqueClass();
+    }
+
     @Override
     public String toString() {
         return str;

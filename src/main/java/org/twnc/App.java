@@ -127,7 +127,6 @@ public final class App {
         }
         
         return Collections.emptyList();
-        
     }
     
     static ProgramNode generateIRTree(InputStream stream, String filename) throws IOException {
