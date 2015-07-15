@@ -20,10 +20,10 @@ import org.twnc.Scope;
 import org.twnc.compile.exceptions.CompileException;
 import org.twnc.compile.exceptions.UnknownVariableDeclarationLocation;
 import org.twnc.compile.exceptions.VariableNotDeclaredException;
-import org.twnc.irtree.BaseASTVisitor;
+import org.twnc.irtree.ASTBaseVisitor;
 import org.twnc.irtree.nodes.*;
 
-public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
+public class BytecodeGenerator extends ASTBaseVisitor implements Opcodes {
     private ProgramNode pn;
     private ClazzNode cn;
     private ClassWriter cw;

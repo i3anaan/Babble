@@ -2,6 +2,8 @@ package org.twnc.irtree.nodes;
 
 import org.twnc.irtree.ASTVisitor;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,10 @@ public class ProgramNode extends Node {
     public ProgramNode(List<ClazzNode> classes, Map<String, String> globals) {
         this.classes = classes;
         this.globals = globals;
+    }
+
+    public ProgramNode() {
+        this(new ArrayList<>());
     }
 
     public List<ClazzNode> getClasses() {
