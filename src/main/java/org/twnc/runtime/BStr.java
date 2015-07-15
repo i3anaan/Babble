@@ -20,15 +20,15 @@ public class BStr {
     }
 
     public Object _startsWith_(Object that) {
-        return BBool.of(str.startsWith(that.toString()));
+        return Core.newBool(str.startsWith(that.toString()));
     }
 
     public Object _endsWith_(Object that) {
-        return BBool.of(str.endsWith(that.toString()));
+        return Core.newBool(str.endsWith(that.toString()));
     }
 
     public Object _contains_(Object that) {
-        return BBool.of(str.contains(that.toString()));
+        return Core.newBool(str.contains(that.toString()));
     }
 
     public Object _replace_with_(Object search, Object replace) {
@@ -40,7 +40,7 @@ public class BStr {
     }
 
     public Object _eqeq_(Object that) {
-        return BBool.of(equals(that));
+        return Core.newBool(equals(that));
     }
     
     public Object _bangeq_(Object that) {

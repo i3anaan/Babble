@@ -1,5 +1,8 @@
 package org.twnc.runtime;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.invoke.*;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.reflect.InvocationTargetException;
@@ -130,6 +133,31 @@ public class Core {
     /** Return a new instance of the Nil Object. */
     public static Object newNil() {
         return construct("Nil");
+    }
+
+    public static Object newBool(boolean b) {
+        return b ? newTrue() : newFalse();
+    }
+
+    public Object _failure() {
+        throw new AssertionError();
+    }
+
+    public Object _print_(Object object) {
+        System.out.println(object.toString());
+        return object;
+    }
+
+    public Object _read() {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+            return new BStr(reader.readLine());
+        } catch (IOException e) {
+            return Core.newNil();
+        }
+    }
+
+    public Object _class() {
+        return Core.newNil();
     }
 
     /**
