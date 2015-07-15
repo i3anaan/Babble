@@ -9,14 +9,16 @@ import java.util.Collections;
 import java.util.List;
 
 import junit.runner.Version;
+
 import org.junit.Test;
 import org.twnc.App;
 import org.twnc.backend.BytecodeGenerator;
 import org.twnc.compile.exceptions.CompileException;
-import org.twnc.frontend.IntrospectionPass;
+import org.twnc.frontend.GlobalsGenerator;
+import org.twnc.frontend.MetaclassGenerator;
 import org.twnc.frontend.ScopeChecker;
 import org.twnc.irtree.ASTVisitor;
-import org.twnc.irtree.BaseASTVisitor;
+import org.twnc.irtree.ASTBaseVisitor;
 import org.twnc.irtree.TreeMerger;
 import org.twnc.irtree.nodes.ProgramNode;
 import org.twnc.util.Graphvizitor;
@@ -26,14 +28,17 @@ public class CompileTest {
     public static final String testFilesDir = "src/test/bla/unitTests/";
     
     public List<String> getErrors(ProgramNode baseTree) {
-        BaseASTVisitor visitor = null;
+        ASTBaseVisitor visitor = null;
         new File(outDir).mkdirs();
         try {
             visitor = new Graphvizitor(outDir);
             baseTree.accept(visitor);
-    
-            visitor = new IntrospectionPass();
-            baseTree.accept(visitor);
+            
+            GlobalsGenerator globalsGen = new GlobalsGenerator();
+            baseTree.accept(globalsGen);
+
+            MetaclassGenerator metaclassGen = new MetaclassGenerator();
+            baseTree.accept(metaclassGen);
     
             visitor = new ScopeChecker();
             baseTree.accept(visitor);

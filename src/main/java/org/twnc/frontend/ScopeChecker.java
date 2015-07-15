@@ -5,13 +5,13 @@ import org.twnc.ScopeStack;
 import org.twnc.compile.exceptions.CompileException;
 import org.twnc.compile.exceptions.ScopeException;
 import org.twnc.compile.exceptions.VariableNotDeclaredException;
-import org.twnc.irtree.BaseASTVisitor;
+import org.twnc.irtree.ASTBaseVisitor;
 import org.twnc.irtree.nodes.*;
 
 /**
  * Checks and sets scopes in the AST.
  */
-public class ScopeChecker extends BaseASTVisitor {
+public class ScopeChecker extends ASTBaseVisitor {
     private ProgramNode program;
     private ScopeStack scopeStack;
     

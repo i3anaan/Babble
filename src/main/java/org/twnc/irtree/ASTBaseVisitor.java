@@ -8,10 +8,10 @@ import org.twnc.compile.exceptions.ScopeException;
 import org.twnc.irtree.nodes.*;
 
 /** An implementation of ASTVisitor that just crawls through the tree. */
-public class BaseASTVisitor extends ASTVisitor {
+public class ASTBaseVisitor extends ASTVisitor {
     private List<String> errors;
 
-    public BaseASTVisitor() {
+    public ASTBaseVisitor() {
         errors = new ArrayList<String>();
     }
 

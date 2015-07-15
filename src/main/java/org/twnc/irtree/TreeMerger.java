@@ -6,7 +6,7 @@ import org.twnc.irtree.nodes.ClazzNode;
 import org.twnc.irtree.nodes.MethodNode;
 import org.twnc.irtree.nodes.ProgramNode;
 
-public class TreeMerger extends BaseASTVisitor {
+public class TreeMerger extends ASTBaseVisitor {
     private ProgramNode baseTree;
     
     public TreeMerger(ProgramNode baseTree) {
