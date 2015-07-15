@@ -88,6 +88,11 @@ public class Core {
         return target.invokeWithArguments(args);
     }
 
+    public static Object call(String selector, Object[] args) throws Throwable {
+        MutableCallSite cs = new MutableCallSite(MethodType.genericMethodType(args.length));
+        return invoke(cs, selector, args);
+    }
+
     public static boolean check(Class klass, Object receiver) {
         Class<?> receiverClass = receiver.getClass();
         return receiverClass.equals(klass);
