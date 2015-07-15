@@ -122,6 +122,10 @@ SelfTest [
         [ x == 10 ] value assert.
     ].
 
+    testClosureThis [
+        ([ this add: 5 to: 6 ] value == 11) assert.
+    ].
+
     testClosureWrite [
         | a b |.
 
