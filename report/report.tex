@@ -68,13 +68,31 @@ feature specifying
 – Usage: how should the feature be used? Are there any typing or other restrictions?
 – Semantics: what does the feature do? How will it be executed?
 – Code generation: what kind of target code is generated for the feature?
-You may make use of your ANTLR grammar as a b
+You may make use of your ANTLR grammar ar as a basis for this description, but note that not every
+rule necessarily corresponds to a language feature
 
 \subsection{Defining classes}
 
 A Babble program is a collection of Babble classes.
 
-Unlike in Java, multiple classes can be defined in a single file, and a single class can be defined in multiple files (see section \ref{merge}).
+A class is defined by a name, an ID, a possible superclass and then opening brackets. Inside these brackets class fields can optionally be declared using a deceleration syntax. Following field declaration are the methods the class has that provide functionality.
+
+Example:
+\begin{quote}
+\begin{lstlisting}
+Duck extends:Animal [
+	| age hungry|.
+	
+	birthday [].
+	
+	eat: food [].
+].
+\end{lstlisting}
+\end{quote}
+
+Unlike in Java, multiple classes can be defined in a single file, and a single class can be defined in multiple files (see section \ref{merge}). A separate Java .class file is generated from each Babble class in the program (after merging), having declarations as fields and Babble methods as methods.
+
+As in Java, these classes do nothing when their methods are not being called. A program can be started from every class that has a Babble method with the name 'main', from here on other classes can be constructed and used in the program.
 
 \subsection{Sending messages}
 
@@ -84,7 +102,7 @@ There are three different kind of messages, each with their own syntax.
 \subsubsection{Unary messages}
 
 Unary messages are similar to unary operators from other languages, or zero-argument methods in Java.
-The following is an example of a unary message:
+The following is an example on how to send a unary message:
 
 \begin{quote}
 \begin{lstlisting}
@@ -92,8 +110,22 @@ true not.
 \end{lstlisting}
 \end{quote}
 
-This sends the 'not' message to the receiver, a True object.
+The syntax is straightforward, a 'not' message is to the receiver, a True object.
 The receiver will reply with a False object. In other words, this is a unary negation.
+
+An example on how a unary method that can receive unary messages would be defined can be given using the Duck example:
+
+\begin{quote}
+\begin{lstlisting}
+birthday [
+	age := age + 1.
+].
+\end{lstlisting}
+\end{quote}
+
+A method name is followed by brackets containing a list of expressions that will be executed in order, separated by dots. This method tells the Duck to increment it's age field by 1.
+
+Babble methods are translated into Java methods belonging to their corresponding class, Sent messages are converted into method calls.
 
 \subsubsection{Infix messages}
 
@@ -105,9 +137,11 @@ Infix messages have selectors that consist entirely of symbols (like `+', `=', o
 \end{lstlisting}
 \end{quote}
 
-Like other messages, infix messages have exactly one receiver, in this case 10.
-Infix messages also have exactly one argument, 20 here.
+Like other messages, infix messages have exactly one receiver, in this case the integer 10.
+Infix messages also have exactly one argument, the integer 20 here.
 Because 10 is not larger than 20, the result will be false.
+
+%TODO infix method declaration.
 
 \subsubsection{Keyword messages}
 
@@ -123,6 +157,30 @@ array at: 2 put: 10.
 \end{quote}
 
 This sends the message \texttt{at:put:} to the variable \texttt{array}, passing the 2 and 10 as arguments. This would place the number 10 at the third position inside the array.
+
+An example on how a keyword method that can receive keyword messages would be defined can again be given using the Duck example:
+
+\begin{quote}
+\begin{lstlisting}
+eat: food [
+	food consume.
+	hungry := false.
+].
+\end{lstlisting}
+\end{quote}
+
+The syntax of these methods is very like a unary method, the main difference in syntax is the colon at the end of the method name, followed by a name to which this argument can be referred inside the method. Multiple arguments would be defined using the following syntax:
+
+\begin{quote}
+\begin{lstlisting}
+eat: soup and: potatoes finishWith: dessert [].
+\end{lstlisting}
+\end{quote}
+
+Keyword methods can be used when a method needs to provide functionality based on input.
+Keyword methods are also translated into Java methods belonging to their corresponding class, yet just as keyword messages require arguments in Babble, they also take arguments of the stack in the Java bytecode.
+
+
 
 \subsubsection{Precedence}
 
