@@ -26,6 +26,18 @@ Light [
     ].
 ].
 
+Number [
+    | value |.
+    
+    set: newValue [
+        value := newValue.
+    ].
+    
+    get [
+        value.
+    ].
+].
+
 Fielder [
     | x y |.
 ].
@@ -170,6 +182,40 @@ SelfTest [
         x := 0.
 
         [ x := x + 1 ]
+    ].
+    
+    testRecursion [
+        field1 := 10.
+        this recursion.
+        (field1 == 0) assert.
+    ].
+    
+    recursion: value [
+        (value > 0) ifTrue: [
+            recursion: (value - 1).
+        ]
+    ].
+    
+    testCallByValue [
+        field2 := 40.
+        this setToFive: field2.
+        (field2 == 40) assert.
+        
+        field2 := Number new.
+        "Setting Number to 40" print.
+        field2 set 40.
+        "Set Number to 40" print.
+        this setNumberToFive: field2.
+        (field2 == 40) assert.
+    ].
+    
+    setToFive: variable [
+        variable := 5.
+    ].
+    
+    setNumberToFive: number [
+        "Setting number to 5..." print.
+        number set: 5.
     ].
 
     testIf [
