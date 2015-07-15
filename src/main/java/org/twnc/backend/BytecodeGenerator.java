@@ -166,13 +166,13 @@ public class BytecodeGenerator extends BaseASTVisitor implements Opcodes {
         MethodVisitor parentMethod = mv;
 
         ClassWriter bw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-        bw.visit(52, ACC_PUBLIC + ACC_SUPER, blockClassName, null, "org/twnc/runtime/BBlock", null);
+        bw.visit(52, ACC_PUBLIC + ACC_SUPER, blockClassName, null, "Block", null);
 
         // Plain constructor.
         mv = bw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
         mv.visitCode();
         mv.visitVarInsn(ALOAD, 0);
-        mv.visitMethodInsn(INVOKESPECIAL, "org/twnc/runtime/BBlock", "<init>", "()V", false);
+        mv.visitMethodInsn(INVOKESPECIAL, "Block", "<init>", "()V", false);
         mv.visitInsn(RETURN);
         mv.visitMaxs(0, 0);
         mv.visitEnd();

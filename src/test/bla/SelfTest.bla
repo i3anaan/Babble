@@ -138,10 +138,6 @@ SelfTest [
         (this arr at: 0 == #bar) not assert.
     ].
 
-    testArrayAtIfAbsent [
-        (this arr at: 2 ifAbsent: #eggs == #eggs) assert.
-    ].
-
     testArrayAtPut [
         | z |.
         z := { 1, 2, 3 }.

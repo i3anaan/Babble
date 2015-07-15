@@ -142,10 +142,21 @@ public class ASTGenerator extends BabbleBaseVisitor<Node> {
     
     @Override
     public Node visitUnaryMethod(UnaryMethodContext ctx) {
-        String selector = ctx.ID().getText();
+        String selector = ctx.method.getText();
         SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
 
         return new MethodNode(selector, sequence);
+    }
+
+    @Override
+    public Node visitInfixMethod(InfixMethodContext ctx) {
+        String selector = ctx.method.getText() + ':';
+        SequenceNode sequence = (SequenceNode) visit(ctx.sequence());
+
+        VarDeclNode arg = new VarDeclNode(ctx.arg.getText());
+        setLocation(arg, ctx.arg.ID().getSymbol());
+
+        return new MethodNode(selector, Arrays.asList(arg), sequence);
     }
 
     @Override

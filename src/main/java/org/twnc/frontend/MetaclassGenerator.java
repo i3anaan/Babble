@@ -39,12 +39,12 @@ public class MetaclassGenerator extends BaseASTVisitor {
         methods.add(new MethodNode("new", new SequenceNode(new LiteralNode(LiteralNode.Type.CLASS, clazz.getName()))));
         methods.add(new MethodNode("name", new SequenceNode(new LiteralNode(LiteralNode.Type.STRING, clazz.getName()))));
         methods.add(new MethodNode("methods", new SequenceNode(new ArrayNode(selectors))));
-        methods.add(new MethodNode("class", new SequenceNode(new LiteralNode(LiteralNode.Type.CLASS, "org/twnc/runtime/BClass"))));
+        methods.add(new MethodNode("class", new SequenceNode(new LiteralNode(LiteralNode.Type.CLASS, "Class"))));
 
         // Add the metaclass to the program
         String className = clazz.getName();
         String metaclassName = className + "Class";
-        metaclasses.add(new ClazzNode(metaclassName, "org/twnc/runtime/BClass", new DeclsNode(), methods));
+        metaclasses.add(new ClazzNode(metaclassName, "Class", new DeclsNode(), methods));
         globals.put(className, metaclassName);
 
         // Add a 'class' method to the original class

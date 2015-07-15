@@ -15,13 +15,6 @@ public class BArray extends ArrayList<Object> {
         return Core.nilOf(get(((Number) index).intValue()));
     }
 
-    public Object _at_ifAbsent_(Object index, Object defaultValue) {
-        Object value = get(((Number) index).intValue());
-        boolean missing = (value == null) || (value instanceof BNil);
-
-        return missing ? defaultValue : value;
-    }
-
     public Object _at_put_(Object index, Object value) {
         set(((Number) index).intValue(), value);
         return value;
