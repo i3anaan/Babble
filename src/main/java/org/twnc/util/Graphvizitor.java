@@ -75,7 +75,6 @@ public class Graphvizitor extends ASTBaseVisitor {
     @Override
     public void visit(BlockNode node) {
         makeNode(node);
-        makeEdges(node, node.getArguments());
         makeEdge(node, node.getSequence());
         super.visit(node);
     }

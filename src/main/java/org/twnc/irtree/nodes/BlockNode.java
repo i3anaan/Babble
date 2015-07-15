@@ -6,17 +6,11 @@ import java.util.List;
 
 public class BlockNode extends ExprNode {
     private final SequenceNode sequence;
-    private final List<VarRefNode> arguments;
 
     private String name;
 
-    public BlockNode(SequenceNode sequence, List<VarRefNode> arguments) {
+    public BlockNode(SequenceNode sequence) {
         this.sequence = sequence;
-        this.arguments = arguments;
-    }    
-    
-    public List<VarRefNode> getArguments() {
-        return arguments;
     }
     
     public SequenceNode getSequence() {
