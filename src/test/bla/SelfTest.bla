@@ -192,7 +192,7 @@ SelfTest [
     
     recursion: value [
         (value > 0) ifTrue: [
-            recursion: (value - 1).
+            this recursion: (value - 1).
         ]
     ].
     
