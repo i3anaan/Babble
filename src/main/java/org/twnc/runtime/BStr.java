@@ -44,7 +44,7 @@ public class BStr {
     }
     
     public Object _bangeq_(Object that) {
-        return BBool.of(!equals(that));
+        return Core.newBool(!equals(that));
     }
 
     public Object _print() {
