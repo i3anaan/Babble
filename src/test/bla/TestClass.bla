@@ -1,0 +1,56 @@
+Animal [
+    canSwim [ false ].
+].
+
+Duck extends: Animal [
+    canSwim [ true ].
+    quack   [ "Quack!" ].
+].
+
+SelfTest [
+    testDuck [
+        | bob |.
+        bob := Duck new.
+
+        (bob class name == "Duck") assert.
+        (bob quack == "Quack!") assert.
+        (bob canSwim) assert.
+    ].
+
+    testRedefineDuck [
+        | Duck |.
+        Duck := 10.
+        (Duck == 10) assert.
+    ].
+    
+    testMetaclassName [
+        (true class name == "True") assert.
+        (true class class name == "Class") assert.
+        (true class class class name == "Class") assert.
+    ].
+
+    testRespondsTo [
+        (this class respondsTo:"main") assert.
+        (this class respondsTo:"bogusMethod") not assert.
+    ].
+    testClassMerging [
+        this isTrue assert.
+        this isFalse not assert.
+    ].
+
+    testNew [
+        (true class new) assert.
+    ].
+    
+    /* Uses TestMerge.bla */
+    testClassMergingAssign [
+        this separatedAssign.
+        field1 assert.
+        field2 not assert.
+    ].
+    
+    /* Uses TestMerge.bla */
+    testClassMergingFields [
+        field3 := 10.
+    ].
+].

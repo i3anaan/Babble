@@ -1,0 +1,83 @@
+SelfTest [
+    testAssert [
+        true assert.
+        false not assert.
+    ].
+
+    testEmptyMethod [
+        (this emptyMethod == nil) assert.
+    ].
+
+    emptyMethod [].
+
+    testOr [
+        true or:true assert.
+        true or:false assert.
+        false or:true assert.
+        false or:false not assert.
+    ].
+
+    testAnd [
+        true and:true assert.
+        true and:false not assert.
+        false and:true not assert.
+        false and:false not assert.
+    ].
+
+    testAsString [
+        (true asString == "true") assert.
+        (false asString == "false") assert.
+    ].
+
+    testMaths [
+        (10 == 10) assert.
+        (10 > 5) assert.
+        (10 negate == -10) assert.
+        (10 + 10 == 20) assert.
+        (-5 == (5 - 10)) assert.
+        (20 / 10 == 2) assert.
+        (3 + 4 * 5 == 35) assert.
+        (3 + (4 * 5) == 23) assert.
+        (-10 abs == 10) assert.
+    ].
+
+    testStrings [
+        ("hello" == "hello") assert.
+        ("WORLD" lower == "world") assert.
+        ("con" + "cat" + "e" + "nation" == "concatenation") assert.
+        ("string replacement" replace: "re" with: "dis" == "string displacement") assert.
+    ].
+
+    testSymbols [
+        (#Monday == #Monday) assert.
+        (#Monday asString == "#Monday") assert.
+        (#Tuesday asString == "#Tuesday") assert.
+        (#Monday asInt != #Tuesday asInt) assert.
+        (#Monday asInt == #Monday asInt) assert.
+    ].
+
+    testThis [
+        this someMethod assert.
+    ].
+
+    someMethod [
+        true.
+    ].
+
+    testAdd [
+        (this add:10 to:20 == 30) assert.
+    ].
+
+    add:left to:right [
+        left + right.
+    ].
+
+    testBlocks [
+        [ true ] value assert.
+        [ false ] value not assert.
+    ].
+
+    testNestedBlocks [
+        ([ [ [ [ 10 ] value. ] value. ] value. ] value == 10) assert.
+    ].
+].
