@@ -1,4 +1,4 @@
-Duck [
+DuckSemanticError [
     | age hunger name kids |.
     
     born [
@@ -16,7 +16,7 @@ Duck [
     ].
     
     +: with [
-        (with class name == "Duck") ifTrue: [ Duck new. ].
+        (with class name == "Duck") ifTrue: [ DuckSemanticError new. ].
     ].
     
     setName: newName [
@@ -44,49 +44,7 @@ Duck [
     ].
     
     main [
-        | dad mom input hunger food |.
-        "Duck simulator 2000" print.
-        dad := Duck new.
-        dad born.
-        mom := Duck new.
-        mom born.
-        "Enter a name for the daddy duck." print.
-        dad setName: (System read).
-        "Enter a name for the mommy duck." print.
-        mom setName: (System read).
-        
-        hunger := dad getHunger.
-        ("Daddy hunger: " + hunger) print.
-        this addKids: dad with: mom.
-        
-        hunger := dad getHunger.
-        ("Daddy hunger: " + hunger) print.
-        
-        food := Food new.
-        food addCal: 4.
-        
-        "Feed daddy? y/n" print. 
-        input := (System read).
-        
-        (input == "y") ifTrue: [
-            dad eat: food.
-        ].
-        
-        hunger := dad getHunger.
-        ("Daddy hunger: " + hunger) print.
-        
-        "Feed daddy again? y/n" print. 
-        input := (System read).
-        
-        (input == "y") ifTrue: [
-            dad eat: food.
-        ].
-        
-        
-        hunger := dad getHunger.
-        ("Daddy hunger: " + hunger) print.
-        
-        "End of Duck simlutaion." print.
+        "woof woof!" print.
     ].
     
     addKids: daddy with: mommy [

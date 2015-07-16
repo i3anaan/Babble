@@ -1,14 +1,15 @@
-Duck [
+DuckSyntaxIncorrect [
     | age hunger name kids |.
     
     born [
-        age := 0.
+        age = 0.
         hunger := 0.
         kids := {}.
     ].
     
     birthday [
         age := (age + 1).
+        lolol := 5.
     ].
     
     eat: food [
@@ -16,7 +17,7 @@ Duck [
     ].
     
     +: with [
-        (with class name == "Duck") ifTrue: [ Duck new. ].
+        (with class name == "Duck") ifTrue: [ DuckSyntaxIncorrect new. ].
     ].
     
     setName: newName [
@@ -46,9 +47,9 @@ Duck [
     main [
         | dad mom input hunger food |.
         "Duck simulator 2000" print.
-        dad := Duck new.
+        dad := DuckSyntaxIncorrect new.
         dad born.
-        mom := Duck new.
+        mom := DuckSyntaxIncorrect new.
         mom born.
         "Enter a name for the daddy duck." print.
         dad setName: (System read).
@@ -93,6 +94,7 @@ Duck [
         | input duck kidCount |.
         "Have a little duck? y/n" print. 
         input := (System read).
+        | input |.
         
         (input == "y") ifTrue: [
             duck := (daddy + mommy).

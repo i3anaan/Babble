@@ -1,8 +1,8 @@
-Duck [
+DuckRunTimeError [
     | age hunger name kids |.
     
     born [
-        age := 0.
+        age = 0.
         hunger := 0.
         kids := {}.
     ].
@@ -16,7 +16,7 @@ Duck [
     ].
     
     +: with [
-        (with class name == "Duck") ifTrue: [ Duck new. ].
+        (with class name == "Duck") ifTrue: [ DuckRunTimeError new. ].
     ].
     
     setName: newName [
@@ -46,10 +46,9 @@ Duck [
     main [
         | dad mom input hunger food |.
         "Duck simulator 2000" print.
-        dad := Duck new.
-        dad born.
-        mom := Duck new.
-        mom born.
+        "Here Duck born is not called." print.
+        dad := DuckRunTimeError new.
+        mom := DuckRunTimeError new.
         "Enter a name for the daddy duck." print.
         dad setName: (System read).
         "Enter a name for the mommy duck." print.
@@ -96,7 +95,6 @@ Duck [
         
         (input == "y") ifTrue: [
             duck := (daddy + mommy).
-            duck born.
             daddy increaseHunger.
             mommy addKid: duck.
             kidCount := (mommy getKidsSize asString).
