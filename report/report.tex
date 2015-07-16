@@ -104,9 +104,6 @@ There are three different kind of methods, each having slight variations on the 
 
 Babble methods are translated into Java methods belonging to their corresponding class.
 
-%TODO call by reference?
-%TODO behaviour of methods
-%TODO return values
 
 \subsubsection{Unary methods}
 
@@ -158,8 +155,12 @@ This method would return a new Duck when the original Duck is with another Duck.
 
 \subsection{Sending messages}
 
-The only way to have a Babble program do anything useful is by sending messages to objects.
-There are three different kind of messages, each with their own syntax.
+The only way to have a Babble program do anything useful is by sending messages to objects, these messages can be seen as calling a method. Sending a message always returns a value, this is the value of the last expression that was executed in that method. Empty methods return a Nil object.
+
+Since Babble is duck typed, there is no compile-time checking whether or not a message send to an object is appropriate. At runtime the message is send to an object. If the object has a method to handle the message everything goes well, in the other case an error occurs if the object does not have a method defined to handle the message sent.
+
+There are again three different kind of messages, each with their own syntax.
+
 
 \subsubsection{Unary messages}
 
