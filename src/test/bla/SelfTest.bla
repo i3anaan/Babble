@@ -332,6 +332,19 @@ SelfTest [
     testArrayAsString [
         ({1, 2, 3} asString == "[1, 2, 3]") assert.
     ].
+    
+    testArrayMixed [
+        | int str duck sym array |.
+        int := 0.
+        str := "one".
+        duck := Duck new.
+        sym := #three.
+        array := {int, str, duck, sym}.
+        (array at: 0 == int) assert.
+        (array at: 1 == str) assert.
+        (array at: 2 class name == "Duck") assert.
+        (array at: 3 == sym) assert.
+    ].
 
     testMetaclassName [
         (true class name == "True") assert.

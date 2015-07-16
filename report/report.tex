@@ -282,7 +282,7 @@ Symbols are written using a hash sign followed by a name, for example: \verb|#fo
 
 \subsubsection{Arrays}
 
-Babble offers support for arrays. Arrays can contain any number of objects and grow or shrink automatically when needed. All the objects in the array are required to have the same type, yet the type of objects is only known at runtime, resulting in no compile-time checking of type similarity. The syntax for array literals is \verb|{1, 2, 3}|, \verb|{#one, #two, #three}| or curly brackets with any other type of objects.
+Babble offers support for arrays. Arrays can contain any number of objects and grow or shrink automatically when needed and can even contain elements of multiple types. The syntax for array literals is \verb|{1, 2, 3}|, \verb|{#one, "bob", Duck new}| or curly brackets with any other type of objects.
 
 Standard methods for arrays are:
 \verb|{at:, at: put:, size, isEmpty, notEmpty, add:, addAll:,|
