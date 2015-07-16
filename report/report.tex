@@ -155,6 +155,7 @@ Infix methods probably have the syntax most deviating from the general syntax. I
 \end{quote}
 This method would return a new Duck when the original Duck is with another Duck.
 
+
 \subsection{Sending messages}
 
 The only way to have a Babble program do anything useful is by sending messages to objects.
@@ -173,8 +174,6 @@ true not.
 
 The syntax is straightforward, a 'not' message is to the receiver, a True object.
 The receiver will reply with a False object. In other words, this is a unary negation.
-
-
 
 \subsubsection{Keyword messages}
 
@@ -210,14 +209,20 @@ Because 10 is not larger than 20, the result will be false.
 
 \subsubsection{Precedence}
 
-Unary messages have the highest precedence, followed by infix messages, followed by keyword messages. Expressions are evaluated `from left to right'.
+Unary messages have the highest precedence, followed by infix messages, followed by keyword messages. Expressions are evaluated `from left to right'. Precedence can be forced using parenthesis, this can be necessary when having to send a message before applying the result:
+\begin{quote}
+\begin{lstlisting}
+this class name == (that class name)
+\end{lstlisting}
+\end{quote}
+If you leave out the parenthesis, the first class name would be compared to 'that' and the class name of the result of that expression (true or false) would be the value of the entire expression.
 
 There are no special exceptions for `arithmetic' operators: all infix messages share the same precedence.
-For example, \texttt{5 + 10 * 2} evaluates to 30.
+For example, \texttt{5 + 10 * 2} evaluates to 30, not 25.
 To calculate $5 + 10 \times 2$ one would write \texttt{5 + (10 * 2)}.
 
 The precedence rules from arithmetic make sense when doing arithmetic, but since Babble allows classes to provide their own infix methods, the symbols from arithmetic can be used in any context.
-For example, `+' is used for string concatenation.
+For example, `+' is used for string concatenation but also for Duck mating in the Duck example.
 The asterisk could  be used as a string repeat method.
 In that context, Babble will evaluate an expression like \texttt{"Hello" + "World" * 2} as "HelloWorldHelloWorld": in other words, left to right.
 
