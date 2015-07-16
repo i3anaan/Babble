@@ -10,6 +10,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Intermediate compilation step that generates metaclasses for every Babble
+ * class.
+ *
+ * Metaclasses allow Babble code some measure of introspection. They are the
+ * classes of which you get an instance when you call the 'class' method of
+ * an object.
+ *
+ * Also adds the names of the classes to the globals table: 'Duck' will get
+ * you an instance of the generated DuckClass metaclass, allowing you to do
+ * e.g. 'Duck new'.
+ */
 public class MetaclassGenerator extends ASTBaseVisitor {
     private List<ClazzNode> metaclasses;
     private Map<String, String> globals;
