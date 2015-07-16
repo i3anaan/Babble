@@ -25,11 +25,11 @@ public class BArray extends ArrayList<Object> {
     }
 
     public Object _isEmpty() {
-        return BBool.of(isEmpty());
+        return Core.newBool(isEmpty());
     }
 
     public Object _notEmpty() {
-        return BBool.of(!isEmpty());
+        return Core.newBool(!isEmpty());
     }
 
     public Object _add_(Object value) {
@@ -51,7 +51,7 @@ public class BArray extends ArrayList<Object> {
     }
 
     public Object _includes_(Object value) {
-        return BBool.of(contains(value));
+        return Core.newBool(contains(value));
     }
 
     public Object _reverse() {

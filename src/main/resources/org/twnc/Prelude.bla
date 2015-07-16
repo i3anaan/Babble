@@ -1,36 +1,40 @@
-True extends:org\twnc\runtime\BTrue [
+Bool [
+    asBool [ this ].
+    value  [ this ].
+
+    ==: that [ that class name == this class name ].
+    !=: that [ that class name != this class name ].
+].
+
+True extends:Bool [
     asString [ "true" ].
     asInt    [ 1 ].
-    asBool   [ true ].
 
     not      [ false ].
     hashCode [ 1 ].
 
-    ifTrue: block        [ block value. ].
-    ifFalse: block       [ nil ].
-    ifTrue: t ifFalse: f [ t value. ].
-
-    ==: that [ that class name == "True". ].
-    !=: that [ that class name != "True". ].
-
     and: that [ that ].
     or:  that [ this ].
+
+    assert    [ true ].
+
+    ifTrue: block        [ block value ].
+    ifFalse: block       [ nil ].
+    ifTrue: t ifFalse: f [ t value ].
 ].
 
-False extends:org\twnc\runtime\BFalse [
+False extends:Bool [
     asString [ "false" ].
     asInt    [ 0 ].
-    asBool   [ false ].
 
     not      [ true ].
     hashCode [ 0 ].
 
+    assert    [ System failure ].
+
     ifTrue: block        [ nil ].
     ifFalse: block       [ block value ].
     ifTrue: t ifFalse: f [ f value. ].
-
-    ==: that [ that class name == "False". ].
-    !=: that [ that class name != "False". ].
 
     and: that [ this ].
     or:  that [ that ].

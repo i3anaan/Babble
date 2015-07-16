@@ -13,6 +13,7 @@ public class GlobalsGenerator extends ASTBaseVisitor {
         globals.put("true", "True");
         globals.put("false", "False");
         globals.put("nil", "Nil");
+        globals.put("System", "org/twnc/runtime/Core");
         super.visit(programNode);
     }
 }

@@ -16,7 +16,7 @@ public class BSymbol {
     }
 
     public Object _eqeq_(Object that) {
-        return BBool.of(equals(that));
+        return Core.newBool(equals(that));
     }
 
     public Object _class() {

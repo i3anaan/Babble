@@ -1,8 +1,12 @@
 package org.twnc.runtime;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.invoke.*;
 import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Scanner;
 
 public class Core {
     private static final MethodType INVOKE_TYPE =
@@ -130,6 +134,29 @@ public class Core {
     /** Return a new instance of the Nil Object. */
     public static Object newNil() {
         return construct("Nil");
+    }
+
+    public static Object newBool(boolean b) {
+        return b ? newTrue() : newFalse();
+    }
+
+    public Object _failure() {
+        throw new AssertionError();
+    }
+
+    public Object _print_(Object object) {
+        System.out.println(object.toString());
+        return object;
+    }
+
+    public Object _read() {
+        Scanner scanner = new Scanner(System.in);
+        // Scanner is not closed since this would also close System.in.
+        return new BStr(scanner.nextLine());
+    }
+
+    public Object _class() {
+        return Core.newNil();
     }
 
     /** Return a new instance of the Nil Object. */
