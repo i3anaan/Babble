@@ -57,9 +57,17 @@ It is a (run-time) error if a receiving object does not understand a message.
 Like Smalltalk, Babble has the concept of blocks: pieces of code that can be passed as values.
 Blocks can take arguments, and will also do lambda closure.
 
-\section{Problems and solutions.}
+\section{Problems and solutions}
 Summary of problems you encountered and how you solved them (max. two
 pages).
+\subsection{ASM?}
+\subsection{Global methods}
+\subsection{Passing method arguments}
+\subsection{Lambda closure}
+\subsection{Multiple files}
+Since Babble does not have a lot of special keywords or statements, a large part of what is considered standard functionality is written in Prelude.bla, Babble code, instead. This file was to be included into every other Babble program. Our first solution was to simply concatenate Prelude.bla with the user's program but this appeared to cause confusion with locating errors (line numbers where off). A new solution was to generate separate IR trees, and merge them together. Using this, Babble can read any number of files and combine them into a single IR tree. An added benefit of this is that Babble supports spreading out defining a single class over multiple files. See \ref{merge} for a detailed description of the merging process.
+\subsection{While statement}
+From the beginning we knew that Babble would not have a special case for either if or while statements. This ment that we needed Babble to be powerfull enough to program our own if and while statements inside Babble. For if this was easy, just check the condition once and act on that. For while this proved to be more troublesome. While needed to be a recursive function on a Block, and due to the way the closure works on blocks, we could not just reassign a number (which is typically used a while condition (\verb|i < 10|)). To solve the issue of 2 closures having to be able to get and set each other's variables, we eventually created a while loop that makes use of get and set methods in the same class as the method in which the while loop is needed. While this does work, and does create a valid while loop, it is far from desirable. Our conclusion to this is: \begin{quote}Avoid having to use while loops in Babble, resort instead to using recursion. \end{quote}
 
 \section{Detailed language description}
 %TODO SCOPE!
