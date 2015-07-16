@@ -74,6 +74,11 @@ public class BStr {
         return this;
     }
 
+    /** Return this string itself. */
+    public Object _asString() {
+        return this;
+    }
+
     /** BInt does not have a Babble-visible metaclass. */
     public Object _class() {
         return Core.newOpaqueClass();
