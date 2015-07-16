@@ -86,6 +86,8 @@ Duck extends:Animal [
 	birthday [].
 	
 	eat: food [].
+	
+	+: with [].
 ].
 \end{lstlisting}
 \end{quote}
@@ -93,6 +95,65 @@ Duck extends:Animal [
 Unlike in Java, multiple classes can be defined in a single file, and a single class can be defined in multiple files (see section \ref{merge}). A separate Java .class file is generated from each Babble class in the program (after merging), having declarations as fields and Babble methods as methods.
 
 As in Java, these classes do nothing when their methods are not being called. A program can be started from every class that has a Babble method with the name 'main', from here on other classes can be constructed and used in the program.
+
+
+\subsection{Defining methods}
+
+Classes on themselves are quite empty, their functionality is defined inside methods defined in the class. The general syntax is a method name optionally followed by parameters and then a block containing a list of expressions to be executed in order.
+There are three different kind of methods, each having slight variations on the general syntax.
+
+Babble methods are translated into Java methods belonging to their corresponding class.
+
+%TODO call by reference?
+%TODO behaviour of methods
+%TODO return values
+
+\subsubsection{Unary methods}
+
+A unary method is a method without arguments, an example on how such a method would be defined can be given using the Duck example:
+
+\begin{quote}
+\begin{lstlisting}
+birthday [
+	age := age + 1.
+].
+\end{lstlisting}
+\end{quote}
+This method tells the Duck to increment it's age field by 1.
+
+\subsubsection{Keyword methods}
+A keyword method is a method with 1 or more arguments, an example on how such a method would be defined can be given using the Duck example:
+
+\begin{quote}
+\begin{lstlisting}
+eat: food [
+	food consume.
+	hungry := false.
+].
+\end{lstlisting}
+\end{quote}
+This method would tell the food it is consumed and then set the Duck's hungry status to false.
+
+The syntactical difference between unary and keyword methods is in the parameters that the method definition expects. After the name, parameters can be defined using a colon. The name given to the parameter can then be used inside the method body to refer to the value that would be passed as an argument. Following is an example of a multiple-parameter keyword method:
+
+\begin{quote}
+\begin{lstlisting}
+eat: soup and: potatoes finishWith: dessert [].
+\end{lstlisting}
+\end{quote}
+
+\subsubsection{Infix methods}
+
+Infix methods probably have the syntax most deviating from the general syntax. Infix method are defined using an operator instead of a identifier as name and always have 1 parameter. An example using the Duck class would be the following:
+
+\begin{quote}
+\begin{lstlisting}
++: with [
+	(with class name == "Duck") ifTrue: [ Duck new. ].
+].
+\end{lstlisting}
+\end{quote}
+This method would return a new Duck when the original Duck is with another Duck.
 
 \subsection{Sending messages}
 
@@ -113,19 +174,7 @@ true not.
 The syntax is straightforward, a 'not' message is to the receiver, a True object.
 The receiver will reply with a False object. In other words, this is a unary negation.
 
-An example on how a unary method that can receive unary messages would be defined can be given using the Duck example:
 
-\begin{quote}
-\begin{lstlisting}
-birthday [
-	age := age + 1.
-].
-\end{lstlisting}
-\end{quote}
-
-A method name is followed by brackets containing a list of expressions that will be executed in order, separated by dots. This method tells the Duck to increment it's age field by 1.
-
-Babble methods are translated into Java methods belonging to their corresponding class, Sent messages are converted into method calls.
 
 \subsubsection{Keyword messages}
 
@@ -142,27 +191,7 @@ array at: 2 put: 10.
 
 This sends the message \texttt{at:put:} to the variable \texttt{array}, passing the 2 and 10 as arguments. This would place the number 10 at the third position inside the array.
 
-An example on how a keyword method that can receive keyword messages would be defined can again be given using the Duck example:
 
-\begin{quote}
-\begin{lstlisting}
-eat: food [
-	food consume.
-	hungry := false.
-].
-\end{lstlisting}
-\end{quote}
-
-The syntax of these methods is very like a unary method, the main difference in syntax is the colon at the end of the method name, followed by a name to which this argument can be referred inside the method. Multiple arguments would be defined using the following syntax:
-
-\begin{quote}
-\begin{lstlisting}
-eat: soup and: potatoes finishWith: dessert [].
-\end{lstlisting}
-\end{quote}
-
-Keyword methods can be used when a method needs to provide functionality based on input.
-Keyword methods are also translated into Java methods belonging to their corresponding class, yet just as keyword messages require arguments in Babble, they also take arguments of the stack in the Java bytecode.
 
 \subsubsection{Infix messages}
 
@@ -177,17 +206,6 @@ Infix messages have selectors that consist entirely of symbols (like `+', `=', o
 Like other messages, infix messages have exactly one receiver, in this case the integer 10.
 Infix messages also have exactly one argument, the integer 20 here.
 Because 10 is not larger than 20, the result will be false.
-
-Just as keyword methods, custom infix methods can be defined by the user using a slightly different syntax:
-\begin{quote}
-\begin{lstlisting}
-==: that [ that class name == "True". ].
-\end{lstlisting}
-\end{quote}
-
-This syntax is almost identical to a single-argument keyword method, the difference being that instead of starting with a (alphabetical) name, an operator is given.
-
-%TODO infix method declaration.
 
 
 \subsubsection{Precedence}
