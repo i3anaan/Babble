@@ -152,6 +152,21 @@ Infix methods probably have the syntax most deviating from the general syntax. I
 \end{quote}
 This method would return a new Duck when the original Duck is with another Duck.
 
+\subsection{Declaring variables}
+Variables in Babble can be declared either as class fields or as local variables in a method. In any case, variables do not have a single type and this is thus not specified. An example would be as follows:
+\begin{quote}
+\begin{lstlisting}
+| variable1 variable2 |.
+\end{lstlisting}
+\end{quote}
+
+Both classes and methods can optionally declare variables (Although a variable has to be declared before it can be used!). For classes this has to be done before any method definition. In methods, variable declaration can be intertwined with expressions, as long as a variable is declared before usage. Multiple variable declarations of the same name are not allowed.
+
+While the syntax in classes and methods is the same for declaring variables, there is a difference in compiling. Variables declared in classes are added as fields to the JVM class, variables declared in methods are added as local variables to the JVM method.
+
+%TODO method arguments?
+%TODO closure variables?
+
 
 \subsection{Sending messages}
 
@@ -161,6 +176,7 @@ Since Babble is duck typed, there is no compile-time checking whether or not a m
 
 There are again three different kind of messages, each with their own syntax.
 
+%TODO main method -> How does our program start? This is currently touched upon in the class definition section.
 
 \subsubsection{Unary messages}
 
