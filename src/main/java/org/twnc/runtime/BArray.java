@@ -64,6 +64,10 @@ public class BArray extends ArrayList<Object> {
         return new BStr(toString());
     }
 
+    public Object _class() {
+        return Core.newOpaqueClass();
+    }
+
     @Override
     public String toString() {
         return Arrays.toString(toArray());

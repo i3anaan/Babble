@@ -19,6 +19,10 @@ public class BSymbol {
         return BBool.of(equals(that));
     }
 
+    public Object _class() {
+        return Core.newOpaqueClass();
+    }
+
     public boolean equals(Object that) {
         return that instanceof BSymbol && ((BSymbol)that).symbol.equals(this.symbol);
     }
