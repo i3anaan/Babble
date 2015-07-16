@@ -208,7 +208,7 @@ Infix messages also have exactly one argument, the integer 20 here.
 Because 10 is not larger than 20, the result will be false.
 
 
-\subsubsection{Precedence}
+\subsection{Precedence}
 
 Unary messages have the highest precedence, followed by infix messages, followed by keyword messages. Expressions are evaluated `from left to right'. Precedence can be forced using parenthesis, this can be necessary when having to send a message before applying the result:
 \begin{quote}
@@ -231,29 +231,42 @@ In that context, Babble will evaluate an expression like \texttt{"Hello" + "Worl
 
 Babble comes with a few built-in classes. Most of these are based on their counterparts in Java.
 
+%TODO Text explaining how these classes are created in Babble (ie: mix of Java classes and Prelude stuff). And how a Babble method call ends in a Java method call (ie: _eqeq_).
+
+%TODO common methods? asString?
+
 \subsubsection{Integers}
 
-Integer values in Babble can be arbitrarily large.
+Babble supports integers as the only type of number, they can be arbitrary large. Integers are created using a no-decimal number representation in the code. Negative integers can be written down using the conventional representation using a minus sign as a first character. Some examples:
+\verb|1|, \verb|8589934592| and \verb|-3|.
+
+Integers have standard methods for the following operators: \verb|{+, -, *, /, %, ==, >, >=, !=, <=}| with these having the expected effect. Additional methods \verb|{min, max, abs, negate, signum}| are also available as standard methods, each having the expected effect.
 
 \subsubsection{Strings}
 
-Babble has string literals. String literals are enclosed in double quotes, i.e. \verb|"Hello, world!"|.
+Babble has string literals. String literals are enclosed in double quotes, i.e. \verb|"Hello, world!"|. Strings have the following standard methods available:
+
+\verb|{upper, lower, starsWith, endsWith:, contains, replace: with:, +, ==, !=}|.
 
 \subsubsection{Symbols}
 
-Symbols are written as \verb|#foo|.
+Symbols are written using a hash-tag followed by a name, for example: \verb|#foo|. Symbols do not need to be declared and are neither integer or string, but there fully own type. Standard methods available for symbols:
+\verb|{asInt, asString, ==}|. AsInt exposes the internally used index from the symbol, asString returns the full name of the symbol (including the hash-tag) as a string.
 
 \subsubsection{Arrays}
 
-The syntax for array literals is \verb|{1, 2, 3}|.
+Babble offers support for arrays. Arrays can contain any number of objects and grow or shrink automatically when needed. All the objects in the array are required to have the same type, yet the type of objects is only known at runtime, resulting in no compile-time checking of type similarity. The syntax for array literals is \verb|{1, 2, 3}|, \verb|{#one, #two, #three}| or curly brackets with any other type of objects.
+
+Standard methods for arrays are:
+\verb|{at:, at: put:, size, isEmpty, notEmpty, add:, addAll:,|
+\verb|first, last,includes:, reverse, asString}|. Most of these are self explanatory, \verb|at:| gets an element at the given index. \verb|at: put:| Puts a value at a given index, overwriting the previous object at that index. \verb|add:| Adds an object to the end of the array.
+
 
 \subsubsection{Blocks}
 
 \subsection{Tips and tricks}
 
 \subsubsection{Using symbols as enumerations}
-
-
 
 \subsubsection{Using blocks as values}
 
