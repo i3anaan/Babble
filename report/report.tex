@@ -69,13 +69,6 @@ Blocks can take arguments, and will also do lambda closure.
 Babble uses call-by-reference and maintains a scope for variables, this is further augmented using the lambda closure of blocks.
 
 \section{Problems and solutions}
-Summary of problems you encountered and how you solved them (max. two
-pages).
-\subsection{ASM?}
-\subsection{Global methods}
-\subsection{Passing method arguments}
-\subsection{Lambda closure}
-\subsection{Multiple files}
 
 Since Babble does not have a lot of special keywords or statements, a large part of what is considered standard functionality is written in Prelude.bla, Babble code, instead. This file was to be included into every other Babble program. Our first solution was to simply concatenate Prelude.bla with the user's program but this caused confusion with locating errors (line numbers where off). A new solution was to generate separate IR trees, and merge them together. Using the TreeMerger class, Babble can read any number of files and combine them into a single IR tree. An added benefit of this is that Babble supports spreading out defining a single class over multiple files. See \ref{merge} for a detailed description of the merging process.
 
@@ -102,14 +95,6 @@ In Babble, most built-in classes are immutable, while references are always muta
 The above is not an issue when working with mutable values, like arrays, which work as expected. Still, because this behaviour could be confusing to people who are not used to programming in Babble (and there are many of those, us included), we recommend using recursion over using \texttt{whileTrue} construct.
 
 \section{Detailed language description}
-%A systematic description of the features of your language, for each
-%feature specifying
-%– Syntax, including one or more examples;
-%– Usage: how should the feature be used? Are there any typing or other restrictions?
-%– Semantics: what does the feature do? How will it be executed?
-%– Code generation: what kind of target code is generated for the feature?
-%You may make use of your ANTLR grammar ar as a basis for this description, but note that %not every
-%rule necessarily corresponds to a language feature
 
 \subsection{Classes}
 A Babble program is a collection of Babble classes.
@@ -373,10 +358,6 @@ This means that you can extend a class from multiple places in your program.
 \subsubsection{Adding methods to metaclasses}
 
 \section{Description of the software}
-%Summary of the JAVA classes you implemented; for instance, for symbol
-%table management, type checking, code generation, error handling, etc. In your description, rely
-%on the concepts and terminology you learned during the course, such as synthesised and inherited
-%attributes, tree listeners and visitors
 
 The program itself is a compiler that translates Babble source code into JVM bytecode.
 While the compiler does check whether variable names are defined, it can't (and won't try to) do any compile-time type checking.
@@ -418,13 +399,6 @@ The Babble compiler generates Java Virtual Machine bytecode using the ASM byteco
 \subsubsection{invokeDynamic}
 
 \section{Test plan and results}
-Discussion of the correctness test, using the criteria described in §B.5. You
-should provide a set of test programs demonstrating the correct functioning of your compiler. The test
-set should contain, next to programs testing the various language featurs, also programs containing
-syntactic, semantic or run-time errors.
-All tests should be provided as part of the zip-file. One test program should be included as an appendix
-in the report (see below).
-
 
 The Babble compiler itself is tested using unit tests, written in Java, while the runtime system is tested using integration tests, written in Babble.
 Both can be executed using Maven by running \texttt{mvn verify}.
@@ -443,7 +417,6 @@ Maven can also generate a graphical (HTML) report of the test results using \tex
 \section{ANTLR grammar}
 
 \input{grammar}
-%TODO UPDATE GRAMMAR!!?!?!?
 
 \label{visitor}
 \section{ANTLR tree visitor}
@@ -452,8 +425,6 @@ This tree visitor converts an ANTLR parse tree into our intermediate representat
 \input{visitor}
 
 \section{Extended test program}
-The listing of one (correct) extended test program, as well as the generated
-target code for that program and one or more example executions showing the correct functioning of the generated code.
 
 \end{appendices}
 
