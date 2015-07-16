@@ -1,7 +1,3 @@
-\title{Babble}
-\author{Wander Nauta (s1380893) \and Derk Snijders (s0000000) }
-\date{\today}
-
 \documentclass[a4paper]{article}
 
 \usepackage[sc]{mathpazo}
@@ -15,6 +11,8 @@
 \usepackage{listings}
 \usepackage{fancyvrb}
 \usepackage{titlesec}
+\usepackage{graphicx}
+\usepackage{titling}
 \usepackage{nag}
 \usepackage[margin=1.3in]{geometry}
 
@@ -33,8 +31,20 @@
 
 \begin{document}
 
+\title{Babble}
+\author{
+Wander Nauta (s1380893)\\
+Derk Snijders (s1299212)
+}
+\date{\today}
+
 \begin{titlepage}
-\maketitle
+\includegraphics[width=\textwidth]{cover}
+\vfill
+
+{\Huge \thetitle}
+
+\theauthor
 \end{titlepage}
 
 \tableofcontents
