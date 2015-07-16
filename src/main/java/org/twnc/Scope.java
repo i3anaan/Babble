@@ -9,6 +9,10 @@ import org.twnc.compile.exceptions.VariableNotDeclaredException;
 import org.twnc.irtree.nodes.Node;
 import org.twnc.irtree.nodes.VarDeclNode;
 
+/**
+ * Represents a Scope in which variables can be declared.
+ *
+ */
 public class Scope {
     /** Null for top-most Scopes. */
     private Scope parent;
@@ -18,6 +22,10 @@ public class Scope {
      * same Scope. Each Scope refers to the topmost Node in its Scope.
      */
     private Node node;
+    /**
+     * Links names of variables to their VarDeclNode (if they have one) in this
+     * Scope.
+     */
     private Map<String, VarDeclNode> mapping;
 
     public Scope(Scope parent, Node node) {
@@ -27,7 +35,8 @@ public class Scope {
     }
 
     /**
-     * Mutates decl, setting its offset.
+     * Puts the given VarDeclNode in the variable mapping, under the given name.
+     * This mutates decl, setting its offset.
      * @param name  key
      * @param decl  value
      * @return The newly put VarDeclNode.
@@ -37,6 +46,11 @@ public class Scope {
         return mapping.put(name, decl);
     }
 
+    /**
+     * @param name The name of the variable to get.
+     * @return The declaration belonging to the given name.
+     * @throws VariableNotDeclaredException When there is no declaration with the given name.
+     */
     public VarDeclNode getVarDeclNode(String name) throws VariableNotDeclaredException {
         Scope scope = this;
         while (scope != null) {
@@ -48,6 +62,10 @@ public class Scope {
         throw new VariableNotDeclaredException();
     }
 
+    /**
+     * @param name The name of the variable to check.
+     * @return Whether or not this Scope contains a declaration for the given variable.
+     */
     protected boolean contains(String name){
         Scope scope = this;
         while (scope != null) {

@@ -32,8 +32,14 @@ public final class App {
      * Starts the compilation of the files specified.
      * 
      * Makes use of cli to give feedback on how to use to run App.
-     * @param args Arguments as given by the java command.
-     * @throws IOException Exception thrown when something goes wrong compiling.
+     * 
+     * When multiple .bla files are given, all of them will be combined in a
+     * single Babble program.
+     * 
+     * @param args
+     *            Arguments as given by the java command.
+     * @throws IOException
+     *             Exception thrown when something goes wrong compiling.
      */
     public static void main(String[] args) throws IOException {
         Options options = new Options();
