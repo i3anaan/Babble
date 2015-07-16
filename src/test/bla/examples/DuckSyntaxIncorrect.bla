@@ -1,0 +1,124 @@
+DuckSyntaxIncorrect [
+    | age hunger name kids |.
+    
+    born [
+        age = 0.
+        hunger := 0.
+        kids := {}.
+    ].
+    
+    birthday [
+        age := (age + 1).
+        lolol := 5.
+    ].
+    
+    eat: food [
+        hunger := (hunger - (food consume)).
+    ].
+    
+    +: with [
+        (with class name == "Duck") ifTrue: [ DuckSyntaxIncorrect new. ].
+    ].
+    
+    setName: newName [
+        name := newName.
+    ].
+    
+    getName [
+        name.
+    ].
+    
+    addKid: kid [
+        kids add: kid.
+    ].
+    
+    getKidsSize [
+        kids size.
+    ].
+    
+    getHunger [
+        hunger.
+    ].
+    
+    increaseHunger [
+        hunger := (hunger + 10).
+    ].
+    
+    main [
+        | dad mom input hunger food |.
+        "Duck simulator 2000" print.
+        dad := DuckSyntaxIncorrect new.
+        dad born.
+        mom := DuckSyntaxIncorrect new.
+        mom born.
+        "Enter a name for the daddy duck." print.
+        dad setName: (System read).
+        "Enter a name for the mommy duck." print.
+        mom setName: (System read).
+        
+        hunger := dad getHunger.
+        ("Daddy hunger: " + hunger) print.
+        this addKids: dad with: mom.
+        
+        hunger := dad getHunger.
+        ("Daddy hunger: " + hunger) print.
+        
+        food := Food new.
+        food addCal: 4.
+        
+        "Feed daddy? y/n" print. 
+        input := (System read).
+        
+        (input == "y") ifTrue: [
+            dad eat: food.
+        ].
+        
+        hunger := dad getHunger.
+        ("Daddy hunger: " + hunger) print.
+        
+        "Feed daddy again? y/n" print. 
+        input := (System read).
+        
+        (input == "y") ifTrue: [
+            dad eat: food.
+        ].
+        
+        
+        hunger := dad getHunger.
+        ("Daddy hunger: " + hunger) print.
+        
+        "End of Duck simlutaion." print.
+    ].
+    
+    addKids: daddy with: mommy [
+        | input duck kidCount |.
+        "Have a little duck? y/n" print. 
+        input := (System read).
+        | input |.
+        
+        (input == "y") ifTrue: [
+            duck := (daddy + mommy).
+            duck born.
+            daddy increaseHunger.
+            mommy addKid: duck.
+            kidCount := (mommy getKidsSize asString).
+            ["Added kid: " + kidCount] value print.
+            this addKids: daddy with: mommy.
+        ] 
+     ].
+].
+
+Food [
+    | calories |.
+    
+    addCal: value [
+        calories := value.
+    ].
+    
+    consume [
+        | worth |.
+        worth := calories.
+        calories := 0.
+        worth.
+    ].
+].
