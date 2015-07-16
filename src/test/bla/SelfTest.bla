@@ -80,6 +80,7 @@ SelfTest [
         (10 > 5) assert.
         (10 negate == -10) assert.
         (10 + 10 == 20) assert.
+        (-5 == (5 - 10)) assert.
         (20 / 10 == 2) assert.
         (3 + 4 * 5 == 35) assert.
         (3 + (4 * 5) == 23) assert.
