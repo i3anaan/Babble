@@ -92,7 +92,7 @@ Example:
 \begin{quote}
 \begin{lstlisting}
 Duck extends:Animal [
-	| age hungry|.
+	| age hungry |.
 	
 	birthday [].
 	
@@ -107,11 +107,11 @@ Unlike in Java, multiple classes can be defined in a single file, and a single c
 
 \subsubsection{Using classes}
 \label{metaclass}
-After defining a Babble class, new objects of this class can be created. This is done by calling \verb|new| on the metaclass object belonging to that class. This will then instantiate a new object of the desired class.
+After defining a Babble class, new objects of this class can be created. This is done by calling \texttt{new} on the metaclass object belonging to that class. This will then instantiate a new object of the desired class.
 
-Besides the \verb|new| method, a metaclass object also has \verb|name methods| and \verb|respondsTo| methods. \verb|name| Returns the name of the class ("Duck"), \verb|methods| returns an array of strings containing the selectors of the methods that the class has. \verb|respondsTo| Can be used to check if a class has a method.
+Besides the \texttt{new} method, a metaclass object also has \texttt{name methods} and \texttt{respondsTo} methods. \texttt{name} Returns the name of the class ("Duck"), \texttt{methods} returns an array of strings containing the selectors of the methods that the class has. \texttt{respondsTo} Can be used to check if a class has a method.
 
-All Babble classes have a special unary method \verb|class|. This method returns a metaclass object representing the class. As an alternative, the name of a class can be used to directly refer to a metaclass object of it (\verb|Duck| as opposed to \verb|duckInstance class|).
+All Babble classes have a special unary method \texttt{class}. This method returns a metaclass object representing the class. As an alternative, the name of a class can be used to directly refer to a metaclass object of it (\texttt{Duck} as opposed to \texttt{duckInstance class}).
 
 
 \subsection{Defining methods}
@@ -179,7 +179,7 @@ Variables in Babble can be declared either as class fields or as local variables
 
 Both classes and methods can optionally declare variables (Although a variable has to be declared before it can be used!). For classes this has to be done before any method definition. In methods, variable declaration can be intertwined with expressions, as long as a variable is declared before usage. Multiple variable declarations of the same name are not allowed.
 
-Babble has 4 special variables, \verb|true, false, this| and \verb|nil|. True and false always create a new object of class True or False, this refers to the current object. Nil is a reference to a Nil object, Babble's equivalent of null, indicating the lack of value.
+Babble has 4 special variables, \texttt{true, false, this} and \texttt{nil}. True and false always create a new object of class True or False, this refers to the current object. Nil is a reference to a Nil object, Babble's equivalent of null, indicating the lack of value.
 %TODO explain how these are globally available (in software desc).
 
 While the syntax in classes and methods is the same for declaring variables, there is a difference in compiling. Variables declared in classes are added as fields to the JVM class, variables declared in methods are added as local variables to the JVM method.
@@ -275,34 +275,33 @@ Babble comes with a few built-in classes. Most of these are based on their count
 \subsubsection{Integers}
 
 Babble supports integers as the only type of number, they can be arbitrary large. Integers are created using a no-decimal number representation in the code. Negative integers can be written down using the conventional representation using a minus sign as a first character. Some examples:
-\verb|1|, \verb|8589934592| and \verb|-3|.
+\texttt{1}, \texttt{8589934592} and \texttt{-3}.
 
-As all the objects in Babble are classes, so are integers. An integer has standard methods for the following operators: \verb|{+, -, *, /, %, ==, >, >=, !=, <=}| with these having the expected effect. Additional methods \verb|{min:, max:, abs, negate, signum}| are also available as standard methods, each also having the expected effect.
+As all the objects in Babble are classes, so are integers. An integer has standard methods for the following operators: \texttt{+, -, *, /, \%, ==, >, >=, !=, <=} with these having the expected effect. Additional methods \texttt{min:, max:, abs, negate, signum} are also available as standard methods, each also having the expected effect.
 
 \subsection{Booleans}
-In Babble booleans can be created using \verb|true| or  \verb|false|, this creates a new object of class True or False respectively. Standard methods for booleans are
-\verb|{astString, asint, asBool, not, hashCode, ifTrue:, ifFalse:, ifTrue: ifFalse:,|
-\verb|==, !=, and:, or:, assert}|. Most of these are pretty self-explanatory, but there are some which deserve attention. \verb|ifTrue:| And \verb|ifFalse:| are the Babble equivalent of an if statement. Depending on which boolean (true or false) the block that is passed as argument gets executed or not. \verb|ifTrue: ifFalse:| Is Babble's equivalent of an if else statement, acting similar. \verb|assert| Asserts that the boolean on which this is called is true, offering a convenient way to do integration tests in Babble.
+In Babble booleans can be created using \texttt{true} or  \texttt{false}, this creates a new object of class True or False respectively. Standard methods for booleans are
+\texttt{astString, asint, asBool, not, hashCode, ifTrue:, ifFalse:, ifTrue: ifFalse:, ==, !=, and:, or:, assert}. Most of these are pretty self-explanatory, but there are some which deserve attention. \texttt{ifTrue:} And \texttt{ifFalse:} are the Babble equivalent of an if statement. Depending on which boolean (true or false) the block that is passed as argument gets executed or not. \texttt{ifTrue: ifFalse:} Is Babble's equivalent of an if else statement, acting similar. \texttt{assert} Asserts that the boolean on which this is called is true, offering a convenient way to do integration tests in Babble.
 
 
 \subsubsection{Strings}
 
-Babble has string literals. String literals are enclosed in double quotes, i.e. \verb|"Hello, world!"|. Strings have the following standard methods available:
+Babble has string literals. String literals are enclosed in double quotes, i.e. \texttt{"Hello, world!"}. Strings have the following standard methods available:
 
-\verb|{upper, lower, starsWith, endsWith:, contains, replace: with:, +, ==, !=}|.
+\texttt{upper, lower, starsWith, endsWith:, contains, replace: with:, +, ==, !=}.
 
 \subsubsection{Symbols}
 
-Symbols are written using a hash sign followed by a name, for example: \verb|#foo|. Symbols do not need to be declared and are neither integer or string, but there fully own type. Standard methods available for symbols:
-\verb|{asInt, asString, ==}|. AsInt exposes the internally used index from the symbol, asString returns the full name of the symbol (including the hash sign) as a string.
+Symbols are written using a hash sign followed by a name, for example: \texttt{\#foo}. Symbols do not need to be declared and are neither integer or string, but there fully own type. Standard methods available for symbols:
+\texttt{asInt, asString, ==}. AsInt exposes the internally used index from the symbol, asString returns the full name of the symbol (including the hash sign) as a string.
 
 \subsubsection{Arrays}
 
-Babble offers support for arrays. Arrays can contain any number of objects and grow or shrink automatically when needed and can even contain elements of multiple types. The syntax for array literals is \verb|{1, 2, 3}|, \verb|{#one, "bob", Duck new}| or curly brackets with any other type of objects.
+Babble offers support for arrays. Arrays can contain any number of objects and grow or shrink automatically when needed and can even contain elements of multiple types. The syntax for array literals is \texttt{1, 2, 3}, \texttt{\#one, "bob", Duck new} or curly brackets with any other type of objects.
 
 Standard methods for arrays are:
-\verb|{at:, at: put:, size, isEmpty, notEmpty, add:, addAll:,|
-\verb|first, last,includes:, reverse, asString}|. Most of these are self explanatory, \verb|at:| gets an element at the given index. \verb|at: put:| Puts a value at a given index, overwriting the previous object at that index. \verb|add:| Adds an object to the end of the array.
+\texttt{at:, at: put:, size, isEmpty, notEmpty, add:, addAll:,}
+\texttt{first, last,includes:, reverse, asString}. Most of these are self explanatory, \texttt{at:} gets an element at the given index. \texttt{at: put:} Puts a value at a given index, overwriting the previous object at that index. \texttt{add:} Adds an object to the end of the array.
 
 
 \subsubsection{Blocks}
@@ -311,10 +310,10 @@ Blocks can be seen as a group of several expression ordered into one object. Blo
 
 %TODO Empty Blocks return nothing, creating stack underflow.
 Blocks are defined using brackets, containing expressions. An example of this would be:
-\verb|[man setName: "bob". woman setName: "Alice".]|, setting the name of 2 people. (assuming 'man' and 'woman' are valid variables in the scope in which the block is defined.)
+\texttt{[man setName: "bob". woman setName: "Alice".]}, setting the name of 2 people. (assuming 'man' and 'woman' are valid variables in the scope in which the block is defined.)
 
 %TODO FIX WHILE.
-Blocks have 2 standard methods, namely \verb|value| and \verb|whileTrue:|. \verb|value| Executes the expressions contained in the block, and in doing so returns the value of the last expression in the block. \verb|whileTrue:| Accepts another block and keeps executing that until the block to which \verb|whileTrue:| was sent returns false.
+Blocks have 2 standard methods, namely \texttt{value} and \texttt{whileTrue:}. \texttt{value} Executes the expressions contained in the block, and in doing so returns the value of the last expression in the block. \texttt{whileTrue:} Accepts another block and keeps executing that until the block to which \texttt{whileTrue:} was sent returns false.
 
 %TODO Maybe this should be in software description.
 Since blocks are classes themselves, a trick is needed to be able to use variables from higher scope, which is in this case other classes. The trick applied is to copy all the variables from the scope in which the block is declared and place them as class fields inside the Block. The resulting effect of this is that Blocks are not able to directly assign new values to variables from higher scope, they can only adapt the variables.
@@ -420,3 +419,4 @@ the generated code.
 \end{appendices}
 
 \end{document}
+
