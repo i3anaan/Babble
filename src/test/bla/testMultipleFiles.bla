@@ -1,0 +1,5 @@
+SelfTest [
+    testMultipleFiles [
+        this isTrue assert.
+    ].
+].

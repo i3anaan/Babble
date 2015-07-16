@@ -80,13 +80,26 @@ public final class App {
 
         verbose = line.hasOption('v');
 
+        ArrayList<ProgramNode> trees = new ArrayList<>();
+        
+        ProgramNode prelude = generateIRTree(App.class.getResourceAsStream("Prelude.bla"), "Babble\\Prelude.bla");
+        trees.add(prelude);
+        
         for (String inPath : line.getArgs()) {
             File file = new File(inPath);
-            compileFile(file, outDir);
-
+            ProgramNode babbleFile = generateIRTree(new FileInputStream(file), file.getPath());
+            
+            trees.add(babbleFile);
+        }
+        
+        List<String> errors = compileTrees(outDir, trees);
+        if (errors.isEmpty()) {
             if (verbose) {
-                System.out.println(String.format("[ OK ] Compiled %s", file));
+                System.out.println("[ OK ] Compiled.");
             }
+        } else {
+            System.out.println(String.format("[ ERROR ] %d Errors while compiling.", errors.size()));
+            throw new CompileException();
         }
     }
 
@@ -96,26 +109,12 @@ public final class App {
     }
 
     /**
-     * Convenience method to compile a single Babble code File, adding Prelude.bla to it. 
-     * @param file Babble file to compile.
-     * @param outDir The output directory in which to place the JVM compatible .class files.
-     * @return List of errors that happened when compiling.
-     * @throws IOException Thrown when something goes wrong compiling.
-     */
-    private static List<String> compileFile(File file, String outDir) throws IOException {
-        ProgramNode prelude = generateIRTree(App.class.getResourceAsStream("Prelude.bla"), "Babble\\Prelude.bla");
-        ProgramNode code = generateIRTree(new FileInputStream(file), file.getPath());
-        
-        return compileTrees(outDir, prelude, code);
-    }
-    
-    /**
      * Compiles multiple ASTs into a single Babble program (still generating multiple .class files).
      * @param outDir The output directory in which to place the JVM compatible .class files.
      * @param trees The ASTs to compile together.
      * @return List of errors that happened when compiling.
      */
-    static List<String> compileTrees(String outDir, ProgramNode... trees) {
+    static List<String> compileTrees(String outDir, List<ProgramNode> trees) {
         ProgramNode program = new ProgramNode();
         ASTBaseVisitor treeMerger = new TreeMerger(program);
         try {
