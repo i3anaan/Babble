@@ -2,6 +2,13 @@ package org.twnc.irtree;
 
 import org.twnc.irtree.nodes.*;
 
+/**
+ * Visitor that can traverse our AST.
+ * 
+ * Makes use of the visitor pattern.
+ * (https://en.wikipedia.org/wiki/Visitor_pattern)
+ *
+ */
 public abstract class ASTVisitor {
     public abstract void visit(AssignNode assignNode);
     public abstract void visit(BlockNode blockNode);

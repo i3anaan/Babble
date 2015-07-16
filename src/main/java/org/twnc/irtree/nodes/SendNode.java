@@ -7,13 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * A Node that represents a message send, method call, in the Babble code.
+ *
+ */
 public class SendNode extends ExprNode {
-    private final Optional<ExprNode> expression;
+    /** The expression (object) for which this message is intended. */
+    private final ExprNode expression;
+    /** Selector of the method to call. */
     private final String selector;
+    /** List of arguments the method requires. */
     private final List<ExprNode> arguments;
 
     public SendNode(ExprNode expression, String selector, List<ExprNode> arguments) {
-        this.expression = Optional.ofNullable(expression);
+        this.expression = expression;
         this.selector = selector;
         this.arguments = arguments;
     }
@@ -22,11 +29,7 @@ public class SendNode extends ExprNode {
         this(expression, selector, new ArrayList<>());
     }
 
-    public SendNode(String selector, List<ExprNode> arguments) {
-        this(null, selector, arguments);
-    }
-
-    public Optional<ExprNode> getExpression() {
+    public ExprNode getExpression() {
         return expression;
     }
 

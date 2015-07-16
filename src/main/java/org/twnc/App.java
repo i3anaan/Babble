@@ -20,9 +20,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Entry point of the Babble to JVM compiler.
+ * 
+ *
+ */
 public final class App {
     private static boolean verbose = false;
 
+    /**
+     * Starts the compilation of the files specified.
+     * 
+     * Makes use of cli to give feedback on how to use to run App.
+     * @param args Arguments as given by the java command.
+     * @throws IOException Exception thrown when something goes wrong compiling.
+     */
     public static void main(String[] args) throws IOException {
         Options options = new Options();
 
@@ -83,6 +95,13 @@ public final class App {
         formatter.printHelp("app", options);
     }
 
+    /**
+     * Convenience method to compile a single Babble code File, adding Prelude.bla to it. 
+     * @param file Babble file to compile.
+     * @param outDir The output directory in which to place the JVM compatible .class files.
+     * @return List of errors that happened when compiling.
+     * @throws IOException Thrown when something goes wrong compiling.
+     */
     private static List<String> compileFile(File file, String outDir) throws IOException {
         ProgramNode prelude = generateIRTree(App.class.getResourceAsStream("Prelude.bla"), "Babble\\Prelude.bla");
         ProgramNode code = generateIRTree(new FileInputStream(file), file.getPath());
@@ -90,6 +109,12 @@ public final class App {
         return compileTrees(outDir, prelude, code);
     }
     
+    /**
+     * Compiles multiple ASTs into a single Babble program (still generating multiple .class files).
+     * @param outDir The output directory in which to place the JVM compatible .class files.
+     * @param trees The ASTs to compile together.
+     * @return List of errors that happened when compiling.
+     */
     static List<String> compileTrees(String outDir, ProgramNode... trees) {
         ProgramNode program = new ProgramNode();
         ASTBaseVisitor treeMerger = new TreeMerger(program);
@@ -104,11 +129,18 @@ public final class App {
         }
     }
     
+    /**
+     * Compiles a single AST into a single Babble program (still generating multiple .class files).
+     * @param outDir The output directory in which to place the JVM compatible .class files.
+     * @param program The AST representing the Babble program to compile.
+     * @return List of errors that happened when compiling.
+     */
     static List<String> compileTree(String outDir, ProgramNode program) {
         new File(outDir).mkdirs();
+        new File(outDir + "graphviz/").mkdirs();
         ASTBaseVisitor visitor = null;
         try {
-            visitor = new Graphvizitor(outDir);
+            visitor = new Graphvizitor(outDir + "graphviz/");
             program.accept(visitor);
             
             visitor = new GlobalsGenerator();
@@ -130,6 +162,14 @@ public final class App {
         
     }
     
+    /**
+     * Generates an AST for the given stream, with the given filename that represents its location.
+     * Makes use of ANTLR.
+     * @param stream    Stream to generate the AST from.
+     * @param filename  Name that should be given to the location of the Nodes in the AST.
+     * @return AST representing a Babble file (or more specifically: stream).
+     * @throws IOException Thrown when something goes wrong parsing the stream.
+     */
     static ProgramNode generateIRTree(InputStream stream, String filename) throws IOException {
             CharStream chars = new ANTLRInputStream(stream);
             Lexer lexer = new BabbleLexer(chars);

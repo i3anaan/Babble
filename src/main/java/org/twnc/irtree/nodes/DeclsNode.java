@@ -5,7 +5,16 @@ import java.util.Set;
 
 import org.twnc.irtree.ASTVisitor;
 
+/**
+ * A Node that represents a set of variable declarations in Babble code
+ * (ie: '| x y |.').
+ *
+ */
 public class DeclsNode extends ExprNode {
+    /**
+     * The actual variables declared. Since this is a set, duplicate
+     * declarations are automatically disallowed.
+     * */
     private final Set<VarDeclNode> declarations;
 
     public DeclsNode() {
@@ -20,6 +29,11 @@ public class DeclsNode extends ExprNode {
         return declarations;
     }
     
+    /**
+     * Looks for a declaration in this set of declaration with a given name.
+     * @param name The declaration to look for
+     * @return The declaration with the requested name, or null if none found.
+     */
     public VarDeclNode getDeclaration(String name) {
         for (VarDeclNode decl : declarations) {
             if (decl.getName().equals(name)) {
