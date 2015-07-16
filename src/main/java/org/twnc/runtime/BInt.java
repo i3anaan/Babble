@@ -48,6 +48,18 @@ public class BInt extends BigInteger {
     public Object _negate() { return new BInt(negate()); }
     public Object _signum() { return new BInt(signum()); }
 
+    public Object _to_(Object that) {
+        BArray array = new BArray();
+        int a = intValue();
+        int b = ((Number) that).intValue();
+
+        for (int i = a; i <= b; i++) {
+            array.add(new BInt(i));
+        }
+
+        return array;
+    }
+
     public Object _class() {
         return Core.newOpaqueClass();
     }

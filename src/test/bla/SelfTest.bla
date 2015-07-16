@@ -242,32 +242,16 @@ SelfTest [
     ].
     
     testWhile [
-        field2 := {}.
-        this setWhileIndex: 0.
-        
-        [this getWhileIndex < 10.] whileTrue: [
-            this addToArray: (this getWhileIndex).
-            this setWhileIndex: (this getWhileIndex + 1).
-        ].
-        
-        (field2 size == 10) assert.
-        (field2 at: 0 == 0) assert.
-        (field2 at: 5 == 5) assert.
-        (field2 at: 9 == 9) assert.
-    ].
-    
-    addToArray: value [
-        field2 add: value.
-    ].
-    
-    setWhileIndex: index [
-        field1 := index.
-    ].
-    
-    getWhileIndex [
-        field1.
-    ].
+        | array |.
+        array := 1 to: 4.
 
+        [ array notEmpty ] whileTrue: [
+            (array pop asString + " little duckies in the pond...") print.
+        ].
+
+        array isEmpty assert.
+    ].
+    
     testVarDecl [
         | x |.
         x := 2.

@@ -7,6 +7,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class BArray extends ArrayList<Object> {
+    public BArray() {
+    }
+
     public BArray(List<Object> objects) {
         super(objects);
     }
@@ -48,6 +51,10 @@ public class BArray extends ArrayList<Object> {
 
     public Object _last() {
         return _at_(size() - 1);
+    }
+
+    public Object _pop() {
+        return remove(0);
     }
 
     public Object _includes_(Object value) {
