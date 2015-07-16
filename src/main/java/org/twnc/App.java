@@ -80,9 +80,14 @@ public final class App {
             trees.add(babbleFile);
         }
         
-        compileTrees(outDir, trees);
-        if (verbose) {
-            System.out.println("[ OK ] Compiled.");
+        List<String> errors = compileTrees(outDir, trees);
+        if (errors.isEmpty()) {
+            if (verbose) {
+                System.out.println("[ OK ] Compiled.");
+            }
+        } else {
+            System.out.println(String.format("[ ERROR ] %d Errors while compiling.", errors.size()));
+            System.exit(1);
         }
     }
 

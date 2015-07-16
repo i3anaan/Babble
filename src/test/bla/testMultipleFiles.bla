@@ -1,5 +1,5 @@
 SelfTest [
     testMultipleFiles [
-        this isTrue not assert.
+        this isTrue assert.
     ].
 ].
