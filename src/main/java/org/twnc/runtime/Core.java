@@ -8,6 +8,10 @@ import java.lang.invoke.MethodHandles.Lookup;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Scanner;
 
+/**
+ * Core provides a few static helper methods that compiled Babble programs
+ * need to function, for example the invokedynamic bootstrap method,
+ */
 public class Core {
     private static final MethodType INVOKE_TYPE =
         MethodType.methodType(Object.class, MutableCallSite.class, String.class, Object[].class);
