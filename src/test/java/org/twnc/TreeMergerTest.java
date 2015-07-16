@@ -14,8 +14,15 @@ import org.twnc.irtree.nodes.MethodNode;
 import org.twnc.irtree.nodes.ProgramNode;
 import org.twnc.irtree.nodes.VarDeclNode;
 
+/**
+ * Tests the TreeMerger's behavior for both correct and incorrect input.
+ *
+ */
 public class TreeMergerTest extends CompileTest {
     
+    /**
+     * Tests if it reacts properly to duplicate Fields.
+     */
     @Test
     public void testDuplicateFieldSignature() {
         ProgramNode tree = buildTree("Duck1.bla");
@@ -29,6 +36,9 @@ public class TreeMergerTest extends CompileTest {
         }
     }
     
+    /**
+     * Tests if it reacts properly to duplicate method signatures.
+     */
     @Test
     public void testDuplicateMethodSignature() {
         ProgramNode tree = buildTree("Duck1.bla");
@@ -45,6 +55,9 @@ public class TreeMergerTest extends CompileTest {
         }
     }
     
+    /**
+     * Tests if it reacts properly to multiple duplicate method signatures.
+     */
     @Test
     public void testDuplicateMethodSignatureMultiple() {
         ProgramNode tree = buildTree("Duck1.bla");
@@ -59,6 +72,9 @@ public class TreeMergerTest extends CompileTest {
         }
     }
     
+    /**
+     * Tests if it reacts properly to discrepancy in the superclasses of classes that need to be merged. 
+     */
     @Test
     public void testSuperClassDiscrepancy() {
         ProgramNode tree = buildTree("Duck1.bla");
@@ -74,7 +90,10 @@ public class TreeMergerTest extends CompileTest {
             assertEquals("[Duck1.bla - 1:0] - Superclass discrepancy for class 'Duck': 'java/lang/Object' with 'Rock' at [Duck3.bla - 1:0]", error);
         }
     }
-
+    
+    /**
+     * Tests if a merge goes well on correct input.
+     */
     @Test
     public void testMerge() {
         ProgramNode tree = buildBaseTree(); 
