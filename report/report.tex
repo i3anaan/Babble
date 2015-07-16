@@ -271,9 +271,6 @@ Like other messages, infix messages have exactly one receiver, in this case the 
 Infix messages also have exactly one argument, the integer 20 here.
 Because 10 is not larger than 20, the result will be false.
 
-\subsection{Expressions}
-%TODO add stuff here.
-
 \subsection{Precedence}
 
 Unary messages have the highest precedence, followed by infix messages, followed by keyword messages. Expressions are evaluated `from left to right'. Precedence can be forced using parenthesis, this can be necessary when having to send a message before applying the result:
@@ -295,11 +292,11 @@ In that context, Babble will evaluate an expression like \texttt{"Hello" + "Worl
 
 \subsection{Standard classes}
 
-Babble comes with a few built-in classes. Most of these are based on their counterparts in Java.
+Babble comes with a few built-in classes. Some of these are actually implemented in Java, not Babble - because Babble code can call Java code and vice-versa, there is not much of a distinction between the two. The built-in classes implemented in Java are referred to as the \emph{runtime classes}.
 
-%TODO Text explaining how these classes are created in Babble (ie: mix of Java classes and Prelude stuff). And how a Babble method call ends in a Java method call (ie: _eqeq_).
+However, there are a few minor issues. Babble method selectors can contain characters which are not allowed in Java method names, but Java classes should still be able to implement them. For example, BInt, the Java class that represents a Babble integer, has methods `+' and `-'. To solve this problem, method names are \emph{mangled} before ending up in the bytecode. Mangling adds an underscore to the beginning of method names, symbols are replaced by their descriptions, and colons get substituted with underscores. This means that a `==:' infix method actually calls the `\_eqeq\_' JVM method, and the `replace:with:' method on strings is called `\_replace\_with\_' in the BStr class.
 
-%TODO common methods? asString?
+All of the standard classes implement the `asString' method to make debugging easier.
 
 \subsubsection{Integers}
 
@@ -324,6 +321,19 @@ Babble has string literals. String literals are enclosed in double quotes, i.e. 
 Symbols are written using a hash sign followed by a name, for example: \texttt{\#foo}. Symbols do not need to be declared and are neither integer or string, but there fully own type. Standard methods available for symbols:
 \texttt{asInt, asString, ==}. AsInt exposes the internally used index from the symbol, asString returns the full name of the symbol (including the hash sign) as a string.
 
+Symbols can be used in much the same way other languages use enumerated types (enums). For example, the following method will return True if the passed week day is part of the weekend:
+
+\begin{quote}
+\begin{lstlisting}
+isWeekend: day [
+	| week |.
+	week := {#Mon, #Tue, #Wed, #Thu, #Fri, #Sat, #Sun}.
+
+	(day == #Sat) or: (day == #Sun).
+].
+\end{lstlisting}
+\end{quote}
+
 \subsubsection{Arrays}
 
 Babble offers support for arrays. Arrays can contain any number of objects and grow or shrink automatically when needed and can even contain elements of multiple types. The syntax for array literals is \texttt{1, 2, 3}, \texttt{\#one, "bob", Duck new} or curly brackets with any other type of objects.
@@ -335,30 +345,23 @@ Standard methods for arrays are:
 
 \subsubsection{Blocks}
 
-Blocks can be seen as a group of several expression ordered into one object. Blocks are a class just as other classes and can thus be passed as arguments in the same way that could be done with for example integers.
+Blocks can be seen as a group of several expression ordered into one object. Blocks can be used like any other objects: they can be defined, passed as arguments and returned in the same way one would with integers, for example.
 
-%TODO Empty Blocks return nothing, creating stack underflow.
-Blocks are defined using brackets, containing expressions. An example of this would be:
-\texttt{[man setName: "bob". woman setName: "Alice".]}, setting the name of 2 people. (assuming 'man' and 'woman' are valid variables in the scope in which the block is defined.)
+Block literals are enclosed with brackets and contain one or more expressions. An example of this would be:
 
-%TODO FIX WHILE.
-Blocks have 2 standard methods, namely \texttt{value} and \texttt{whileTrue:}. \texttt{value} Executes the expressions contained in the block, and in doing so returns the value of the last expression in the block. \texttt{whileTrue:} Accepts another block and keeps executing that until the block to which \texttt{whileTrue:} was sent returns false.
+\begin{quote}
+\begin{lstlisting}
+[ man setName: "bob". woman setName: "Alice". ]
+\end{lstlisting}
+\end{quote}
 
-%TODO Maybe this should be in software description.
-Since blocks are classes themselves, a trick is needed to be able to use variables from higher scope, which is in this case other classes. The trick applied is to copy all the variables from the scope in which the block is declared and place them as class fields inside the Block. The resulting effect of this is that Blocks are not able to directly assign new values to variables from higher scope, they can only adapt the variables.
+This block, when executed, would set the name of two people, assuming 'man' and 'woman' are valid variables in the scope in which the block is defined.
 
-%TODO Block value tricks explained.
+Blocks have two standard methods, namely \texttt{value} and \texttt{whileTrue:}. The \texttt{value} method executes the expressions contained in the block, and in doing so returns the value of the last expression in the block. The \texttt{whileTrue:} method accepts another block and keeps executing that until the block to which \texttt{whileTrue:} was sent returns false.
 
+Blocks do a limited form of lambda closure. References from the parent scope are copied to the block, which means code from a block can access variables and fields defined in the parent method or parent class. These references will survive as long as the instance of the block exists. However, assigning new values to variables inside a block will not change the references outside that block.
 
-\subsection{Tips and tricks}
-
-\subsubsection{Using symbols as enumerations}
-
-\subsubsection{Using blocks as values}
-
-\subsubsection{Using values as blocks}
-
-\subsubsection{Introspection and metaclasses}
+\subsection{Introspection and metaclasses}
 
 Babble offers some amount of introspection into objects: objects can be queried for their class by sending them the \texttt{class} message.
 The resulting metaclass instance can then be asked for information about the original class using the \texttt{name} and \texttt{methods} messages.
@@ -369,8 +372,6 @@ It can also tell you whether or not the original object will \texttt{respondTo} 
 
 The Babble compiler will merge class definitions with the same name together.
 This means that you can extend a class from multiple places in your program.
-
-\subsubsection{Adding methods to metaclasses}
 
 \section{Description of the software}
 %Summary of the JAVA classes you implemented; for instance, for symbol
