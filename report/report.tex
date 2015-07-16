@@ -367,6 +367,17 @@ The resulting parse tree is converted into a tree-based intermediate representat
 
 When the program is parsed, it goes through a few intermediate passes, most of which either annotate the tree representation of the program in some way, or check its semantics.
 
+\textbf{TreeMerger} merges multiple IR trees together into a single IR tree, this is used to add Prelude.bla to the .bla file to compile (or multiple .bla files). This merging however does also happen within a single file, for example when a class definition is spread out over the file.
+
+\textbf{Graphvizitor} is generated a visual representation of the merged tree, in the form of .dot files for each Babble class. This file can then be used by a dot compiler such as Graphviz to generate an image.
+
+\textbf{GlobalsGenerator} adds global variables to the tree, such as \texttt{true}, \texttt{false} and \texttt{nil}.
+
+\textbf{MetaclassGenerator} adds metaclasses for each Babble class in the tree.
+%TODO more explanation?
+
+\textbf{ScopeChecker} checks if the scope in the generated tree is correct. This includes checking if a variable is declared before usage and if there are no duplicate declarations.
+
 \subsubsection{Back end: bytecode generator}
 
 The Babble compiler generates Java Virtual Machine bytecode using the ASM bytecode manipulation library from Objectweb.
@@ -390,6 +401,8 @@ Both can be executed using Maven by running \texttt{mvn verify}.
 Maven can also generate a graphical (HTML) report of the test results using \texttt{mvn site}.
 % ...
 
+%TODO tests are divided into the following files/categories...
+
 \section{Conclusions}
 
 \clearpage
@@ -404,18 +417,13 @@ Maven can also generate a graphical (HTML) report of the test results using \tex
 
 \label{visitor}
 \section{ANTLR tree visitor}
-The complete listing of each implementation of a
-tree listener or tree visitor for your grammar.
-
 This tree visitor converts an ANTLR parse tree into our intermediate representation, the IR tree.
 
 \input{visitor}
-%TODO MORE VISITORS!!!!
 
 \section{Extended test program}
 The listing of one (correct) extended test program, as well as the generated
-target code for that program and one or more example executions showing the correct functioning of
-the generated code.
+target code for that program and one or more example executions showing the correct functioning of the generated code.
 
 \end{appendices}
 
