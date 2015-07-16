@@ -1,0 +1,9 @@
+TestPrintRead [
+    main [
+        | input |.
+        "Please enter a number or 'cake'" print.
+        input := (System read).
+        ( "The number you entered was: " + input ) print.
+        [ input == "cake". ] value ifTrue: [ "Yeeey! CAKE!" print. ] ifFalse: [ this main. ]
+    ].
+].

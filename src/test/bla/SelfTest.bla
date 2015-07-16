@@ -380,41 +380,6 @@ SelfTest [
     
     main [
         "Please use `mvn verify` to run integration tests." print.
-        this testAdd.
-        this testAnd.
-        this testArrayAdd.
-        this testArrayAddAll.
-        this testArrayAsString.
-        this testArrayAt.
-        this testArrayAtIfAbsent.
-        this testArrayAtPut.
-        this testArrayFirst.
-        this testArrayIncludes.
-        this testArrayIsEmpty.
-        this testArrayLast.
-        this testArrayNotEmpty.
-        this testArrayReverse.
-        this testArraySize.
-        this testArrays.
-        this testAsString.
-        this testAssert.
-        this testBlocks.
-        this testClassFields.
-        this testClassFieldsOther.
-        this testClassFieldsOverride.
-        this testEmptyMethod.
-        this testIf.
-        this testMaths.
-        this testMetaclassName.
-        this testNestedBlocks.
-        this testOr.
-        this testRespondsTo.
-        this testStrings.
-        this testSymbols.
-        this testThis.
-        this testVarDecl.
-        this testVarception.
-        "Main tests: OK" print.
     ].
 ].
 
