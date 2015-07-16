@@ -214,9 +214,7 @@ SelfTest [
         (field2 == 40) assert.
         
         field2 := Number new.
-        "Setting Number to 40" print.
         field2 set: 40.
-        "Set Number to 40" print.
         this setNumberToFive: field2.
         ((field2 get) == 5) assert.
     ].
@@ -226,7 +224,6 @@ SelfTest [
     ].
     
     setNumberToFive: number [
-        "Setting number to 5..." print.
         number set: 5.
     ].
 
@@ -470,7 +467,10 @@ SelfTest [
     ].
     
     testClassFieldsOther [
-        "TestClassFieldsOther: TODO Add when new objects can be created." print.
+        | num |.
+        num := Number new.
+        num set: 10.
+        (num get == 10) assert.
     ].
     
     main [
