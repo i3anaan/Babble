@@ -94,8 +94,15 @@
                         <configuration>
                             <mainClass>org.twnc.App</mainClass>
                             <arguments>
-                                <argument>src/test/bla/SelfTest.bla</argument>
-                                <argument>src/test/bla/testMultipleFiles.bla</argument>
+                                <argument>src/test/bla/TestBasic.bla</argument>
+                                <argument>src/test/bla/TestMultipleFiles.bla</argument>
+                                <argument>src/test/bla/TestStatements.bla</argument>
+                                <argument>src/test/bla/TestVariables.bla</argument>
+                                <argument>src/test/bla/TestArrays.bla</argument>
+                                <argument>src/test/bla/TestClass.bla</argument>
+                                <argument>src/test/bla/TestClosure.bla</argument>
+                                <argument>src/test/bla/TestMisc.bla</argument>
+                                <argument>src/test/bla/TestMerge.bla</argument>
                                 <argument>--dest=target/test-classes</argument>
                                 <argument>--verbose</argument>
                             </arguments>

@@ -1,0 +1,16 @@
+SelfTest [
+    | field3 |.
+    
+    isTrue [
+        true.
+    ].
+    
+    isFalse [
+        false.
+    ].
+    
+    separatedAssign [
+        field1 := true.
+        field2 := false.
+    ].
+].

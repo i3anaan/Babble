@@ -1,0 +1,68 @@
+SelfTest [
+    testVarDecl [
+        | x |.
+        x := 2.
+        (x == 2) assert.
+        | y z |.
+        z := 5.
+        (z == 5) assert.
+    ].
+    
+    testVarception [
+        | x y z |.
+        x := y := z:= 10.
+        this varception1.
+        (x == 10) assert.
+        (y == 10) assert.
+        (z == 10) assert.
+    ].
+    
+    varception1 [
+        | x y |.
+        x := y := 20.
+        this varception2.
+        (x == 20) assert.
+        (y == 20) assert.
+    ].
+    
+    varception2 [
+        | x |.
+        x := 30.
+        (x == 30) assert.
+    ].
+    
+    testClassFields [
+        field1 := 10.
+        field2 := 20.
+        
+        (field1 == 10) assert.
+        (field2 == 20) assert.
+    ].
+    
+    testClassFieldsOverride [
+        field1 := 10.
+        field2 := 20.
+        
+        this setClassFields.
+        this checkClassFields.
+    ].
+    
+    setClassFields [
+        | field1 |.
+        
+        field1 := 30.
+        field2 := 30.
+    ].
+    
+    checkClassFields [
+        (field1 == 10) assert.
+        (field2 == 30) assert.
+    ].
+    
+    testClassFieldsOther [
+        | num |.
+        num := Number new.
+        num set: 10.
+        (num get == 10) assert.
+    ].
+].

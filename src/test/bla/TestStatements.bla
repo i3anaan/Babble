@@ -1,0 +1,40 @@
+SelfTest [
+    testIf [
+        (true  ifTrue: [ #yea ] == #yea) assert.
+        (false ifTrue: [ #yea ] == nil) assert.
+
+        (true  ifFalse: [ #yea ] == nil) assert.
+        (false ifFalse: [ #yea ] == #yea) assert.
+
+        (true  ifTrue: [ #a ] ifFalse: [ #b ] == #a) assert.
+        (false ifTrue: [ #a ] ifFalse: [ #b ] == #b) assert.
+    ].
+
+    testWhile [
+        | duckies |.
+
+        duckies := { "Freddy", "Johnny", "Bobby", "Harold" }.
+
+        [ duckies notEmpty ] whileTrue: [
+            ("Duckie " + duckies pop + " says quack!") print.
+        ].
+
+        duckies isEmpty assert.
+    ].
+
+    testWhileMoveArray [
+        | arrayOne arrayTwo |.
+
+        arrayOne := 1 to: 10.
+        arrayTwo := {}.
+
+        (arrayOne size == 10) assert.
+
+        [ arrayOne notEmpty ] whileTrue: [
+            /* Move elements from one array to the other */
+            arrayTwo add: (arrayOne pop).
+        ].
+
+        (arrayTwo size == 10) assert.
+    ].
+].

@@ -1,0 +1,57 @@
+SelfTest [
+    | field1 field2 |.
+    
+    testRecursion [
+        field1 := {}.
+        field2 := {10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0}.
+        ((this recursion: 10) == 0) assert.
+        ((field1 size) == (field2 size)) assert.
+        ((field1 at: 7) == (field2 at: 7)) assert.
+        ((field1 at: 2) == (field2 at: 2)) assert.
+    ].
+    
+    recursion: value [
+        field1 add: value.
+        
+        (value > 0) ifTrue: [
+            this recursion: (value - 1).
+        ] ifFalse: [
+            0.
+        ]
+    ].
+    
+    testCallByReference [
+        field2 := 40.
+        this setToFive: field2.
+        (field2 == 40) assert.
+        
+        field2 := Number new.
+        field2 set: 40.
+        this setNumberToFive: field2.
+        ((field2 get) == 5) assert.
+    ].
+    
+    setToFive: variable [
+        variable := 5.
+    ].
+    
+    setNumberToFive: number [
+        number set: 5.
+    ].
+    
+    main [
+        "Please use `mvn verify` to run integration tests." print.
+    ].
+].
+
+Number [
+    | value |.
+    
+    set: newValue [
+        value := newValue.
+    ].
+    
+    get [
+        value.
+    ].
+].
