@@ -87,7 +87,7 @@ public final class App {
             }
         } else {
             System.out.println(String.format("[ ERROR ] %d Errors while compiling.", errors.size()));
-            System.exit(1);
+            throw new CompileException();
         }
     }
 
