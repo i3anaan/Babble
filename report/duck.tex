@@ -1,0 +1,124 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nc}{Duck} [
+    \PY{o}{|}\PY{n+nv}{ age hunger name kids }\PY{o}{|}.
+    
+    \PY{n+nv}{born} [
+        \PY{n+nv}{age} \PY{o}{:=} \PY{l+m}{0}\PY{p}{.}
+        \PY{n+nv}{hunger} \PY{o}{:=} \PY{l+m}{0}\PY{p}{.}
+        \PY{n+nv}{kids} \PY{o}{:=} \PYZob{}\PYZcb{}.
+    ]\PY{p}{.}
+    
+    \PY{n+nv}{birthday} [
+        \PY{n+nv}{age} \PY{o}{:=} (\PY{n+nv}{age} \PY{n+nf}{+} \PY{l+m}{1})\PY{p}{.}
+    ]\PY{p}{.}
+    
+    \PY{n+nf}{eat:} \PY{n+nv}{food} [
+        \PY{n+nv}{hunger} \PY{o}{:=} (\PY{n+nv}{hunger} \PY{n+nf}{\PYZhy{}} (\PY{n+nv}{food} \PY{n+nf}{consume}))\PY{p}{.}
+    ]\PY{p}{.}
+    
+    \PY{err}{+}\PY{err}{:} \PY{n+nv}{with} [
+        (\PY{n+nv}{with} \PY{n+nf}{class} \PY{n+nf}{name} \PY{n+nf}{==} \PY{c}{\PYZdq{}Duck\PYZdq{}}) \PY{n+nb}{ifTrue:} [ \PY{n+nc}{Duck} \PY{n+nb}{new}\PY{p}{.} ]\PY{p}{.}
+    ]\PY{p}{.}
+    
+    \PY{n+nf}{setName:} \PY{n+nv}{newName} [
+        \PY{n+nv}{name} \PY{o}{:=} \PY{n+nv}{newName}\PY{p}{.}
+    ]\PY{p}{.}
+    
+    \PY{n+nv}{getName} [
+        \PY{n+nv}{name}\PY{p}{.}
+    ]\PY{p}{.}
+    
+    \PY{n+nf}{addKid:} \PY{n+nv}{kid} [
+        \PY{n+nv}{kids} \PY{n+nf}{add:} \PY{n+nv}{kid}\PY{p}{.}
+    ]\PY{p}{.}
+    
+    \PY{n+nv}{getKidsSize} [
+        \PY{n+nv}{kids} \PY{n+nf}{size}\PY{p}{.}
+    ]\PY{p}{.}
+    
+    \PY{n+nv}{getHunger} [
+        \PY{n+nv}{hunger}\PY{p}{.}
+    ]\PY{p}{.}
+    
+    \PY{n+nv}{increaseHunger} [
+        \PY{n+nv}{hunger} \PY{o}{:=} (\PY{n+nv}{hunger} \PY{n+nf}{+} \PY{l+m}{10})\PY{p}{.}
+    ]\PY{p}{.}
+    
+    \PY{n+nv}{main} [
+        \PY{o}{|}\PY{n+nv}{ dad mom input hunger food }\PY{o}{|}.
+        \PY{c}{\PYZdq{}Duck simulator 2000\PYZdq{}} \PY{n+nv}{print}\PY{p}{.}
+        \PY{n+nv}{dad} \PY{o}{:=} \PY{n+nc}{Duck} \PY{n+nb}{new}\PY{p}{.}
+        \PY{n+nv}{dad} \PY{n+nf}{born}\PY{p}{.}
+        \PY{n+nv}{mom} \PY{o}{:=} \PY{n+nc}{Duck} \PY{n+nb}{new}\PY{p}{.}
+        \PY{n+nv}{mom} \PY{n+nf}{born}\PY{p}{.}
+        \PY{c}{\PYZdq{}Enter a name for the daddy duck.\PYZdq{}} \PY{n+nv}{print}\PY{p}{.}
+        \PY{n+nv}{dad} \PY{n+nf}{setName:} (\PY{n+nc}{System} \PY{n+nf}{read})\PY{p}{.}
+        \PY{c}{\PYZdq{}Enter a name for the mommy duck.\PYZdq{}} \PY{n+nv}{print}\PY{p}{.}
+        \PY{n+nv}{mom} \PY{n+nf}{setName:} (\PY{n+nc}{System} \PY{n+nf}{read})\PY{p}{.}
+        
+        \PY{n+nv}{hunger} \PY{o}{:=} \PY{n+nv}{dad} \PY{n+nf}{getHunger}\PY{p}{.}
+        (\PY{c}{\PYZdq{}Daddy hunger: \PYZdq{}} \PY{err}{+} \PY{n+nv}{hunger}) \PY{n+nf}{print}\PY{p}{.}
+        \PY{n+nv}{this} \PY{n+nf}{addKids:} \PY{n+nv}{dad} \PY{n+nf}{with:} \PY{n+nv}{mom}\PY{p}{.}
+        
+        \PY{n+nv}{hunger} \PY{o}{:=} \PY{n+nv}{dad} \PY{n+nf}{getHunger}\PY{p}{.}
+        (\PY{c}{\PYZdq{}Daddy hunger: \PYZdq{}} \PY{err}{+} \PY{n+nv}{hunger}) \PY{n+nf}{print}\PY{p}{.}
+        
+        \PY{n+nv}{food} \PY{o}{:=} \PY{n+nc}{Food} \PY{n+nb}{new}\PY{p}{.}
+        \PY{n+nv}{food} \PY{n+nf}{addCal:} \PY{l+m}{4}\PY{p}{.}
+        
+        \PY{c}{\PYZdq{}Feed daddy? y/n\PYZdq{}} \PY{n+nv}{print}\PY{p}{.} 
+        \PY{n+nv}{input} \PY{o}{:=} (\PY{n+nc}{System} \PY{n+nf}{read})\PY{p}{.}
+        
+        (\PY{n+nv}{input} \PY{n+nf}{==} \PY{c}{\PYZdq{}y\PYZdq{}}) \PY{n+nb}{ifTrue:} [
+            \PY{n+nv}{dad} \PY{n+nf}{eat:} \PY{n+nv}{food}\PY{p}{.}
+        ]\PY{p}{.}
+        
+        \PY{n+nv}{hunger} \PY{o}{:=} \PY{n+nv}{dad} \PY{n+nf}{getHunger}\PY{p}{.}
+        (\PY{c}{\PYZdq{}Daddy hunger: \PYZdq{}} \PY{err}{+} \PY{n+nv}{hunger}) \PY{n+nf}{print}\PY{p}{.}
+        
+        \PY{c}{\PYZdq{}Feed daddy again? y/n\PYZdq{}} \PY{n+nv}{print}\PY{p}{.} 
+        \PY{n+nv}{input} \PY{o}{:=} (\PY{n+nc}{System} \PY{n+nf}{read})\PY{p}{.}
+        
+        (\PY{n+nv}{input} \PY{n+nf}{==} \PY{c}{\PYZdq{}y\PYZdq{}}) \PY{n+nb}{ifTrue:} [
+            \PY{n+nv}{dad} \PY{n+nf}{eat:} \PY{n+nv}{food}\PY{p}{.}
+        ]\PY{p}{.}
+        
+        
+        \PY{n+nv}{hunger} \PY{o}{:=} \PY{n+nv}{dad} \PY{n+nf}{getHunger}\PY{p}{.}
+        (\PY{c}{\PYZdq{}Daddy hunger: \PYZdq{}} \PY{err}{+} \PY{n+nv}{hunger}) \PY{n+nf}{print}\PY{p}{.}
+        
+        \PY{c}{\PYZdq{}End of Duck simlutaion.\PYZdq{}} \PY{n+nv}{print}\PY{p}{.}
+    ]\PY{p}{.}
+    
+    \PY{n+nf}{addKids:} \PY{n+nv}{daddy} \PY{n+nf}{with:} \PY{n+nv}{mommy} [
+        \PY{o}{|} \PY{n+nv}{input} \PY{n+nf}{duck} \PY{n+nf}{kidCount} \PY{n+nf}{|}.
+        \PY{c}{\PYZdq{}Have a little duck? y/n\PYZdq{}} \PY{n+nv}{print}\PY{p}{.} 
+        \PY{n+nv}{input} \PY{o}{:=} (\PY{n+nc}{System} \PY{n+nf}{read})\PY{p}{.}
+        
+        (\PY{n+nv}{input} \PY{n+nf}{==} \PY{c}{\PYZdq{}y\PYZdq{}}) \PY{n+nb}{ifTrue:} [
+            \PY{n+nv}{duck} \PY{o}{:=} (\PY{n+nv}{daddy} \PY{n+nf}{+} \PY{n+nv}{mommy})\PY{p}{.}
+            \PY{n+nv}{duck} \PY{n+nf}{born}\PY{p}{.}
+            \PY{n+nv}{daddy} \PY{n+nf}{increaseHunger}\PY{p}{.}
+            \PY{n+nv}{mommy} \PY{n+nf}{addKid:} \PY{n+nv}{duck}\PY{p}{.}
+            \PY{n+nv}{kidCount} \PY{o}{:=} (\PY{n+nv}{mommy} \PY{n+nf}{getKidsSize} \PY{n+nf}{asString})\PY{p}{.}
+            [\PY{c}{\PYZdq{}Added kid: \PYZdq{}} \PY{err}{+} \PY{n+nv}{kidCount}] \PY{n+nf}{value} \PY{n+nf}{print}\PY{p}{.}
+            \PY{n+nv}{this} \PY{n+nf}{addKids:} \PY{n+nv}{daddy} \PY{n+nf}{with:} \PY{n+nv}{mommy}\PY{p}{.}
+        ] 
+     ]\PY{p}{.}
+]\PY{p}{.}
+
+\PY{n+nc}{Food} [
+    \PY{o}{|}\PY{n+nv}{ calories }\PY{o}{|}.
+    
+    \PY{n+nf}{addCal:} \PY{n+nv}{value} [
+        \PY{n+nv}{calories} \PY{o}{:=} \PY{n+nv}{value}\PY{p}{.}
+    ]\PY{p}{.}
+    
+    \PY{n+nv}{consume} [
+        \PY{o}{|}\PY{n+nv}{ worth }\PY{o}{|}.
+        \PY{n+nv}{worth} \PY{o}{:=} \PY{n+nv}{calories}\PY{p}{.}
+        \PY{n+nv}{calories} \PY{o}{:=} \PY{l+m}{0}\PY{p}{.}
+        \PY{n+nv}{worth}\PY{p}{.}
+    ]\PY{p}{.}
+]\PY{p}{.}
+\end{Verbatim}
