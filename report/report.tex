@@ -40,7 +40,6 @@
 \tableofcontents
 
 \section{Language summary}
-
 Babble is a compiled, duck-typed, object-oriented programming language for the Java Virtual machine.
 It has syntax and semantics inspired by the Smalltalk programming language, but the compile-once-run-anywhere development cycle from Java.
 It has no primitives, no operators, no statements like \texttt{if} or \texttt{while}, and no type annotations.
@@ -57,13 +56,13 @@ It is a (run-time) error if a receiving object does not understand a message.
 Like Smalltalk, Babble has the concept of blocks: pieces of code that can be passed as values.
 Blocks can take arguments, and will also do lambda closure.
 
+Babble uses call-by-reference and maintains a scope for variables, this is further augmented using the lambda closure of blocks.
+
 \section{Problems and solutions.}
 Summary of problems you encountered and how you solved them (max. two
 pages).
 
 \section{Detailed language description}
-%TODO SCOPE!
-%TODO explain that if and while are no special keywords.
 %A systematic description of the features of your language, for each
 %feature specifying
 %– Syntax, including one or more examples;
@@ -73,11 +72,11 @@ pages).
 %You may make use of your ANTLR grammar ar as a basis for this description, but note that %not every
 %rule necessarily corresponds to a language feature
 
-\subsection{Defining classes}
-
+\subsection{Classes}
 A Babble program is a collection of Babble classes.
 
-A class is defined by a name, an ID, a possible superclass and then opening brackets. Inside these brackets class fields can optionally be declared using a deceleration syntax. Following field declaration are the methods the class has that provide functionality.
+\subsubsection{Defining classes}
+A class is defined by a name, an ID, a possible superclass and then opening brackets. Inside these brackets class fields can optionally be declared using a declaration syntax. Following field declaration are the methods the class has that provide functionality.
 
 Example:
 \begin{quote}
@@ -94,9 +93,15 @@ Duck extends:Animal [
 \end{lstlisting}
 \end{quote}
 
-Unlike in Java, multiple classes can be defined in a single file, and a single class can be defined in multiple files (see section \ref{merge}). A separate Java .class file is generated from each Babble class in the program (after merging), having declarations as fields and Babble methods as methods.
+Unlike in Java, multiple classes can be defined in a single file, and a single class can be defined in multiple files (see section \ref{merge}). When compiling, each Babble class gets its own metaclass class (see section \ref{metaclass}) and a Java .class file. Declarations are added as fields to the Java class, methods as Java methods.
 
-As in Java, these classes do nothing when their methods are not being called. A program can be started from every class that has a Babble method with the name 'main', from here on other classes can be constructed and used in the program.
+\subsubsection{Using classes}
+\label{metaclass}
+After defining a Babble class, new objects of this class can be created. This is done by calling \verb|new| on the metaclass object belonging to that class. This will then instantiate a new object of the desired class.
+
+Besides the \verb|new| method, a metaclass object also has \verb|name methods| and \verb|respondsTo| methods. \verb|name| Returns the name of the class ("Duck"), \verb|methods| returns an array of strings containing the selectors of the methods that the class has. \verb|respondsTo| Can be used to check if a class has a method.
+
+All Babble classes have a special unary method \verb|class|. This method returns a metaclass object representing the class. As an alternative, the name of a class can be used to directly refer to a metaclass object of it (\verb|Duck| as opposed to \verb|duckInstance class|).
 
 
 \subsection{Defining methods}
@@ -164,22 +169,22 @@ Variables in Babble can be declared either as class fields or as local variables
 
 Both classes and methods can optionally declare variables (Although a variable has to be declared before it can be used!). For classes this has to be done before any method definition. In methods, variable declaration can be intertwined with expressions, as long as a variable is declared before usage. Multiple variable declarations of the same name are not allowed.
 
+Babble has 4 special variables, \verb|true, false, this| and \verb|nil|. True and false always create a new object of class True or False, this refers to the current object. Nil is a reference to a Nil object, Babble's equivalent of null, indicating the lack of value.
+%TODO explain how these are globally available (in software desc).
+
 While the syntax in classes and methods is the same for declaring variables, there is a difference in compiling. Variables declared in classes are added as fields to the JVM class, variables declared in methods are added as local variables to the JVM method.
 
-%TODO method arguments?
-%TODO closure variables?
+\
 
-
-%TODO special variables: true, false, this, nil.
 \subsection{Sending messages}
 
 The only way to have a Babble program do anything useful is by sending messages to objects, these messages can be seen as calling a method. Sending a message always returns a value, this is the value of the last expression that was executed in that method. Empty methods return a Nil object.
 
+When running a Babble program, an unary message is send to the main method inside the Babble class that is to be executed, starting the Babble program.
+
 Since Babble is duck typed, there is no compile-time checking whether or not a message send to an object is appropriate. At runtime the message is send to an object. If the object has a method to handle the message everything goes well, in the other case an error occurs if the object does not have a method defined to handle the message sent.
 
-There are again three different kind of messages, each with their own syntax.
-
-%TODO main method -> How does our program start? This is currently touched upon in the class definition section.
+There are again three different kind of messages, each with their own syntax and corresponding to the three method kinds.
 
 \subsubsection{Unary messages}
 
@@ -211,6 +216,7 @@ array at: 2 put: 10.
 This sends the message \texttt{at:put:} to the variable \texttt{array}, passing the 2 and 10 as arguments. This would place the number 10 at the third position inside the array.
 
 
+%TODO method argument passing.
 
 \subsubsection{Infix messages}
 
