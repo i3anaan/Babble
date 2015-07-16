@@ -65,9 +65,30 @@ pages).
 \subsection{Passing method arguments}
 \subsection{Lambda closure}
 \subsection{Multiple files}
+
 Since Babble does not have a lot of special keywords or statements, a large part of what is considered standard functionality is written in Prelude.bla, Babble code, instead. This file was to be included into every other Babble program. Our first solution was to simply concatenate Prelude.bla with the user's program but this caused confusion with locating errors (line numbers where off). A new solution was to generate separate IR trees, and merge them together. Using the TreeMerger class, Babble can read any number of files and combine them into a single IR tree. An added benefit of this is that Babble supports spreading out defining a single class over multiple files. See \ref{merge} for a detailed description of the merging process.
+
 \subsection{While statement}
-From the beginning we knew that Babble would not have a special case for either \texttt{if} or \texttt{while} statements. This meant that we needed Babble to be powerful enough to program our own \texttt{if} and \texttt{while} statements inside Babble. For \texttt{if} this was easy, just check the condition once and act on that. For \texttt{while} this proved to be more troublesome. \texttt{While} needed to be a recursive function on a Block, and due to the way the closure works on blocks, we could not just reassign a number (which is typically used in a \texttt{while} condition (\verb|i < 10|)). To solve the issue of 2 closures having to be able to get and set each other's variables, we eventually created a \texttt{while} loop that makes use of get and set methods in the same class as the method in which the \texttt{while} loop is needed. While this does work, and does create a valid \texttt{while} loop, it is far from desirable. Our conclusion to this is: \begin{quote}Avoid having to use \texttt{while} loops in Babble, resort instead to using recursion. \end{quote}
+
+Babble, like Smalltalk, was designed from the beginning not to have \texttt{if} and \texttt{while} structures in the language, but rather to have these constructs implemented in the language itself.
+Once we got blocks working, implementing \texttt{if} was trivial, and indeed the implementations of \texttt{ifTrue:} and \texttt{ifFalse:} on the True and False classes are quite short.
+
+Implementing \texttt{whileTrue}, our version of the while statement, was more involved. The following will result in an infinite loop, which surprised us for a while:
+
+\begin{quote}
+\begin{lstlisting}
+| i |.
+i := 0.
+
+[ i < 20 ] whileTrue: [
+	i := i + 1.
+].
+\end{lstlisting}
+\end{quote}
+
+In Babble, most built-in classes are immutable, while references are always mutable. Also, blocks (closures) get their own set of mutable references. Assignments (\texttt{:=}) inside a block will point the variable to a new object, but only inside that block's scope, not outside. This meant that the \texttt{i} variable inside the second block was pointed to ever-increasing numbers, but the \texttt{i} variable inside the first block never changed.
+
+The above is not an issue when working with mutable values, like arrays, which work as expected. Still, because this behaviour could be confusing to people who are not used to programming in Babble (and there are many of those, us included), we recommend using recursion over using \texttt{whileTrue} construct.
 
 \section{Detailed language description}
 %TODO SCOPE!
