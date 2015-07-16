@@ -1,0 +1,16 @@
+Duck extends:Animal [
+	| age hungry|.
+	
+	birthday [
+		age := age + 1.
+	].
+	
+	eat: food [
+		food consume.
+		hungry := false.
+	].
+	
+	+: with [
+		(with class name == "Duck") ifTrue: [ Duck new. ].
+	].
+].

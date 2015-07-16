@@ -2,11 +2,11 @@ grammar Babble;
 
 program : clazz* ;
 
-clazz : classname=ID (EXTENDS ':' superclass=ID)? '[' (decls '.')? mthd* '].' ;
+clazz : classname=ID (EXTENDS ':' superclass=ID)? '[' (decls '.')? mthd* ']' '.' ;
 
-mthd : method=ID '[' sequence '].'                    # UnaryMethod
-     | method=OPERATOR ':' arg=decl '[' sequence '].' # InfixMethod
-     | (ID ':' decl)+ '[' sequence '].'               # KeywordMethod
+mthd : method=ID '[' sequence ']' '.'                    # UnaryMethod
+     | method=OPERATOR ':' arg=decl '[' sequence ']' '.' # InfixMethod
+     | (ID ':' decl)+ '[' sequence ']' '.'               # KeywordMethod
      ;
 
 sequence : (expr ('.'+ expr)*)? '.'? ;
