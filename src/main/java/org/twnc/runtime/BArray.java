@@ -16,6 +16,10 @@ import java.util.List;
  * Unset elements are returned as Nil.
  */
 public class BArray extends ArrayList<Object> {
+    public BArray() {
+        // Allow default constructor.
+    }
+
     /** Construct a new BArray with the given contents. */
     public BArray(List<Object> objects) {
         super(objects);
@@ -67,6 +71,11 @@ public class BArray extends ArrayList<Object> {
     /** Return the last element of this array. */
     public Object _last() {
         return _at_(size() - 1);
+    }
+
+    /** Removes and returns the last element of this array. */
+    public Object _pop() {
+        return remove(this.size() - 1);
     }
 
     /** Return True if the array includes the given value, False otherwise. */

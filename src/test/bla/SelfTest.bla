@@ -240,34 +240,35 @@ SelfTest [
         (true  ifTrue: [ #a ] ifFalse: [ #b ] == #a) assert.
         (false ifTrue: [ #a ] ifFalse: [ #b ] == #b) assert.
     ].
-    
+
     testWhile [
-        field2 := {}.
-        this setWhileIndex: 0.
-        
-        [this getWhileIndex < 10.] whileTrue: [
-            this addToArray: (this getWhileIndex).
-            this setWhileIndex: (this getWhileIndex + 1).
+        | duckies |.
+
+        duckies := { "Freddy", "Johnny", "Bobby", "Harold" }.
+
+        [ duckies notEmpty ] whileTrue: [
+            ("Duckie " + duckies pop + " says quack!") print.
         ].
-        
-        (field2 size == 10) assert.
-        (field2 at: 0 == 0) assert.
-        (field2 at: 5 == 5) assert.
-        (field2 at: 9 == 9) assert.
-    ].
-    
-    addToArray: value [
-        field2 add: value.
-    ].
-    
-    setWhileIndex: index [
-        field1 := index.
-    ].
-    
-    getWhileIndex [
-        field1.
+
+        duckies isEmpty assert.
     ].
 
+    testWhileMoveArray [
+        | arrayOne arrayTwo |.
+
+        arrayOne := 1 to: 10.
+        arrayTwo := {}.
+
+        (arrayOne size == 10) assert.
+
+        [ arrayOne notEmpty ] whileTrue: [
+            /* Move elements from one array to the other */
+            arrayTwo add: (arrayOne pop).
+        ].
+
+        (arrayTwo size == 10) assert.
+    ].
+    
     testVarDecl [
         | x |.
         x := 2.

@@ -70,8 +70,22 @@ public class BInt extends BigInteger {
     /** Return the sign of this BInt as a new BInt (either -1, 0 or +1). */
     public Object _signum() { return new BInt(signum()); }
 
+
     /** Return a string representation of this BInt. */
     public Object _asString() { return new BStr(toString()); }
+
+    /** Return an array containing the integers from this to that. */
+    public Object _to_(Object that) {
+        BArray array = new BArray();
+        int a = intValue();
+        int b = ((Number) that).intValue();
+
+        for (int i = a; i <= b; i++) {
+            array.add(new BInt(i));
+        }
+
+        return array;
+    }
 
     /** BInt does not have a Babble-visible metaclass. */
     public Object _class() {
