@@ -62,6 +62,7 @@ Summary of problems you encountered and how you solved them (max. two
 pages).
 
 \section{Detailed language description}
+%TODO SCOPE!
 %A systematic description of the features of your language, for each
 %feature specifying
 %– Syntax, including one or more examples;
@@ -207,6 +208,8 @@ Like other messages, infix messages have exactly one receiver, in this case the 
 Infix messages also have exactly one argument, the integer 20 here.
 Because 10 is not larger than 20, the result will be false.
 
+\subsection{Expressions}
+%TODO add stuff here.
 
 \subsection{Precedence}
 
@@ -263,6 +266,28 @@ Standard methods for arrays are:
 
 
 \subsubsection{Blocks}
+
+Blocks can be seen as a group of several expression ordered into one object. Blocks are a class just as other classes and can thus be passed as arguments in the same way that could be done with for example integers.
+
+%TODO BLOCKS CURRENTLY BROKEN!!
+\iffalse
+	testClosureWriteRead [
+	    | x y |.
+	    [x := 10. y := 20.] value.
+	    (x == 10) assert.
+	    (y == 20) assert.
+	].
+	This fails, but should probably pass.
+\fi
+%TODO Empty Blocks return nothing, creating stack underflow.
+Blocks are defined using brackets, containing expressions. An example of this would be:
+\verb|[x := 10. y := 20.]| (assuming x and y are valid variables in the scope in which the block is defined.)
+
+%TODO FIX WHILE.
+Blocks have 2 standard methods, namely \verb|value| and \verb|whileTrue:|. \verb|value| Executes the expressions contained in the block, and in doing so returns the value of the last expression in the block. \verb|whileTrue:| Accepts another block and keeps executing that until the block to which \verb|whileTrue:| was sent returns false.
+
+%TODO Block value tricks explained.
+
 
 \subsection{Tips and tricks}
 
