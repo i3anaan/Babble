@@ -80,7 +80,7 @@ public final class App {
             trees.add(babbleFile);
         }
         
-        compileTrees(outDir, trees.toArray(new ProgramNode[0]));
+        compileTrees(outDir, trees);
         if (verbose) {
             System.out.println("[ OK ] Compiled.");
         }
@@ -91,7 +91,7 @@ public final class App {
         formatter.printHelp("app", options);
     }
     
-    static List<String> compileTrees(String outDir, ProgramNode... trees) {
+    static List<String> compileTrees(String outDir, List<ProgramNode> trees) {
         ProgramNode program = new ProgramNode();
         ASTBaseVisitor treeMerger = new TreeMerger(program);
         try {

@@ -95,6 +95,7 @@
                             <mainClass>org.twnc.App</mainClass>
                             <arguments>
                                 <argument>src/test/bla/SelfTest.bla</argument>
+                                <argument>src/test/bla/testMultipleFiles.bla</argument>
                                 <argument>--dest=target/test-classes</argument>
                                 <argument>--verbose</argument>
                             </arguments>
