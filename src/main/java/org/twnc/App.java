@@ -68,26 +68,27 @@ public final class App {
 
         verbose = line.hasOption('v');
 
+        ArrayList<ProgramNode> trees = new ArrayList<>();
+        
+        ProgramNode prelude = generateIRTree(App.class.getResourceAsStream("Prelude.bla"), "Babble\\Prelude.bla");
+        trees.add(prelude);
+        
         for (String inPath : line.getArgs()) {
             File file = new File(inPath);
-            compileFile(file, outDir);
-
-            if (verbose) {
-                System.out.println(String.format("[ OK ] Compiled %s", file));
-            }
+            ProgramNode babbleFile = generateIRTree(new FileInputStream(file), file.getPath());
+            
+            trees.add(babbleFile);
+        }
+        
+        compileTrees(outDir, trees.toArray(new ProgramNode[0]));
+        if (verbose) {
+            System.out.println("[ OK ] Compiled.");
         }
     }
 
     private static void printHelp(Options options) {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("app", options);
-    }
-
-    private static List<String> compileFile(File file, String outDir) throws IOException {
-        ProgramNode prelude = generateIRTree(App.class.getResourceAsStream("Prelude.bla"), "Babble\\Prelude.bla");
-        ProgramNode code = generateIRTree(new FileInputStream(file), file.getPath());
-        
-        return compileTrees(outDir, prelude, code);
     }
     
     static List<String> compileTrees(String outDir, ProgramNode... trees) {
