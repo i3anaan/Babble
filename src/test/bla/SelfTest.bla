@@ -240,16 +240,33 @@ SelfTest [
         (true  ifTrue: [ #a ] ifFalse: [ #b ] == #a) assert.
         (false ifTrue: [ #a ] ifFalse: [ #b ] == #b) assert.
     ].
-    
-    testWhile [
-        | array |.
-        array := 1 to: 4.
 
-        [ array notEmpty ] whileTrue: [
-            (array pop asString + " little duckies in the pond...") print.
+    testWhile [
+        | duckies |.
+
+        duckies := { "Freddy", "Johnny", "Bobby", "Harold" }.
+
+        [ duckies notEmpty ] whileTrue: [
+            ("Duckie " + duckies pop + " says quack!") print.
         ].
 
-        array isEmpty assert.
+        duckies isEmpty assert.
+    ].
+
+    testWhileMoveArray [
+        | arrayOne arrayTwo |.
+
+        arrayOne := 1 to: 10.
+        arrayTwo := {}.
+
+        (arrayOne size == 10) assert.
+
+        [ arrayOne notEmpty ] whileTrue: [
+            /* Move elements from one array to the other */
+            arrayTwo add: (arrayOne pop).
+        ].
+
+        (arrayTwo size == 10) assert.
     ].
     
     testVarDecl [
