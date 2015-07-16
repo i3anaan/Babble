@@ -2,6 +2,7 @@ package org.twnc.irtree;
 
 import org.twnc.irtree.nodes.*;
 
+//TODO explain visitor pattern.
 public abstract class ASTVisitor {
     public abstract void visit(AssignNode assignNode);
     public abstract void visit(BlockNode blockNode);

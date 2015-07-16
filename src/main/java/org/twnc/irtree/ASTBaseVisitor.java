@@ -7,8 +7,15 @@ import org.twnc.compile.exceptions.CompileException;
 import org.twnc.compile.exceptions.ScopeException;
 import org.twnc.irtree.nodes.*;
 
-/** An implementation of ASTVisitor that just crawls through the tree. */
+/**
+ * A basic implementation of ASTVisitor that just crawls through the tree,
+ * intended for other visitors to extend.
+ * 
+ * Each visit method calls the accept() method on the Node's children, in
+ * accordance with the visitor pattern.
+ */
 public class ASTBaseVisitor extends ASTVisitor {
+    /** A list of errors found while traversing the tree. */
     private List<String> errors;
 
     public ASTBaseVisitor() {
@@ -18,13 +25,6 @@ public class ASTBaseVisitor extends ASTVisitor {
     @Override
     public void visit(ProgramNode programNode) throws CompileException {
         programNode.getClasses().forEach(x -> x.accept(this));
-
-        if (!errors.isEmpty()) {
-            for (String error : errors) {
-                System.err.println(error);
-            }
-            throw new CompileException();
-        }
     }
     
     @Override
@@ -56,7 +56,7 @@ public class ASTBaseVisitor extends ASTVisitor {
 
     @Override
     public void visit(SendNode sendNode) {
-        sendNode.getExpression().ifPresent(x-> x.accept(this));
+        sendNode.getExpression().accept(this);
         sendNode.getArguments().forEach(x -> x.accept(this));
     }
     
@@ -83,6 +83,11 @@ public class ASTBaseVisitor extends ASTVisitor {
     public void visit(LiteralNode literalNode) {
     }
 
+    /**
+     * Method to store error messages for errors that occured during tree traversal.
+     * @param node  The Node for which the error occured.
+     * @param message A message that can be used to display the error.
+     */
     public void visitError(Node node, String message) {
         errors.add(String.format("[%s] - %s", String.valueOf(node.getLocation()), message));
     }

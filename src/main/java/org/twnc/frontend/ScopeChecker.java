@@ -9,10 +9,18 @@ import org.twnc.irtree.ASTBaseVisitor;
 import org.twnc.irtree.nodes.*;
 
 /**
- * Checks and sets scopes in the AST.
+ * AST visitor that checks and sets scopes in the AST.
+ * 
+ * When visiting ProgramNodes, ClazzNodes or MethodNodes a new scope gets
+ * entered before visiting its children, after the Node's children have been
+ * visited the scope gets exited again.
+ * 
+ * 
  */
 public class ScopeChecker extends ASTBaseVisitor {
     private ProgramNode program;
+    
+    /** The actual scope being build. */
     private ScopeStack scopeStack;
     
     @Override
@@ -23,6 +31,8 @@ public class ScopeChecker extends ASTBaseVisitor {
         
         super.visit(programNode);
         
+        // If something related to scope was wrong, print the errors and throw
+        // an exception to abort compilation.
         if (!getErrors().isEmpty()) {
             for (String error : getErrors()) {
                 System.err.println(error);
@@ -53,6 +63,8 @@ public class ScopeChecker extends ASTBaseVisitor {
         Scope blockScope = scopeStack.enterScope(blockNode);
         blockNode.setScope(blockScope);
 
+        // Enable Lambda closure by copying the declarations in the current
+        // scope and above, and giving them to the block.
         for (VarDeclNode decl : blockScope.flatten()) {
             String name = decl.getName();
             VarDeclNode newNode = new VarDeclNode(name);
@@ -68,8 +80,8 @@ public class ScopeChecker extends ASTBaseVisitor {
     @Override
     public void visit(VarRefNode varRefNode) {
         String name = varRefNode.getName();
+        // Detect usage of variables before declaring them.
         if (!program.getGlobals().containsKey(name) && !scopeStack.contains(name)) {
-
             visitError(varRefNode, String.format("Variable %s is not declared.", name));
         }
         super.visit(varRefNode);
@@ -78,10 +90,17 @@ public class ScopeChecker extends ASTBaseVisitor {
     @Override
     public void visit(VarDeclNode node) {
         if (!scopeStack.putVarDeclNode(node)) {
+            // The new variable declaration can not be added because there
+            // already is one with the same name.
+            
             VarDeclNode previousDecl;
             try {
+                // Find the previous declaration for better error reporting.
                 previousDecl = scopeStack.getVarDeclNode(node.getName());
             } catch (VariableNotDeclaredException e) {
+                // Since we only just checked that there already was a
+                // declaration with the same name, this exception should never
+                // occur.
                 throw new RuntimeException(e);
             }
             visitError(node, String.format("Variable %s is already declared at [%s].", node.getName(), String.valueOf(previousDecl.getLocation())));

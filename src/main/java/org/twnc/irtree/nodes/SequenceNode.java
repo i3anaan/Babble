@@ -6,7 +6,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A Node that represents a sequence of expressions in the Babble code.
+ *
+ */
 public class SequenceNode extends Node {
+    /** List of the expressions contained in this sequence. */
     private final List<ExprNode> expressions;
 
     public SequenceNode() {

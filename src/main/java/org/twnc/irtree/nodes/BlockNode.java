@@ -2,11 +2,15 @@ package org.twnc.irtree.nodes;
 
 import org.twnc.irtree.ASTVisitor;
 
-import java.util.List;
-
+/**
+ * A Node that represents a Block in Babble code.
+ *
+ */
 public class BlockNode extends ExprNode {
+    /** Sequence of the expressions contained inside this Block. */
     private final SequenceNode sequence;
 
+    /** The name of the block, this is used to generate its class. */
     private String name;
 
     public BlockNode(SequenceNode sequence) {

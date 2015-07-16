@@ -8,7 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A Node that represents an entire Babble program
+ * (up until merging this equals a file).
+ *
+ */
 public class ProgramNode extends Node {
+    /** List of Babble classes defined in this program. */
     private final List<ClazzNode> classes;
 
     /**
@@ -50,10 +56,20 @@ public class ProgramNode extends Node {
         visitor.visit(this);
     }
     
+    /**
+     * Adds a Babble class to the program, no check is made whether there was already a class with the same name.
+     * @param clazz Babble class to add.
+     * @return true if succesfully added.
+     */
     public boolean addClazz(ClazzNode clazz) {
         return classes.add(clazz);
     }
     
+    /**
+     * Looks for a class in this program with a given name.
+     * @param name The class to look for.
+     * @return The class with the requested name, or null if none found.
+     */
     public ClazzNode getClazz(String name) {
         for (ClazzNode clazz : getClasses()) {
             if (clazz.getName().equals(name)) {

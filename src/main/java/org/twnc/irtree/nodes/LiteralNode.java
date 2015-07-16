@@ -4,15 +4,22 @@ import org.twnc.irtree.ASTVisitor;
 
 import java.awt.Color;
 
+/**
+ * A Node that represents a literal object in Babble code.
+ *
+ */
 public class LiteralNode extends ExprNode {
-    public enum Type {
+    /** Literals can be of 4 types. */
+    public static enum Type {
         INTEGER,
         STRING,
         SYMBOL,
         CLASS
     }
 
+    /** The type of this literal. */
     private final Type type;
+    /** The value of this literal. */
     private final String value;
 
     public LiteralNode(Type t, String v) {
