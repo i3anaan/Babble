@@ -248,7 +248,7 @@ Babble supports integers as the only type of number, they can be arbitrary large
 As all the objects in Babble are classes, so are integers. An integer has standard methods for the following operators: \verb|{+, -, *, /, %, ==, >, >=, !=, <=}| with these having the expected effect. Additional methods \verb|{min:, max:, abs, negate, signum}| are also available as standard methods, each also having the expected effect.
 
 \subsection{Booleans}
-In Babble booleans can be created with using \verb|true| or  \verb|false|. Standard methods for booleans are
+In Babble booleans can be created using \verb|true| or  \verb|false|, this creates a new object of class True or False respectively. Standard methods for booleans are
 \verb|{astString, asint, asBool, not, hashCode, ifTrue:, ifFalse:, ifTrue: ifFalse:,|
 \verb|==, !=, and:, or:, assert}|. Most of these are pretty self-explanatory, but there are some which deserve attention. \verb|ifTrue:| And \verb|ifFalse:| are the Babble equivalent of an if statement. Depending on which boolean (true or false) the block that is passed as argument gets executed or not. \verb|ifTrue: ifFalse:| Is Babble's equivalent of an if else statement, acting similar. \verb|assert| Asserts that the boolean on which this is called is true, offering a convenient way to do integration tests in Babble.
 
@@ -261,8 +261,8 @@ Babble has string literals. String literals are enclosed in double quotes, i.e. 
 
 \subsubsection{Symbols}
 
-Symbols are written using a hash-tag followed by a name, for example: \verb|#foo|. Symbols do not need to be declared and are neither integer or string, but there fully own type. Standard methods available for symbols:
-\verb|{asInt, asString, ==}|. AsInt exposes the internally used index from the symbol, asString returns the full name of the symbol (including the hash-tag) as a string.
+Symbols are written using a hash sign followed by a name, for example: \verb|#foo|. Symbols do not need to be declared and are neither integer or string, but there fully own type. Standard methods available for symbols:
+\verb|{asInt, asString, ==}|. AsInt exposes the internally used index from the symbol, asString returns the full name of the symbol (including the hash sign) as a string.
 
 \subsubsection{Arrays}
 
@@ -277,22 +277,15 @@ Standard methods for arrays are:
 
 Blocks can be seen as a group of several expression ordered into one object. Blocks are a class just as other classes and can thus be passed as arguments in the same way that could be done with for example integers.
 
-%TODO BLOCKS CURRENTLY BROKEN!!
-\iffalse
-	testClosureWriteRead [
-	    | x y |.
-	    [x := 10. y := 20.] value.
-	    (x == 10) assert.
-	    (y == 20) assert.
-	].
-	This fails, but should probably pass.
-\fi
 %TODO Empty Blocks return nothing, creating stack underflow.
 Blocks are defined using brackets, containing expressions. An example of this would be:
-\verb|[x := 10. y := 20.]| (assuming x and y are valid variables in the scope in which the block is defined.)
+\verb|[man setName: "bob". woman setName: "Alice".]|, setting the name of 2 people. (assuming 'man' and 'woman' are valid variables in the scope in which the block is defined.)
 
 %TODO FIX WHILE.
 Blocks have 2 standard methods, namely \verb|value| and \verb|whileTrue:|. \verb|value| Executes the expressions contained in the block, and in doing so returns the value of the last expression in the block. \verb|whileTrue:| Accepts another block and keeps executing that until the block to which \verb|whileTrue:| was sent returns false.
+
+%TODO Maybe this should be in software description.
+Since blocks are classes themselves, a trick is needed to be able to use variables from higher scope, which is in this case other classes. The trick applied is to copy all the variables from the scope in which the block is declared and place them as class fields inside the Block. The resulting effect of this is that Blocks are not able to directly assign new values to variables from higher scope, they can only adapt the variables.
 
 %TODO Block value tricks explained.
 
