@@ -65,7 +65,7 @@ public class MethodNode extends Node {
     }
     
     /**
-     * Overriden to easily detect duplicate methods. Babble does not care if the
+     * Overridden to easily detect duplicate methods. Babble does not care if the
      * functionallity of a method is different, it only checks the method's
      * signature.
      */
