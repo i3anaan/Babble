@@ -40,7 +40,6 @@
 \tableofcontents
 
 \section{Language summary}
-%TODO SCOPE!
 Babble is a compiled, duck-typed, object-oriented programming language for the Java Virtual machine.
 It has syntax and semantics inspired by the Smalltalk programming language, but the compile-once-run-anywhere development cycle from Java.
 It has no primitives, no operators, no statements like \texttt{if} or \texttt{while}, and no type annotations.
@@ -56,6 +55,8 @@ It is a (run-time) error if a receiving object does not understand a message.
 
 Like Smalltalk, Babble has the concept of blocks: pieces of code that can be passed as values.
 Blocks can take arguments, and will also do lambda closure.
+
+Babble uses call-by-reference and maintains a scope for variables, this is further augmented using the lambda closure of blocks.
 
 \section{Problems and solutions.}
 Summary of problems you encountered and how you solved them (max. two
