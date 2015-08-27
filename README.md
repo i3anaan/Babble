@@ -1,3 +1,5 @@
+![logo](https://raw.githubusercontent.com/i3anaan/Babble/master/report/cover.png)
+
 # Babble
 
 Babble is a compiled, duck-typed, object-oriented programming language for the
